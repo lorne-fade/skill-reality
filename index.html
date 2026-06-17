@@ -80,9 +80,9 @@
   .glow-line {
     position: absolute;
     left: 0; right: 0;
-    top: 28%;
+    top: 62%;
     height: 1px;
-    background: linear-gradient(to right, transparent, rgba(75,163,224,0.55), transparent);
+    background: linear-gradient(to right, transparent, rgba(75,163,224,0.4), transparent);
     filter: blur(0.5px);
   }
 
@@ -350,8 +350,23 @@
     var field = document.getElementById('field');
     var success = document.getElementById('success');
 
+    // Beehiiv publication embed endpoint
+    var BEEHIIV_URL = 'https://embeds.beehiiv.com/5a8bd97c-d992-4f95-ad00-60908635ceb1';
+
     function isValid(v) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    }
+
+    function submitToBeehiiv(email) {
+      var body = new URLSearchParams();
+      body.append('email', email);
+      // no-cors: fire-and-forget; Beehiiv records the subscriber, response is opaque
+      return fetch(BEEHIIV_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString()
+      });
     }
 
     function submit() {
@@ -362,13 +377,12 @@
         setTimeout(function () { field.style.borderColor = ''; }, 1500);
         return;
       }
-      field.style.display = 'none';
-      success.classList.add('show');
-      try {
-        var list = JSON.parse(sessionStorage.getItem('sr_signups') || '[]');
-        list.push({ email: v, ts: Date.now() });
-        sessionStorage.setItem('sr_signups', JSON.stringify(list));
-      } catch (e) {}
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+      submitToBeehiiv(v).finally(function () {
+        field.style.display = 'none';
+        success.classList.add('show');
+      });
     }
 
     btn.addEventListener('click', submit);
