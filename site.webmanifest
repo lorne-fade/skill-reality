@@ -1,0 +1,12 @@
+{
+  "name": "Skill Reality",
+  "short_name": "Skill Reality",
+  "description": "Immersive XR + AI training. Launching 2027.",
+  "icons": [
+    { "src": "/favicon/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/favicon/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "theme_color": "#1B74BC",
+  "background_color": "#0a0e14",
+  "display": "standalone"
+}

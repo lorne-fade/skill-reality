@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Skill Reality — Immersive XR + AI training, launching 2027</title>
+<meta name="description" content="Skill Reality builds immersive XR and AI-driven training that turns instruction into real, retained skill. Launching 2027." />
+<meta property="og:title" content="Skill Reality — Immersive XR + AI training" />
+<meta property="og:description" content="Training that builds real skill. XR and AI, launching 2027." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="/favicon/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta name="theme-color" content="#1B74BC" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Space+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --void: #0a0e14;
+    --void-2: #0f1520;
+    --surface: #141b27;
+    --line: #1f2937;
+    --ink: #eef2f7;
+    --ink-dim: #9aa7b8;
+    --ink-faint: #5d6b7e;
+    --signal: #1B74BC;
+    --signal-bright: #4BA3E0;
+    --signal-deep: #1561a0;
+    --warm: #f0a868;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--void);
+    color: var(--ink);
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- Signature: constructed-reality grid horizon ---- */
+  .horizon {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    background:
+      radial-gradient(120% 80% at 50% 8%, rgba(75,163,224,0.12), transparent 55%),
+      linear-gradient(180deg, var(--void) 0%, var(--void-2) 60%, var(--void) 100%);
+  }
+  .grid-plane {
+    position: absolute;
+    left: 50%;
+    bottom: -12%;
+    width: 280vw;
+    height: 70vh;
+    transform: translateX(-50%) perspective(70vh) rotateX(74deg);
+    transform-origin: 50% 100%;
+    background-image:
+      linear-gradient(to right, rgba(75,163,224,0.20) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(75,163,224,0.20) 1px, transparent 1px);
+    background-size: 6vw 6vw;
+    -webkit-mask-image: linear-gradient(to top, #000 0%, rgba(0,0,0,0.4) 35%, transparent 75%);
+    mask-image: linear-gradient(to top, #000 0%, rgba(0,0,0,0.4) 35%, transparent 75%);
+    animation: drift 14s linear infinite;
+  }
+  @keyframes drift {
+    from { background-position: 0 0; }
+    to   { background-position: 0 6vw; }
+  }
+  .glow-line {
+    position: absolute;
+    left: 0; right: 0;
+    top: 28%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(75,163,224,0.55), transparent);
+    filter: blur(0.5px);
+  }
+
+  /* ---- Layout ---- */
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 28px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    padding: 36px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    opacity: 0;
+    animation: rise 0.8s cubic-bezier(0.2,0.8,0.2,1) 0.1s forwards;
+  }
+  .mark {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 19px;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .mark .logo-glyph {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 8px rgba(75,163,224,0.45));
+  }
+  .from {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 0;
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--signal-bright);
+    margin-bottom: 26px;
+    opacity: 0;
+    animation: rise 0.8s cubic-bezier(0.2,0.8,0.2,1) 0.25s forwards;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(40px, 7vw, 82px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    max-width: 14ch;
+    margin-bottom: 30px;
+  }
+  h1 .word { display: inline-block; opacity: 0; animation: rise 0.9s cubic-bezier(0.2,0.8,0.2,1) forwards; }
+  h1 .word:nth-child(1) { animation-delay: 0.35s; }
+  h1 .word:nth-child(2) { animation-delay: 0.42s; }
+  h1 .word:nth-child(3) { animation-delay: 0.49s; }
+  h1 .word:nth-child(4) { animation-delay: 0.56s; }
+  h1 .accent {
+    font-style: italic;
+    color: var(--signal-bright);
+  }
+
+  .lede {
+    font-size: clamp(17px, 2.2vw, 21px);
+    color: var(--ink-dim);
+    max-width: 52ch;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: rise 0.8s cubic-bezier(0.2,0.8,0.2,1) 0.7s forwards;
+  }
+  .lede strong { color: var(--ink); font-weight: 500; }
+
+  /* ---- Capture ---- */
+  .capture {
+    opacity: 0;
+    animation: rise 0.8s cubic-bezier(0.2,0.8,0.2,1) 0.85s forwards;
+    max-width: 480px;
+  }
+  .capture-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 14px;
+  }
+  .field {
+    display: flex;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 7px 7px 7px 18px;
+    transition: border-color 0.25s, box-shadow 0.25s;
+  }
+  .field:focus-within {
+    border-color: var(--signal);
+    box-shadow: 0 0 0 4px rgba(79,209,197,0.08);
+  }
+  .field input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--ink);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+  }
+  .field input::placeholder { color: var(--ink-faint); }
+  .field button {
+    background: var(--signal);
+    color: var(--void);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 22px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+  }
+  .field button:hover { background: var(--signal-deep); }
+  .field button:active { transform: scale(0.97); }
+  .micro {
+    font-size: 13px;
+    color: var(--ink-faint);
+    margin-top: 12px;
+  }
+  .success {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    color: var(--signal);
+    font-size: 16px;
+    padding: 16px 0;
+  }
+  .success.show { display: flex; }
+  .success::before {
+    content: "";
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--signal);
+    background:
+      linear-gradient(45deg, transparent 45%, var(--signal) 45%, var(--signal) 55%, transparent 55%),
+      linear-gradient(-45deg, transparent 45%, var(--signal) 45%, var(--signal) 55%, transparent 55%);
+    background-size: 60% 2px, 60% 2px;
+    background-position: center;
+    background-repeat: no-repeat;
+    flex-shrink: 0;
+  }
+
+  footer {
+    padding: 30px 0 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 28px;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--line);
+    opacity: 0;
+    animation: rise 0.8s cubic-bezier(0.2,0.8,0.2,1) 1s forwards;
+  }
+  footer .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+  }
+  footer a {
+    color: var(--ink-dim);
+    text-decoration: none;
+    font-size: 14px;
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  footer a:hover { color: var(--signal-bright); border-color: var(--signal-bright); }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 560px) {
+    .from { display: none; }
+    .field { flex-direction: column; padding: 12px; }
+    .field input { padding: 6px 4px; }
+    .field button { width: 100%; padding: 14px; }
+    footer { flex-direction: column; align-items: flex-start; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before { animation: none !important; }
+    .eyebrow, h1 .word, .lede, .capture, header, footer { opacity: 1 !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="horizon" aria-hidden="true">
+    <div class="glow-line"></div>
+    <div class="grid-plane"></div>
+  </div>
+
+  <div class="wrap">
+    <header>
+      <div class="mark"><img class="logo-glyph" src="/favicon/glyph-bright.png" alt="Skill Reality" />Skill Reality</div>
+      <div class="from">A VR Vision company</div>
+    </header>
+
+    <main>
+      <div class="eyebrow">Launching 2027</div>
+      <h1>
+        <span class="word">Training</span>
+        <span class="word">that</span>
+        <span class="word accent">becomes</span>
+        <span class="word accent">skill.</span>
+      </h1>
+      <p class="lede">
+        We build immersive <strong>XR</strong> and <strong>AI-driven</strong> training that moves people past watching and into doing — so the skill is real before the job is. Same team behind enterprise programs at Toyota, Siemens, and Coca-Cola. New name. Wider reality.
+      </p>
+
+      <div class="capture">
+        <div class="capture-label">Get the launch note</div>
+        <div class="field" id="field">
+          <input type="email" id="email" placeholder="you@company.com" aria-label="Email address" autocomplete="email" />
+          <button id="submit">Keep me posted</button>
+        </div>
+        <div class="success" id="success">You're on the list. We'll be in touch.</div>
+        <p class="micro">One email when we launch. No noise.</p>
+      </div>
+    </main>
+
+    <footer>
+      <span class="tag">SKILLREALITY.COM — XR + AI TRAINING</span>
+      <a href="https://vrvisiongroup.com" target="_blank" rel="noopener">See what we build today at VR Vision →</a>
+    </footer>
+  </div>
+
+<script>
+  (function () {
+    var btn = document.getElementById('submit');
+    var input = document.getElementById('email');
+    var field = document.getElementById('field');
+    var success = document.getElementById('success');
+
+    function isValid(v) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    }
+
+    function submit() {
+      var v = input.value.trim();
+      if (!isValid(v)) {
+        field.style.borderColor = '#f0a868';
+        input.focus();
+        setTimeout(function () { field.style.borderColor = ''; }, 1500);
+        return;
+      }
+      // Holding-page stub: capture in-memory only.
+      // Wire this to your list (HubSpot form, Mailchimp, etc.) before going live.
+      field.style.display = 'none';
+      success.classList.add('show');
+      try {
+        var list = JSON.parse(sessionStorage.getItem('sr_signups') || '[]');
+        list.push({ email: v, ts: Date.now() });
+        sessionStorage.setItem('sr_signups', JSON.stringify(list));
+      } catch (e) {}
+    }
+
+    btn.addEventListener('click', submit);
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') submit();
+    });
+  })();
+</script>
+</body>
+</html>
