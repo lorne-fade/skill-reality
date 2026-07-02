@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Skill Reality — Training that follows you onto the job</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #06080A; }
+  * { box-sizing: border-box; }
+  ::selection { background: rgba(27,116,188,0.4); color: #fff; }
+  @keyframes srFadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes srFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes srPulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+  @keyframes srArrow { 0%, 100% { transform: translateX(0); opacity: 0.9; } 50% { transform: translateX(8px); opacity: 1; } }
+  @keyframes srScan { 0% { transform: translateY(0); } 100% { transform: translateY(46px); } }
+  @keyframes srDraw { from { stroke-dashoffset: 900; } to { stroke-dashoffset: 0; } }
+  input::placeholder { color: rgba(240,244,248,0.35); }
+  input:focus { outline: none; border-color: #1B74BC !important; }
+  a { color: inherit; }
+  @media (max-width: 720px) {
+    [data-sr-grid3] { grid-template-columns: 1fr !important; }
+    [data-sr-grid2] { grid-template-columns: 1fr !important; }
+    [data-sr-hero-h] { font-size: 42px !important; letter-spacing: -1.5px !important; }
+    [data-sr-h2] { font-size: 32px !important; letter-spacing: -1px !important; }
+    [data-sr-pad] { padding-left: 24px !important; padding-right: 24px !important; }
+    [data-sr-hide-m] { display: none !important; }
+    [data-sr-row] { flex-direction: column !important; align-items: stretch !important; }
+  }
+</style>
+</helmet>
+
+<div style="min-height: 100vh; background: #06080A; color: #F0F4F8; font-family: 'Hanken Grotesk', 'Helvetica Neue', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden;">
+
+  <!-- ============ NAV ============ -->
+  <nav data-sr-pad style="position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: linear-gradient(to bottom, rgba(6,8,10,0.85), rgba(6,8,10,0)); backdrop-filter: blur(2px);">
+    <div style="display: flex; align-items: baseline; gap: 12px;">
+      <span style="font-weight: 800; font-size: 18px; letter-spacing: -0.3px;">Skill Reality</span>
+      <span data-sr-hide-m style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(240,244,248,0.45); letter-spacing: 0.5px;">A VR VISION COMPANY</span>
+    </div>
+    <a href="#contact" style="font-size: 14px; font-weight: 600; color: #F0F4F8; text-decoration: none; border: 1px solid rgba(240,244,248,0.2); border-radius: 100px; padding: 8px 18px;" style-hover="border-color: {{ accent }}; color: {{ accent }};">Get in touch</a>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <header data-sr-pad style="position: relative; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 120px 48px 80px; overflow: hidden;">
+    <!-- blurred industrial backdrop -->
+    <div style="position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 70% 40%, rgba(27,116,188,0.14), transparent 60%), radial-gradient(ellipse 50% 40% at 20% 80%, rgba(27,116,188,0.07), transparent 60%), #06080A;"></div>
+    <div style="position: absolute; inset: 0; opacity: 0.35; background-image: linear-gradient(rgba(240,244,248,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(240,244,248,0.03) 1px, transparent 1px); background-size: 72px 72px; mask-image: radial-gradient(ellipse 70% 60% at 60% 45%, black, transparent);"></div>
+
+    <div style="position: relative; max-width: 1200px; margin: 0 auto; width: 100%; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 64px; align-items: center;" data-sr-grid2>
+      <div>
+        <div style="display: inline-flex; align-items: center; gap: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 1px; color: rgba(240,244,248,0.6); border: 1px solid rgba(240,244,248,0.14); border-radius: 100px; padding: 7px 16px; margin-bottom: 32px; animation: srFadeUp 0.6s ease-out both;">
+          <span style="width: 6px; height: 6px; border-radius: 50%; background: {{ accent }}; animation: srPulse 2.4s ease-in-out infinite;"></span>
+          A VR VISION COMPANY · LAUNCHING 2027
+        </div>
+        <h1 data-sr-hero-h style="font-size: 68px; line-height: 1.02; font-weight: 800; letter-spacing: -2.5px; margin: 0 0 24px; animation: srFadeUp 0.6s ease-out 0.1s both;">Training that follows you onto&nbsp;the&nbsp;job.</h1>
+        <p style="font-size: 19px; line-height: 1.55; color: rgba(240,244,248,0.65); max-width: 480px; margin: 0 0 40px; animation: srFadeUp 0.6s ease-out 0.2s both;">AI-guided performance support through smart glasses — real-time, hands-free direction for frontline industrial workers, at the moment of performance.</p>
+        <div data-sr-row style="display: flex; gap: 14px; animation: srFadeUp 0.6s ease-out 0.3s both;">
+          <a href="#contact" style="display: inline-flex; align-items: center; justify-content: center; background: {{ accent }}; color: #fff; font-weight: 700; font-size: 15px; padding: 15px 28px; border-radius: 10px; text-decoration: none; letter-spacing: -0.2px;" style-hover="background: #2585d1;">Request the investor deck</a>
+          <a href="#contact" style="display: inline-flex; align-items: center; justify-content: center; color: #F0F4F8; font-weight: 600; font-size: 15px; padding: 15px 28px; border-radius: 10px; text-decoration: none; border: 1px solid rgba(240,244,248,0.22); letter-spacing: -0.2px;" style-hover="border-color: {{ accent }}; color: {{ accent }};">Become a design partner</a>
+        </div>
+      </div>
+
+      <!-- first-person AR viewport -->
+      <div style="position: relative; aspect-ratio: 4 / 3.1; border-radius: 24px; overflow: hidden; border: 1px solid rgba(240,244,248,0.1); background: linear-gradient(160deg, #0d1319 0%, #0a0e13 50%, #080b0f 100%); animation: srFadeIn 0.9s ease-out 0.35s both; box-shadow: 0 40px 100px rgba(0,0,0,0.5);">
+        <!-- abstract blurred industrial scene -->
+        <div style="position: absolute; inset: 0; filter: blur(22px); opacity: 0.8;">
+          <div style="position: absolute; left: 8%; top: 30%; width: 26%; height: 60%; background: #16202b; border-radius: 6px;"></div>
+          <div style="position: absolute; left: 38%; top: 18%; width: 20%; height: 72%; background: #1a2532; border-radius: 6px;"></div>
+          <div style="position: absolute; left: 62%; top: 38%; width: 30%; height: 52%; background: #131c26; border-radius: 6px;"></div>
+          <div style="position: absolute; left: 42%; top: 30%; width: 12%; height: 10%; background: rgba(27,116,188,0.7); border-radius: 50%;"></div>
+          <div style="position: absolute; left: 10%; top: 12%; width: 60%; height: 8%; background: #223041;"></div>
+        </div>
+        <div style="position: absolute; inset: 0; background: radial-gradient(ellipse 90% 80% at 50% 50%, transparent 55%, rgba(0,0,0,0.55));"></div>
+
+        <!-- AR overlay: step indicator -->
+        <div style="position: absolute; left: 6%; top: 9%; background: rgba(8,12,16,0.78); border: 1px solid rgba(27,116,188,0.55); border-radius: 10px; padding: 12px 16px; backdrop-filter: blur(6px); animation: srFadeUp 0.5s ease-out 1.0s both;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.5px; color: {{ accent }}; margin-bottom: 5px;">STEP 3 / 7</div>
+          <div style="font-size: 14px; font-weight: 600; color: #F0F4F8;">Isolate breaker before opening panel</div>
+        </div>
+
+        <!-- AR overlay: reticle + arrow -->
+        <div style="position: absolute; left: 44%; top: 42%; width: 64px; height: 64px; border: 1.5px solid rgba(27,116,188,0.9); border-radius: 12px; animation: srFadeIn 0.5s ease-out 1.3s both;">
+          <div style="position: absolute; left: -1.5px; top: -1.5px; width: 14px; height: 14px; border-left: 2.5px solid {{ accent }}; border-top: 2.5px solid {{ accent }}; border-top-left-radius: 12px;"></div>
+          <div style="position: absolute; right: -1.5px; bottom: -1.5px; width: 14px; height: 14px; border-right: 2.5px solid {{ accent }}; border-bottom: 2.5px solid {{ accent }}; border-bottom-right-radius: 12px;"></div>
+        </div>
+        <div style="position: absolute; left: 24%; top: 50%; display: flex; align-items: center; gap: 4px; animation: srFadeIn 0.5s ease-out 1.5s both;">
+          <div style="width: 34px; height: 2px; background: linear-gradient(90deg, transparent, {{ accent }});"></div>
+          <div style="width: 10px; height: 10px; border-right: 2.5px solid {{ accent }}; border-top: 2.5px solid {{ accent }}; transform: rotate(45deg); animation: srArrow 1.8s ease-in-out infinite;"></div>
+        </div>
+
+        <!-- AR overlay: safety callout -->
+        <div style="position: absolute; right: 6%; bottom: 10%; display: flex; align-items: center; gap: 10px; background: rgba(8,12,16,0.78); border: 1px solid rgba(240,244,248,0.16); border-radius: 100px; padding: 9px 18px 9px 12px; backdrop-filter: blur(6px); animation: srFadeUp 0.5s ease-out 1.7s both;">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: #35c07d;"></span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1px; color: rgba(240,244,248,0.85);">PPE VERIFIED · ARC FLASH ZONE CLEAR</span>
+        </div>
+
+        <!-- lens vignette hint -->
+        <div style="position: absolute; inset: 0; border-radius: 24px; box-shadow: inset 0 0 80px rgba(0,0,0,0.6); pointer-events: none;"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ PROBLEM ============ -->
+  <section data-sr-pad style="padding: 140px 48px; border-top: 1px solid rgba(240,244,248,0.07);">
+    <div style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: center;" data-sr-grid2>
+      <div data-reveal>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: {{ accent }}; margin-bottom: 20px;">THE PROBLEM</div>
+        <h2 data-sr-h2 style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.08; margin: 0 0 24px;">Training fades. The job doesn't wait.</h2>
+        <p style="font-size: 17px; line-height: 1.6; color: rgba(240,244,248,0.65); margin: 0 0 16px; max-width: 440px;">Research on the forgetting curve is blunt: most of what workers learn in the classroom or the headset evaporates within days — long before they perform the task for real.</p>
+        <p style="font-size: 17px; line-height: 1.6; color: rgba(240,244,248,0.65); margin: 0; max-width: 440px;">What follows is predictable. Errors. Rework. Safety incidents. Slow ramp-up.</p>
+      </div>
+      <div data-reveal style="background: #0A0E13; border: 1px solid rgba(240,244,248,0.08); border-radius: 20px; padding: 36px 32px 28px;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px;">
+          <span style="font-size: 14px; font-weight: 600; color: rgba(240,244,248,0.8);">Knowledge retention after training</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(240,244,248,0.4);">FORGETTING CURVE</span>
+        </div>
+        <svg viewBox="0 0 460 220" style="width: 100%; height: auto; display: block;" data-om-raster>
+          <line x1="30" y1="10" x2="30" y2="190" stroke="rgba(240,244,248,0.15)" stroke-width="1"></line>
+          <line x1="30" y1="190" x2="450" y2="190" stroke="rgba(240,244,248,0.15)" stroke-width="1"></line>
+          <path d="M 30 20 C 90 130, 150 160, 250 172 C 330 180, 400 183, 450 184" fill="none" stroke="{{ accent }}" stroke-width="3" stroke-linecap="round" stroke-dasharray="900" data-curve style="animation: srDraw 1.6s ease-out both; animation-play-state: paused;"></path>
+          <path d="M 30 20 C 90 130, 150 160, 250 172 C 330 180, 400 183, 450 184 L 450 190 L 30 190 Z" fill="rgba(27,116,188,0.08)" stroke="none"></path>
+          <text x="34" y="18" fill="rgba(240,244,248,0.5)" font-size="11" font-family="IBM Plex Mono, monospace">100%</text>
+          <text x="34" y="205" fill="rgba(240,244,248,0.4)" font-size="11" font-family="IBM Plex Mono, monospace">DAY 0</text>
+          <text x="410" y="205" fill="rgba(240,244,248,0.4)" font-size="11" font-family="IBM Plex Mono, monospace">DAY 30</text>
+          <circle cx="250" cy="172" r="4" fill="{{ accent }}"></circle>
+          <text x="240" y="150" fill="rgba(240,244,248,0.7)" font-size="12" font-family="Hanken Grotesk, sans-serif" font-weight="600">First real task, most of it gone</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ THE SHIFT ============ -->
+  <section data-sr-pad style="padding: 140px 48px; background: #090D12; border-top: 1px solid rgba(240,244,248,0.07);">
+    <div style="max-width: 860px; margin: 0 auto; text-align: center;" data-reveal>
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: {{ accent }}; margin-bottom: 20px;">THE SHIFT</div>
+      <h2 data-sr-h2 style="font-size: 48px; font-weight: 800; letter-spacing: -1.8px; line-height: 1.08; margin: 0 0 28px;">Smart glasses just became real.</h2>
+      <p style="font-size: 19px; line-height: 1.6; color: rgba(240,244,248,0.65); margin: 0 auto 12px; max-width: 640px;">Lightweight, all-day wearable displays with hands-free input have arrived. Meta Ray-Ban Display with Neural Band today. More platforms coming.</p>
+      <p style="font-size: 19px; line-height: 1.6; color: rgba(240,244,248,0.85); font-weight: 600; margin: 0 auto; max-width: 640px;">For the first time, guidance can live where work happens — in the worker's line of sight, not on a tablet in their pocket. Skill Reality is built for this inflection.</p>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section data-sr-pad style="padding: 140px 48px; border-top: 1px solid rgba(240,244,248,0.07);">
+    <div style="max-width: 1100px; margin: 0 auto;">
+      <div data-reveal style="margin-bottom: 64px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: {{ accent }}; margin-bottom: 20px;">HOW IT WORKS</div>
+        <h2 data-sr-h2 style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.08; margin: 0; max-width: 560px;">From expert knowledge to guided performance.</h2>
+      </div>
+      <div data-sr-grid3 style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <div data-step style="border: 1px solid rgba(240,244,248,0.08); border-radius: 20px; padding: 36px 30px; background: #0A0E13; transition: border-color 0.5s ease-out, background 0.5s ease-out, transform 0.5s ease-out;">
+          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 22px;">
+            <span data-step-num style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: rgba(240,244,248,0.4); border: 1px solid rgba(240,244,248,0.15); border-radius: 50%; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.5s ease-out;">01</span>
+            <span style="font-size: 22px; font-weight: 700; letter-spacing: -0.5px;">Capture</span>
+          </div>
+          <p style="font-size: 15.5px; line-height: 1.6; color: rgba(240,244,248,0.6); margin: 0;">Expert procedures and existing training content are structured into guided, step-by-step workflows — once.</p>
+        </div>
+        <div data-step style="border: 1px solid rgba(240,244,248,0.08); border-radius: 20px; padding: 36px 30px; background: #0A0E13; transition: border-color 0.5s ease-out, background 0.5s ease-out, transform 0.5s ease-out;">
+          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 22px;">
+            <span data-step-num style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: rgba(240,244,248,0.4); border: 1px solid rgba(240,244,248,0.15); border-radius: 50%; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.5s ease-out;">02</span>
+            <span style="font-size: 22px; font-weight: 700; letter-spacing: -0.5px;">Guide</span>
+          </div>
+          <p style="font-size: 15.5px; line-height: 1.6; color: rgba(240,244,248,0.6); margin: 0;">AI delivers visual and audio direction through the glasses — hands-free, in real time, in the worker's field of view.</p>
+        </div>
+        <div data-step style="border: 1px solid rgba(240,244,248,0.08); border-radius: 20px; padding: 36px 30px; background: #0A0E13; transition: border-color 0.5s ease-out, background 0.5s ease-out, transform 0.5s ease-out;">
+          <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 22px;">
+            <span data-step-num style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: rgba(240,244,248,0.4); border: 1px solid rgba(240,244,248,0.15); border-radius: 50%; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.5s ease-out;">03</span>
+            <span style="font-size: 22px; font-weight: 700; letter-spacing: -0.5px;">Reinforce</span>
+          </div>
+          <p style="font-size: 15.5px; line-height: 1.6; color: rgba(240,244,248,0.6); margin: 0;">Performance data flows back to close skill gaps, prove competency, and sharpen the next run.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ USE CASES ============ -->
+  <section data-sr-pad style="padding: 140px 48px; background: #090D12; border-top: 1px solid rgba(240,244,248,0.07);">
+    <div style="max-width: 1100px; margin: 0 auto;">
+      <div data-reveal style="margin-bottom: 64px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: {{ accent }}; margin-bottom: 20px;">USE CASES</div>
+        <h2 data-sr-h2 style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.08; margin: 0; max-width: 520px;">Three ways guidance shows up on the job.</h2>
+      </div>
+      <div data-sr-grid3 style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <div data-reveal style="border: 1px solid rgba(240,244,248,0.08); border-radius: 20px; padding: 36px 30px; background: #0A0E13;" style-hover="border-color: rgba(27,116,188,0.5);">
+          <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(27,116,188,0.12); border: 1px solid rgba(27,116,188,0.35); display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+            <div style="width: 16px; height: 16px; border: 2px solid {{ accent }}; border-radius: 4px; position: relative;"><div style="position: absolute; left: 4px; top: 4px; width: 4px; height: 4px; background: {{ accent }}; border-radius: 1px;"></div></div>
+          </div>
+          <h3 style="font-size: 20px; font-weight: 700; letter-spacing: -0.4px; margin: 0 0 14px;">Post-Training Field Reinforcement</h3>
+          <p style="font-size: 15px; line-height: 1.6; color: rgba(240,244,248,0.6); margin: 0;">After VR or classroom training, workers get on-the-job prompts and step guidance that lock in what they learned — right when they first perform the task for real.</p>
+        </div>
+        <div data-reveal style="border: 1px solid rgba(240,244,248,0.08); border-radius: 20px; padding: 36px 30px; background: #0A0E13;" style-hover="border-color: rgba(27,116,188,0.5);">
+          <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(27,116,188,0.12); border: 1px solid rgba(27,116,188,0.35); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; gap: 4px;">
+            <div style="width: 8px; height: 8px; border-radius: 50%; border: 2px solid {{ accent }};"></div>
+            <div style="width: 12px; height: 2px; background: {{ accent }};"></div>
+            <div style="width: 8px; height: 8px; border-radius: 50%; background: {{ accent }};"></div>
+          </div>
+          <h3 style="font-size: 20px; font-weight: 700; letter-spacing: -0.4px; margin: 0 0 14px;">Remote Expert Assist</h3>
+          <p style="font-size: 15px; line-height: 1.6; color: rgba(240,244,248,0.6); margin: 0;">A senior expert sees what the worker sees and guides them through complex or rare procedures from anywhere — cutting travel and downtime.</p>
+        </div>
+        <div data-reveal style="border: 1px solid rgba(240,244,248,0.08); border-radius: 20px; padding: 36px 30px; background: #0A0E13;" style-hover="border-color: rgba(27,116,188,0.5);">
+          <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(27,116,188,0.12); border: 1px solid rgba(27,116,188,0.35); display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+            <div style="width: 0; height: 0; border-left: 9px solid transparent; border-right: 9px solid transparent; border-bottom: 15px solid {{ accent }};"></div>
+          </div>
+          <h3 style="font-size: 20px; font-weight: 700; letter-spacing: -0.4px; margin: 0 0 14px;">Real-Time Hazard Identification</h3>
+          <p style="font-size: 15px; line-height: 1.6; color: rgba(240,244,248,0.6); margin: 0;">AI watches the environment through the glasses and flags risks — missing PPE, live equipment, unsafe positioning — before incidents happen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HARDWARE ============ -->
+  <section data-sr-pad style="padding: 140px 48px; border-top: 1px solid rgba(240,244,248,0.07);">
+    <div style="max-width: 1100px; margin: 0 auto;">
+      <div data-reveal style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 72px; align-items: center;" data-sr-grid2>
+        <div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: {{ accent }}; margin-bottom: 20px;">PLATFORM</div>
+          <h2 data-sr-h2 style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.08; margin: 0 0 24px;">Built for any wearable.</h2>
+          <p style="font-size: 17px; line-height: 1.6; color: rgba(240,244,248,0.65); margin: 0; max-width: 440px;">Skill Reality is hardware-agnostic. We're building on Meta Ray-Ban Display and Neural Band today — and designed to extend to future AR glasses from Apple, Google, and others as the category matures.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; align-items: center; gap: 20px; border: 1px solid rgba(27,116,188,0.4); background: rgba(27,116,188,0.06); border-radius: 16px; padding: 20px 24px;">
+            <div style="flex-shrink: 0; width: 72px; height: 26px; position: relative;">
+              <div style="position: absolute; left: 0; top: 4px; width: 30px; height: 20px; border: 2px solid {{ accent }}; border-radius: 6px 6px 9px 9px;"></div>
+              <div style="position: absolute; right: 0; top: 4px; width: 30px; height: 20px; border: 2px solid {{ accent }}; border-radius: 6px 6px 9px 9px;"></div>
+              <div style="position: absolute; left: 30px; top: 6px; width: 12px; height: 3px; background: {{ accent }};"></div>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-weight: 700; font-size: 16px;">Meta Ray-Ban Display + Neural Band</div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1px; color: {{ accent }}; margin-top: 4px;">IN ACTIVE R&amp;D — TODAY</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 20px; border: 1px solid rgba(240,244,248,0.1); border-radius: 16px; padding: 20px 24px; opacity: 0.65;">
+            <div style="flex-shrink: 0; width: 72px; height: 26px; position: relative;">
+              <div style="position: absolute; left: 0; top: 4px; width: 30px; height: 20px; border: 2px dashed rgba(240,244,248,0.4); border-radius: 10px;"></div>
+              <div style="position: absolute; right: 0; top: 4px; width: 30px; height: 20px; border: 2px dashed rgba(240,244,248,0.4); border-radius: 10px;"></div>
+              <div style="position: absolute; left: 30px; top: 6px; width: 12px; height: 3px; background: rgba(240,244,248,0.4);"></div>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-weight: 700; font-size: 16px;">Future AR glasses</div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1px; color: rgba(240,244,248,0.45); margin-top: 4px;">APPLE · GOOGLE · OTHERS</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HERITAGE ============ -->
+  <section data-sr-pad style="padding: 140px 48px; background: #090D12; border-top: 1px solid rgba(240,244,248,0.07);">
+    <div style="max-width: 1100px; margin: 0 auto;">
+      <div data-reveal style="max-width: 640px; margin-bottom: 56px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: {{ accent }}; margin-bottom: 20px;">WHY US</div>
+        <h2 data-sr-h2 style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.08; margin: 0 0 24px;">Born from VR Vision.</h2>
+        <p style="font-size: 17px; line-height: 1.6; color: rgba(240,244,248,0.65); margin: 0;">Skill Reality is built by the team behind <a href="https://vrvisiongroup.com" target="_blank" rel="noopener" style="color: #F0F4F8; text-decoration: underline; text-decoration-color: rgba(27,116,188,0.6); text-underline-offset: 3px;">VR Vision Group</a> — a decade of enterprise XR training for the world's largest industrial operators. That work is the credibility. Skill Reality is what's next.</p>
+      </div>
+      <div data-reveal data-sr-grid3 style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px;">
+        <div style="border: 1px solid rgba(240,244,248,0.08); border-radius: 16px; padding: 28px;">
+          <div style="font-size: 40px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8;">10+</div>
+          <div style="font-size: 14px; color: rgba(240,244,248,0.55); margin-top: 6px;">years in enterprise XR training</div>
+        </div>
+        <div style="border: 1px solid rgba(240,244,248,0.08); border-radius: 16px; padding: 28px;">
+          <div style="font-size: 40px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8;">100+</div>
+          <div style="font-size: 14px; color: rgba(240,244,248,0.55); margin-top: 6px;">enterprise deployments</div>
+        </div>
+        <div style="border: 1px solid rgba(240,244,248,0.08); border-radius: 16px; padding: 28px;">
+          <div style="font-size: 40px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8;">4</div>
+          <div style="font-size: 14px; color: rgba(240,244,248,0.55); margin-top: 6px;">sectors: energy, utilities, manufacturing, rail</div>
+        </div>
+      </div>
+      <div data-reveal>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1.5px; color: rgba(240,244,248,0.4); margin-bottom: 20px;">VR VISION CLIENTS INCLUDE</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+          <span style="font-size: 15px; font-weight: 600; color: rgba(240,244,248,0.7); border: 1px solid rgba(240,244,248,0.12); border-radius: 100px; padding: 9px 20px;">Toyota</span>
+          <span style="font-size: 15px; font-weight: 600; color: rgba(240,244,248,0.7); border: 1px solid rgba(240,244,248,0.12); border-radius: 100px; padding: 9px 20px;">Siemens</span>
+          <span style="font-size: 15px; font-weight: 600; color: rgba(240,244,248,0.7); border: 1px solid rgba(240,244,248,0.12); border-radius: 100px; padding: 9px 20px;">Coca-Cola</span>
+          <span style="font-size: 15px; font-weight: 600; color: rgba(240,244,248,0.7); border: 1px solid rgba(240,244,248,0.12); border-radius: 100px; padding: 9px 20px;">Toronto Hydro</span>
+          <span style="font-size: 15px; font-weight: 600; color: rgba(240,244,248,0.7); border: 1px solid rgba(240,244,248,0.12); border-radius: 100px; padding: 9px 20px;">Hydro One</span>
+          <span style="font-size: 15px; font-weight: 600; color: rgba(240,244,248,0.7); border: 1px solid rgba(240,244,248,0.12); border-radius: 100px; padding: 9px 20px;">Avangrid</span>
+          <span style="font-size: 15px; font-weight: 600; color: rgba(240,244,248,0.7); border: 1px solid rgba(240,244,248,0.12); border-radius: 100px; padding: 9px 20px;">Enel</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ROADMAP ============ -->
+  <section data-sr-pad style="padding: 140px 48px; border-top: 1px solid rgba(240,244,248,0.07);">
+    <div style="max-width: 1100px; margin: 0 auto;">
+      <div data-reveal style="margin-bottom: 64px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: {{ accent }}; margin-bottom: 20px;">ROADMAP</div>
+        <h2 data-sr-h2 style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.08; margin: 0;">Where we are. Where we're going.</h2>
+      </div>
+      <div data-reveal data-sr-grid3 style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; position: relative;">
+        <div style="position: absolute; left: 10px; right: 10px; top: 7px; height: 1px; background: linear-gradient(90deg, {{ accent }}, rgba(240,244,248,0.15));" data-sr-hide-m></div>
+        <div style="position: relative; padding: 0 28px 0 0;">
+          <div style="width: 15px; height: 15px; border-radius: 50%; background: {{ accent }}; box-shadow: 0 0 0 5px rgba(27,116,188,0.2); margin-bottom: 24px;"></div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 1.5px; color: {{ accent }}; margin-bottom: 10px;">NOW</div>
+          <div style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Active R&amp;D</div>
+          <p style="font-size: 14.5px; line-height: 1.55; color: rgba(240,244,248,0.55); margin: 0; max-width: 260px;">Building on Meta Ray-Ban Display + Neural Band.</p>
+        </div>
+        <div style="position: relative; padding: 0 28px 0 0; margin-top: 0;">
+          <div style="width: 15px; height: 15px; border-radius: 50%; border: 2px solid rgba(240,244,248,0.3); background: #06080A; margin-bottom: 24px;" data-sr-dot2></div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 1.5px; color: rgba(240,244,248,0.5); margin-bottom: 10px;">2026</div>
+          <div style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Design-partner pilots</div>
+          <p style="font-size: 14.5px; line-height: 1.55; color: rgba(240,244,248,0.55); margin: 0; max-width: 260px;">Early enterprise partners shape the product in the field.</p>
+        </div>
+        <div style="position: relative;">
+          <div style="width: 15px; height: 15px; border-radius: 50%; border: 2px solid rgba(240,244,248,0.3); background: #06080A; margin-bottom: 24px;" data-sr-dot2></div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 1.5px; color: rgba(240,244,248,0.5); margin-bottom: 10px;">2027</div>
+          <div style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Launch</div>
+          <p style="font-size: 14.5px; line-height: 1.55; color: rgba(240,244,248,0.55); margin: 0; max-width: 260px;">General availability for industrial teams.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DUAL CTA ============ -->
+  <section id="contact" data-sr-pad style="padding: 140px 48px; background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(27,116,188,0.1), transparent 65%), #090D12; border-top: 1px solid rgba(240,244,248,0.07);">
+    <div style="max-width: 1100px; margin: 0 auto;">
+      <div data-sr-grid2 style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div data-reveal style="border: 1px solid rgba(27,116,188,0.4); background: rgba(27,116,188,0.05); border-radius: 24px; padding: 48px 40px;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: {{ accent }}; margin-bottom: 18px;">FOR INVESTORS</div>
+          <h3 style="font-size: 28px; font-weight: 800; letter-spacing: -0.8px; margin: 0 0 12px; line-height: 1.15;">We're raising our seed round.</h3>
+          <p style="font-size: 15.5px; line-height: 1.55; color: rgba(240,244,248,0.6); margin: 0 0 28px;">Request the deck and we'll send it directly.</p>
+          <form onSubmit="{{ submitInvestor }}" style="display: flex; gap: 10px;" data-sr-row>
+            <input type="email" required placeholder="you@fund.com" value="{{ investorEmail }}" onChange="{{ onInvestorEmail }}" style="flex: 1; min-width: 0; background: rgba(6,8,10,0.7); border: 1px solid rgba(240,244,248,0.15); border-radius: 10px; padding: 14px 16px; color: #F0F4F8; font-size: 15px; font-family: 'Hanken Grotesk', sans-serif; transition: border-color 0.2s;">
+            <button type="submit" style="background: {{ accent }}; color: #fff; border: none; border-radius: 10px; padding: 14px 22px; font-size: 15px; font-weight: 700; font-family: 'Hanken Grotesk', sans-serif; cursor: pointer; white-space: nowrap;" style-hover="background: #2585d1;">{{ investorButtonLabel }}</button>
+          </form>
+          <p style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(240,244,248,0.35); margin: 14px 0 0; letter-spacing: 0.5px;">One email. No noise.</p>
+        </div>
+        <div data-reveal style="border: 1px solid rgba(240,244,248,0.1); border-radius: 24px; padding: 48px 40px;">
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: rgba(240,244,248,0.5); margin-bottom: 18px;">FOR ENTERPRISES</div>
+          <h3 style="font-size: 28px; font-weight: 800; letter-spacing: -0.8px; margin: 0 0 12px; line-height: 1.15;">Shape the product as a design partner.</h3>
+          <p style="font-size: 15.5px; line-height: 1.55; color: rgba(240,244,248,0.6); margin: 0 0 28px;">Limited pilot slots for 2026.</p>
+          <form onSubmit="{{ submitPartner }}" style="display: flex; gap: 10px;" data-sr-row>
+            <input type="email" required placeholder="you@company.com" value="{{ partnerEmail }}" onChange="{{ onPartnerEmail }}" style="flex: 1; min-width: 0; background: rgba(6,8,10,0.7); border: 1px solid rgba(240,244,248,0.15); border-radius: 10px; padding: 14px 16px; color: #F0F4F8; font-size: 15px; font-family: 'Hanken Grotesk', sans-serif; transition: border-color 0.2s;">
+            <button type="submit" style="background: transparent; color: #F0F4F8; border: 1px solid rgba(240,244,248,0.3); border-radius: 10px; padding: 14px 22px; font-size: 15px; font-weight: 700; font-family: 'Hanken Grotesk', sans-serif; cursor: pointer; white-space: nowrap;" style-hover="border-color: {{ accent }}; color: {{ accent }};">{{ partnerButtonLabel }}</button>
+          </form>
+          <p style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(240,244,248,0.35); margin: 14px 0 0; letter-spacing: 0.5px;">One email. No noise.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer data-sr-pad style="padding: 56px 48px; border-top: 1px solid rgba(240,244,248,0.07);">
+    <div data-sr-row style="max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 20px;">
+      <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;">
+        <span style="font-weight: 800; font-size: 16px;">Skill Reality</span>
+        <a href="https://vrvisiongroup.com" target="_blank" rel="noopener" style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(240,244,248,0.45); letter-spacing: 0.5px; text-decoration: none;" style-hover="color: {{ accent }};">A VR VISION COMPANY ↗</a>
+      </div>
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(240,244,248,0.35); letter-spacing: 0.5px;">LAUNCHING 2027 · © 2026 SKILL REALITY INC.</div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accentColor&quot;: {&quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#1B74BC&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#1B74BC&quot;, &quot;#2A9D8F&quot;, &quot;#C0622B&quot;], &quot;section&quot;: &quot;Brand&quot;}}">
+class Component extends DCLogic {
+  state = { investorEmail: '', partnerEmail: '', investorSent: false, partnerSent: false };
+
+  componentDidMount() {
+    const root = this.rootEl || document;
+    // scroll reveals
+    const reveals = root.querySelectorAll('[data-reveal]');
+    reveals.forEach((el) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(18px)';
+      el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+    });
+    this._io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+          this._io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    reveals.forEach((el) => this._io.observe(el));
+
+    // forgetting-curve draw
+    const curve = root.querySelector('[data-curve]');
+    if (curve) {
+      this._ioCurve = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            curve.style.animationPlayState = 'running';
+            this._ioCurve.disconnect();
+          }
+        });
+      }, { threshold: 0.4 });
+      this._ioCurve.observe(curve);
+    }
+
+    // how-it-works steps light up sequentially on scroll
+    const steps = root.querySelectorAll('[data-step]');
+    if (steps.length) {
+      this._ioSteps = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            steps.forEach((s, i) => {
+              setTimeout(() => {
+                s.style.borderColor = 'rgba(27,116,188,0.55)';
+                s.style.background = '#0C1420';
+                s.style.transform = 'translateY(-4px)';
+                const num = s.querySelector('[data-step-num]');
+                if (num) { num.style.color = '#1B74BC'; num.style.borderColor = 'rgba(27,116,188,0.6)'; }
+              }, 300 + i * 350);
+            });
+            this._ioSteps.disconnect();
+          }
+        });
+      }, { threshold: 0.3 });
+      this._ioSteps.observe(steps[0]);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this._io) this._io.disconnect();
+    if (this._ioCurve) this._ioCurve.disconnect();
+    if (this._ioSteps) this._ioSteps.disconnect();
+  }
+
+  submit(kind, email, subject) {
+    if (!email) return;
+    window.open('mailto:hello@skillreality.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent('Contact: ' + email), '_blank');
+    this.setState({ [kind]: true });
+  }
+
+  renderVals() {
+    const accent = this.props.accentColor ?? '#1B74BC';
+    return {
+      accent,
+      investorEmail: this.state.investorEmail,
+      partnerEmail: this.state.partnerEmail,
+      onInvestorEmail: (e) => this.setState({ investorEmail: e.target.value }),
+      onPartnerEmail: (e) => this.setState({ partnerEmail: e.target.value }),
+      investorButtonLabel: this.state.investorSent ? 'Sent ✓' : 'Request the deck',
+      partnerButtonLabel: this.state.partnerSent ? 'Sent ✓' : 'Join the waitlist',
+      submitInvestor: (e) => { e.preventDefault(); this.submit('investorSent', this.state.investorEmail, 'Investor deck request — Skill Reality'); },
+      submitPartner: (e) => { e.preventDefault(); this.submit('partnerSent', this.state.partnerEmail, 'Design partner interest — Skill Reality'); },
+    };
+  }
+}
+</script>
+</body>
+</html>
