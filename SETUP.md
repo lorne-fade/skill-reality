@@ -32,17 +32,22 @@ RESEND_API_KEY     = re_xxxx
 DECK_URL           = https://xxxx.public.blob.vercel-storage.com/Skill_Reality_....pdf
 FROM_EMAIL         = Skill Reality <hello@skillreality.com>
 REPLY_TO_EMAIL     = founders@skillreality.com   (optional; defaults to FROM_EMAIL)
-RESEND_AUDIENCE_ID = aud_xxxx                     (optional)
+RESEND_AUDIENCE_ID = aud_xxxx                     (optional; deck requesters)
+NOTIFY_EMAIL       = founders@skillreality.com   (optional; waitlist signups go here,
+                                                  defaults to REPLY_TO_EMAIL then FROM_EMAIL)
 ```
 `DECK_URL` is read server-side only — it is never sent to the browser or
 returned in any API response.
 
 ## 5. What's already wired
-- `api/request-deck.js` — the serverless function (validation, honeypot,
-  5 req/min per-IP rate limit, Resend link-email with reply-to the founders
-  inbox, best-effort add to a Resend audience).
-- The **"For investors"** card in `index.html` posts to it and shows
-  idle → sending → sent / error states inline.
+- `api/request-deck.js` — investor deck (validation, honeypot, 5 req/min per-IP
+  rate limit, Resend link-email with reply-to the founders inbox, best-effort
+  add to a Resend audience). The **"For investors"** card posts to it.
+- `api/join-waitlist.js` — design-partner waitlist. Same validation / honeypot /
+  rate limit; emails the founders inbox (`NOTIFY_EMAIL`) on each signup, with
+  `reply_to` set to the enterprise so you can reply straight to the lead. The
+  **"For enterprises"** card posts to it.
+- Both cards show idle → sending → sent / error states inline in `index.html`.
 
 Nothing else to drop in. Vercel serves any file under `/api` as a Node
 serverless function automatically.
