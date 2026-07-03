@@ -585,11 +585,29 @@
           <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: {{ accent }}; margin-bottom: 18px;">FOR INVESTORS</div>
           <h3 style="font-size: 28px; font-weight: 800; letter-spacing: -0.8px; margin: 0 0 12px; line-height: 1.15;">We're raising our seed round.</h3>
           <p style="font-size: 15.5px; line-height: 1.55; color: rgba(240,244,248,0.6); margin: 0 0 28px;">Request the deck and we'll send it directly.</p>
-          <form onSubmit="{{ submitInvestor }}" style="display: flex; gap: 10px;" data-sr-row>
-            <input type="email" required placeholder="you@fund.com" value="{{ investorEmail }}" onChange="{{ onInvestorEmail }}" style="flex: 1; min-width: 0; background: rgba(6,8,10,0.7); border: 1px solid rgba(240,244,248,0.15); border-radius: 10px; padding: 14px 16px; color: #F0F4F8; font-size: 15px; font-family: 'Hanken Grotesk', sans-serif; transition: border-color 0.2s;">
-            <button type="submit" data-magnetic style="background: {{ accent }}; color: #fff; border: none; border-radius: 10px; padding: 14px 22px; font-size: 15px; font-weight: 700; font-family: 'Hanken Grotesk', sans-serif; cursor: pointer; white-space: nowrap; transition: box-shadow 0.3s ease-out, background 0.25s;" style-hover="background: #2585d1; box-shadow: 0 0 28px rgba(27,116,188,0.45);">{{ investorButtonLabel }}</button>
-          </form>
-          <p style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(240,244,248,0.35); margin: 14px 0 0; letter-spacing: 0.5px;">One email. No noise.</p>
+          <sc-if value="{{ investorSent }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; align-items: flex-start; gap: 13px; border: 1px solid rgba(53,192,125,0.4); background: rgba(53,192,125,0.06); border-radius: 12px; padding: 18px 20px; animation: srFadeUp 0.4s ease-out both;">
+              <span style="flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #35c07d; margin-top: 1px;">
+                <span style="display: block; width: 9px; height: 5px; border-left: 2px solid #06080A; border-bottom: 2px solid #06080A; transform: rotate(-45deg) translate(0.5px, -1px);"></span>
+              </span>
+              <div>
+                <div style="font-size: 15.5px; font-weight: 700; color: #F0F4F8; margin-bottom: 3px;">Deck sent — check your inbox</div>
+                <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.6);">(and spam, just in case).</div>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ investorFormVisible }}" hint-placeholder-val="{{ true }}">
+            <form onSubmit="{{ submitInvestor }}" style="display: flex; gap: 10px; position: relative;" data-sr-row>
+              <input type="email" required placeholder="you@fund.com" value="{{ investorEmail }}" onChange="{{ onInvestorEmail }}" style="flex: 1; min-width: 0; background: rgba(6,8,10,0.7); border: 1px solid rgba(240,244,248,0.15); border-radius: 10px; padding: 14px 16px; color: #F0F4F8; font-size: 15px; font-family: 'Hanken Grotesk', sans-serif; transition: border-color 0.2s;">
+              <!-- honeypot: hidden from humans, bots fill it -->
+              <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" value="{{ investorHoney }}" onChange="{{ onInvestorHoney }}" style="position: absolute; left: -9999px; top: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none;">
+              <button type="submit" data-magnetic style="background: {{ accent }}; color: #fff; border: none; border-radius: 10px; padding: 14px 22px; font-size: 15px; font-weight: 700; font-family: 'Hanken Grotesk', sans-serif; cursor: pointer; white-space: nowrap; opacity: {{ investorBtnOpacity }}; transition: box-shadow 0.3s ease-out, background 0.25s, opacity 0.2s;" style-hover="background: #2585d1; box-shadow: 0 0 28px rgba(27,116,188,0.45);">{{ investorButtonLabel }}</button>
+            </form>
+            <sc-if value="{{ investorError }}" hint-placeholder-val="{{ false }}">
+              <p style="font-size: 13px; line-height: 1.4; color: #e67a7a; margin: 12px 0 0;">{{ investorErrorMsg }}</p>
+            </sc-if>
+            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(240,244,248,0.35); margin: 14px 0 0; letter-spacing: 0.5px;">Sent as a link, straight to your inbox. No noise.</p>
+          </sc-if>
         </div>
         <div data-reveal style="border: 1px solid rgba(240,244,248,0.1); border-radius: 24px; padding: 48px 40px;">
           <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: rgba(240,244,248,0.5); margin-bottom: 18px;">FOR ENTERPRISES</div>
@@ -623,6 +641,7 @@
 class Component extends DCLogic {
   state = {
     investorEmail: '', partnerEmail: '', investorSent: false, partnerSent: false,
+    investorSending: false, investorError: false, investorErrorMsg: '', investorHoney: '',
     hudStepLabel: 'STEP 4 OF 7', hudTyped: '', hudDone: false, doneLabel: 'STEP 3 COMPLETED',
     hiwPhase: 0,
     uc0Open: '0', uc1Open: '0', uc2Open: '0',
@@ -819,6 +838,30 @@ class Component extends DCLogic {
     this.setState({ [kind]: true });
   }
 
+  // Email-gated investor deck: POST to the /api/request-deck serverless
+  // function, which emails the deck link. States: idle / sending / sent / error.
+  requestDeck(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const s = this.state;
+    if (s.investorSending) return;
+    const email = (s.investorEmail || '').trim();
+    if (!email) return;
+    this.setState({ investorSending: true, investorError: false, investorErrorMsg: '' });
+    fetch('/api/request-deck', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, website: s.investorHoney || '' }),
+    })
+      .then((res) => res.json().catch(() => ({})).then((data) => ({ ok: res.ok, data })))
+      .then(({ ok, data }) => {
+        if (!ok) throw new Error((data && data.error) || 'Something went wrong. Please try again.');
+        this.setState({ investorSent: true, investorSending: false });
+      })
+      .catch((err) => {
+        this.setState({ investorSending: false, investorError: true, investorErrorMsg: err.message || 'Something went wrong. Please try again.' });
+      });
+  }
+
   renderVals() {
     const accent = this.props.accentColor ?? '#1B74BC';
     const s = this.state;
@@ -854,9 +897,17 @@ class Component extends DCLogic {
       partnerEmail: s.partnerEmail,
       onInvestorEmail: (e) => this.setState({ investorEmail: e.target.value }),
       onPartnerEmail: (e) => this.setState({ partnerEmail: e.target.value }),
-      investorButtonLabel: s.investorSent ? 'Sent ✓' : 'Request the deck',
+      // investor deck (email-gated via /api/request-deck)
+      investorSent: s.investorSent,
+      investorFormVisible: !s.investorSent,
+      investorError: s.investorError,
+      investorErrorMsg: s.investorErrorMsg,
+      investorHoney: s.investorHoney,
+      investorBtnOpacity: s.investorSending ? '0.6' : '1',
+      onInvestorHoney: (e) => this.setState({ investorHoney: e.target.value }),
+      investorButtonLabel: s.investorSending ? 'Sending…' : 'Request the deck',
+      submitInvestor: (e) => this.requestDeck(e),
       partnerButtonLabel: s.partnerSent ? 'Sent ✓' : 'Join the waitlist',
-      submitInvestor: (e) => { e.preventDefault(); this.submit('investorSent', s.investorEmail, 'Investor deck request — Skill Reality'); },
       submitPartner: (e) => { e.preventDefault(); this.submit('partnerSent', s.partnerEmail, 'Design partner interest — Skill Reality'); },
     };
   }
