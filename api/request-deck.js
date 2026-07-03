@@ -9,7 +9,8 @@
 //   DECK_URL        – unguessable Vercel Blob URL of the PDF. Server-side only —
 //                     never sent to the client or exposed in any response.
 //   FROM_EMAIL      – e.g. "Skill Reality <hello@skillreality.com>"
-//   HUBSPOT_TOKEN   – optional: private-app token with crm.objects.contacts.write
+//   REPLY_TO_EMAIL  – optional: where replies go (founders inbox). Falls back to FROM_EMAIL.
+//   RESEND_AUDIENCE_ID – optional: Resend audience to log deck requesters into
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -62,6 +63,7 @@ export default async function handler(req, res) {
 
   const deckUrl = process.env.DECK_URL;
   const from = process.env.FROM_EMAIL || "Skill Reality <hello@skillreality.com>";
+  const replyTo = process.env.REPLY_TO_EMAIL || from;
   if (!deckUrl || !process.env.RESEND_API_KEY) {
     console.error("request-deck: missing DECK_URL or RESEND_API_KEY env var");
     return res.status(500).json({ error: "Server not configured. Please try again later." });
@@ -80,6 +82,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         from,
         to: email,
+        reply_to: replyTo,
         subject: "Skill Reality — Investor Deck",
         html: `
         <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:520px;margin:0 auto;color:#0d1218">
@@ -106,30 +109,26 @@ export default async function handler(req, res) {
     return res.status(502).json({ error: "Couldn't send the email. Try again." });
   }
 
-  // 2) Log the lead to HubSpot — best-effort. We await (a fire-and-forget call
-  //    can be dropped when the serverless function freezes) but wrap in
-  //    try/catch and a short timeout so it can never fail or stall the user.
-  if (process.env.HUBSPOT_TOKEN) {
+  // 2) Log the requester to a Resend audience — best-effort. We await (a
+  //    fire-and-forget call can be dropped when the serverless function
+  //    freezes) but wrap in try/catch and a short timeout so it can never
+  //    fail or stall the user response.
+  if (process.env.RESEND_AUDIENCE_ID) {
     try {
-      await fetch("https://api.hubapi.com/crm/v3/objects/contacts", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.HUBSPOT_TOKEN}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          properties: {
-            email,
-            ...(body.name ? { firstname: String(body.name) } : {}),
-            ...(body.company ? { company: String(body.company) } : {}),
-            lifecyclestage: "lead",
-            hs_lead_status: "NEW",
+      await fetch(
+        `https://api.resend.com/audiences/${process.env.RESEND_AUDIENCE_ID}/contacts`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+            "Content-Type": "application/json",
           },
-        }),
-        signal: AbortSignal.timeout(4000),
-      });
+          body: JSON.stringify({ email, unsubscribed: false }),
+          signal: AbortSignal.timeout(4000),
+        }
+      );
     } catch (e) {
-      console.error("request-deck: HubSpot log failed (non-blocking):", e);
+      console.error("request-deck: Resend audience log failed (non-blocking):", e);
     }
   }
 

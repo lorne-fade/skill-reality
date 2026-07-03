@@ -18,28 +18,29 @@ never lives in a public path.
 2. Add and verify `skillreality.com` as a sending domain (3 DNS records).
 3. Create an API key → this becomes `RESEND_API_KEY`.
 
-## 3. HubSpot logging — optional (3 min)
-1. HubSpot → Settings → Integrations → Private Apps → create one with
-   `crm.objects.contacts.write`.
-2. Copy the token → this becomes `HUBSPOT_TOKEN`.
+## 3. Resend audience — optional (2 min)
+1. Resend → Audiences → create one (or use the default).
+2. Copy its ID → this becomes `RESEND_AUDIENCE_ID`.
 
-Every deck request lands in HubSpot as a new lead (`lifecyclestage=lead`,
-`hs_lead_status=NEW`). If `HUBSPOT_TOKEN` is unset, this step is silently
+Every deck request is added to that audience (`unsubscribed: false`) using the
+same `RESEND_API_KEY`. If `RESEND_AUDIENCE_ID` is unset, this step is silently
 skipped — the user still gets the deck.
 
 ## 4. Env vars (Vercel → Project → Settings → Environment Variables)
 ```
-RESEND_API_KEY = re_xxxx
-DECK_URL       = https://xxxx.public.blob.vercel-storage.com/Skill_Reality_....pdf
-FROM_EMAIL     = Skill Reality <hello@skillreality.com>
-HUBSPOT_TOKEN  = pat-na1-xxxx        (optional)
+RESEND_API_KEY     = re_xxxx
+DECK_URL           = https://xxxx.public.blob.vercel-storage.com/Skill_Reality_....pdf
+FROM_EMAIL         = Skill Reality <hello@skillreality.com>
+REPLY_TO_EMAIL     = founders@skillreality.com   (optional; defaults to FROM_EMAIL)
+RESEND_AUDIENCE_ID = aud_xxxx                     (optional)
 ```
 `DECK_URL` is read server-side only — it is never sent to the browser or
 returned in any API response.
 
 ## 5. What's already wired
 - `api/request-deck.js` — the serverless function (validation, honeypot,
-  5 req/min per-IP rate limit, Resend link-email, best-effort HubSpot upsert).
+  5 req/min per-IP rate limit, Resend link-email with reply-to the founders
+  inbox, best-effort add to a Resend audience).
 - The **"For investors"** card in `index.html` posts to it and shows
   idle → sending → sent / error states inline.
 
