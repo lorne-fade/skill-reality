@@ -85,18 +85,41 @@ export default async function handler(req, res) {
         reply_to: replyTo,
         subject: "Skill Reality — Investor Deck",
         html: `
-        <div style="font-family:'Helvetica Neue',Arial,sans-serif;max-width:520px;margin:0 auto;color:#0d1218">
-          <h2 style="margin:24px 0 6px;font-size:22px;letter-spacing:-0.5px">Skill Reality</h2>
-          <p style="font-size:15px;line-height:1.6;color:#333">Thanks for your interest. Here's the investor deck:</p>
-          <p style="margin:26px 0">
-            <a href="${deckUrl}"
-               style="background:#1B74BC;color:#ffffff;padding:13px 26px;text-decoration:none;border-radius:8px;display:inline-block;font-weight:700;font-size:15px">
-              Download the deck (PDF)
-            </a>
-          </p>
-          <p style="font-size:15px;line-height:1.6;color:#333">If you'd like a walkthrough, just reply to this email — it goes straight to the founders.</p>
-          <p style="color:#8a94a6;font-size:12.5px;margin-top:32px">Skill Reality · skillreality.com · Launching 2027</p>
-        </div>`,
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;margin:0;padding:0">
+          <tr><td align="center" style="padding:32px 16px">
+            <table role="presentation" width="560" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:560px;background:#ffffff;font-family:'Helvetica Neue',Arial,sans-serif">
+              <!-- wordmark + thin blue rule (light-only; dark bg breaks Gmail dark mode) -->
+              <tr><td style="padding:0 8px 12px">
+                <div style="font-size:17px;font-weight:700;letter-spacing:3px;color:#0d1218">SKILL REALITY</div>
+              </td></tr>
+              <tr><td style="padding:0 8px"><div style="height:2px;line-height:2px;font-size:0;background:#5ba8e6">&nbsp;</div></td></tr>
+              <!-- intro -->
+              <tr><td style="padding:26px 8px 0;font-size:16px;line-height:1.6;color:#0d1218">Thanks for your interest — here's the investor deck.</td></tr>
+              <!-- proof line -->
+              <tr><td style="padding:12px 8px 0;font-size:14px;line-height:1.6;color:#6b7280">10 years of enterprise VR training. 100+ deployments for Toyota, Siemens, and Coca-Cola.</td></tr>
+              <!-- deck cover, full width, rounded, linked to the deck -->
+              <tr><td style="padding:26px 8px 0">
+                <a href="${deckUrl}" style="display:block;text-decoration:none">
+                  <img src="https://skillreality.com/deck-cover.jpg" alt="Skill Reality Investor Deck" width="544" style="display:block;width:100%;height:auto;border:1px solid #e6e9ee;border-radius:12px" />
+                </a>
+              </td></tr>
+              <!-- download button -->
+              <tr><td style="padding:24px 8px 0">
+                <a href="${deckUrl}" style="background:#1B74BC;color:#ffffff;padding:13px 26px;text-decoration:none;border-radius:8px;display:inline-block;font-weight:700;font-size:15px">Download the deck (PDF)</a>
+              </td></tr>
+              <!-- sign-off -->
+              <tr><td style="padding:32px 8px 0;font-size:15px;line-height:1.6;color:#333">If you'd like a walkthrough, just reply — this goes straight to my inbox.</td></tr>
+              <tr><td style="padding:18px 8px 0;font-size:14px;line-height:1.7;color:#0d1218">
+                <strong>Lorne Fade</strong><br />
+                Co-founder, Skill Reality <span style="color:#8a94a6">(a VR Vision company)</span><br />
+                <a href="https://www.linkedin.com/in/lornefade" style="color:#1B74BC;text-decoration:none">linkedin.com/in/lornefade</a>
+              </td></tr>
+              <!-- footer -->
+              <tr><td style="padding:28px 8px 0"><div style="height:1px;line-height:1px;font-size:0;background:#e6e9ee">&nbsp;</div></td></tr>
+              <tr><td style="padding:16px 8px 0;font-size:12.5px;line-height:1.5;color:#8a94a6">Skill Reality · skillreality.com · Raising seed · Launching 2027</td></tr>
+            </table>
+          </td></tr>
+        </table>`,
       }),
     });
   } catch (e) {
