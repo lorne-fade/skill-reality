@@ -108,6 +108,10 @@
   @media (max-width: 820px) {
     [data-cta-grid] { grid-template-columns: 1fr !important; }
   }
+  /* proof strip: shrink on mobile so it fits ~two lines */
+  @media (max-width: 720px) {
+    [data-proof] { font-size: 10px !important; letter-spacing: 0 !important; line-height: 1.7 !important; }
+  }
   /* short-viewport fit for the pinned How-It-Works block */
   @media (min-width: 721px) and (max-height: 830px) {
     [data-hiw-sticky] { padding: 20px 0 !important; }
@@ -144,7 +148,7 @@
         <span data-sr-hide-m style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(240,244,248,0.6); letter-spacing: 0.5px;">FRONTLINE PERFORMANCE AI</span>
       </div>
     </div>
-    <a href="#contact" style="font-size: 14px; font-weight: 600; color: #F0F4F8; text-decoration: none; border: 1px solid rgba(240,244,248,0.2); border-radius: 100px; padding: 8px 18px; transition: border-color 0.25s, color 0.25s;" style-hover="border-color: {{ accent }}; color: {{ accent }};">Get in touch</a>
+    <a href="#contact" onClick="{{ scrollToInvestor }}" style="font-size: 14px; font-weight: 600; color: #F0F4F8; text-decoration: none; border: 1px solid rgba(240,244,248,0.2); border-radius: 100px; padding: 8px 18px; transition: border-color 0.25s, color 0.25s;" style-hover="border-color: {{ accent }}; color: {{ accent }};">Request the deck</a>
   </nav>
 
   <!-- ============ HERO ============ -->
@@ -160,11 +164,12 @@
           RAISING SEED · LAUNCHING 2027
         </div>
         <h1 data-sr-hero-h style="font-size: 74px; line-height: 1.0; font-weight: 800; letter-spacing: -2.8px; margin: 0 0 24px; animation: srFadeUp 0.45s ease-out 0.07s both;">Training that follows you <span style="background: linear-gradient(100deg, {{ accent }}, #6fc0ff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">onto&nbsp;the&nbsp;job.</span></h1>
-        <p style="font-size: 19px; line-height: 1.55; color: rgba(240,244,248,0.65); max-width: 480px; margin: 0 0 40px; animation: srFadeUp 0.45s ease-out 0.14s both;">AI-guided performance support through smart glasses — real-time, hands-free direction for frontline industrial workers, at the moment of performance.</p>
+        <p style="font-size: 19px; line-height: 1.55; color: rgba(240,244,248,0.65); max-width: 480px; margin: 0 0 40px; animation: srFadeUp 0.45s ease-out 0.14s both;">An AI coach on smart glasses that sees what a frontline worker sees and talks them through the job: hands-free, step by step, on real equipment.</p>
         <div data-sr-row style="display: flex; gap: 14px; animation: srFadeUp 0.45s ease-out 0.21s both;">
           <a href="#contact" onClick="{{ scrollToInvestor }}" data-magnetic style="display: inline-flex; align-items: center; justify-content: center; background: {{ accent }}; color: #fff; font-weight: 700; font-size: 15px; padding: 15px 28px; border-radius: 10px; text-decoration: none; letter-spacing: -0.2px; transition: box-shadow 0.3s ease-out, background 0.25s;" style-hover="background: #2585d1; box-shadow: 0 0 32px rgba(27,116,188,0.45);">Request the investor deck</a>
           <a href="#contact" onClick="{{ scrollToPartner }}" data-magnetic style="display: inline-flex; align-items: center; justify-content: center; color: #F0F4F8; font-weight: 600; font-size: 15px; padding: 15px 28px; border-radius: 10px; text-decoration: none; border: 1px solid rgba(240,244,248,0.22); letter-spacing: -0.2px; transition: border-color 0.25s, color 0.25s, box-shadow 0.3s ease-out;" style-hover="border-color: {{ accent }}; color: {{ accent }}; box-shadow: 0 0 24px rgba(27,116,188,0.2);">Become a design partner</a>
         </div>
+        <div data-proof style="margin-top: 26px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.8px; line-height: 1.75; color: rgba(240,244,248,0.4); max-width: 540px; animation: srFadeUp 0.45s ease-out 0.28s both;">BUILT BY THE TEAM BEHIND VR VISION · 10 YEARS · 100+ ENTERPRISE DEPLOYMENTS · TOYOTA · SIEMENS · COCA-COLA</div>
       </div>
 
       <!-- live looping HUD demo -->
@@ -250,6 +255,7 @@
             <circle cx="250" cy="172" r="4" fill="rgba(240,244,248,0.5)"></circle>
           </g>
         </svg>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.5px; line-height: 1.5; color: rgba(240,244,248,0.3); margin-top: 18px;">Based on Ebbinghaus forgetting curve research and industry retention studies.</div>
       </div>
     </div>
   </section>
@@ -551,8 +557,8 @@
         </div>
         <div style="border: 1px solid rgba(240,244,248,0.08); border-radius: 16px; padding: 28px; background: #0A0F14;">
           <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 1.5px; color: {{ accent }}; margin-bottom: 14px;">WHY NOW</div>
-          <div style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8; line-height: 1;">2027</div>
-          <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">the first all-day, hands-free smart glasses reach enterprise scale — and Skill Reality launches with them.</div>
+          <div style="font-size: 40px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8; line-height: 1;">MAY 2026</div>
+          <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">Meta opened display glasses to developers. We're building the training layer while the platform is still empty.</div>
         </div>
       </div>
       <div data-reveal style="border: 1px solid rgba(27,116,188,0.28); background: rgba(27,116,188,0.05); border-radius: 16px; padding: 26px 28px; max-width: 780px;">
@@ -610,9 +616,42 @@
 
   <div style="height: 1px; background: linear-gradient(90deg, transparent, rgba(27,116,188,0.4), transparent);"></div>
 
+  <!-- ============ TEAM ============ -->
+  <section data-sr-pad style="position: relative; overflow: hidden; padding: 104px 48px; background: #090D12;">
+    <div data-sr-num style="position: absolute; right: -20px; top: 30px; font-size: 220px; font-weight: 800; letter-spacing: -8px; color: rgba(240,244,248,0.028); line-height: 1; pointer-events: none; user-select: none;">08</div>
+    <div style="position: relative; max-width: 1100px; margin: 0 auto;">
+      <div data-reveal style="max-width: 640px; margin-bottom: 52px;">
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: {{ accent }}; margin-bottom: 20px;">THE TEAM</div>
+        <h2 data-sr-h2 style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.08; margin: 0;">Built by operators, not tourists.</h2>
+      </div>
+      <div data-reveal data-sr-grid2 style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <a href="https://www.linkedin.com/in/ronicerga/" target="_blank" rel="noopener" data-lift style="display: flex; gap: 22px; align-items: center; border: 1px solid rgba(240,244,248,0.1); border-radius: 20px; padding: 30px; background: #0A0F14; text-decoration: none;">
+          <img src="assets/roni.jpg" alt="Roni Cerga" width="92" height="92" loading="lazy" style="flex-shrink: 0; width: 92px; height: 92px; border-radius: 16px; object-fit: cover; border: 1px solid rgba(240,244,248,0.14);">
+          <div style="min-width: 0;">
+            <div style="font-size: 19px; font-weight: 800; letter-spacing: -0.4px; color: #F0F4F8;">Roni Cerga</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1px; color: {{ accent }}; margin: 6px 0 10px;">CO-FOUNDER &amp; CEO</div>
+            <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.6);">Co-founded VR Vision; 10 years running enterprise XR deployments for Fortune 500 clients.</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 1px; color: rgba(240,244,248,0.4); margin-top: 12px;">LINKEDIN ↗</div>
+          </div>
+        </a>
+        <a href="https://www.linkedin.com/in/lornefade/" target="_blank" rel="noopener" data-lift style="display: flex; gap: 22px; align-items: center; border: 1px solid rgba(240,244,248,0.1); border-radius: 20px; padding: 30px; background: #0A0F14; text-decoration: none;">
+          <img src="assets/lorne.jpg" alt="Lorne Fade" width="92" height="92" loading="lazy" style="flex-shrink: 0; width: 92px; height: 92px; border-radius: 16px; object-fit: cover; border: 1px solid rgba(240,244,248,0.14);">
+          <div style="min-width: 0;">
+            <div style="font-size: 19px; font-weight: 800; letter-spacing: -0.4px; color: #F0F4F8;">Lorne Fade</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1px; color: {{ accent }}; margin: 6px 0 10px;">CO-FOUNDER, CTO &amp; HEAD OF AI</div>
+            <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.6);">Co-founded VR Vision; built the GTM engine behind 100+ enterprise training deployments.</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 1px; color: rgba(240,244,248,0.4); margin-top: 12px;">LINKEDIN ↗</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div style="height: 1px; background: linear-gradient(90deg, transparent, rgba(27,116,188,0.4), transparent);"></div>
+
   <!-- ============ THE RAISE ============ -->
   <section data-sr-pad style="position: relative; overflow: hidden; padding: 104px 48px; background: #090D12;">
-    <div data-sr-num style="position: absolute; left: -20px; top: 30px; font-size: 220px; font-weight: 800; letter-spacing: -8px; color: rgba(240,244,248,0.028); line-height: 1; pointer-events: none; user-select: none;">08</div>
+    <div data-sr-num style="position: absolute; left: -20px; top: 30px; font-size: 220px; font-weight: 800; letter-spacing: -8px; color: rgba(240,244,248,0.028); line-height: 1; pointer-events: none; user-select: none;">09</div>
     <div style="position: relative; max-width: 1100px; margin: 0 auto;">
       <div data-reveal style="max-width: 700px; margin-bottom: 52px;">
         <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: {{ accent }}; margin-bottom: 20px;">THE RAISE</div>
@@ -627,7 +666,7 @@
           <div style="position: absolute; right: 14px; bottom: 14px; width: 12px; height: 12px; border-right: 2px solid rgba(27,116,188,0.55); border-bottom: 2px solid rgba(27,116,188,0.55);"></div>
           <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 1.5px; color: rgba(240,244,248,0.5); margin-bottom: 18px;">01 · PRODUCT &amp; PLATFORM</div>
           <div style="font-size: 36px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8; line-height: 1;"><span data-count="45">0</span>%</div>
-          <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 12px;">Build the guidance engine and the author-once workflow builder across wearables.</div>
+          <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 12px;">Build the guidance engine and the tools that turn any SOP into glasses-ready guidance.</div>
         </div>
         <div data-lift style="position: relative; overflow: hidden; border: 1px solid rgba(240,244,248,0.1); border-radius: 18px; padding: 32px 26px 28px; background: #0A0F14;">
           <div style="position: absolute; left: 14px; top: 14px; width: 12px; height: 12px; border-left: 2px solid rgba(27,116,188,0.55); border-top: 2px solid rgba(27,116,188,0.55);"></div>

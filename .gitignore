@@ -1,6 +1,9 @@
 # Investor deck is hosted on Vercel Blob (DECK_URL) — never commit the PDF
 assets/*.pdf
 
+# Full-res headshot backups (originals kept locally, web versions are committed)
+assets/*-orig.*
+
 # Vercel / local
 .vercel
 .env
