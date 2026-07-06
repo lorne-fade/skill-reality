@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- Lock the glasses viewport: fixed 600x600, no zoom -->
+  <meta name="viewport" content="width=600, height=600, initial-scale=1.0, user-scalable=no">
+  <meta name="description" content="Skill Reality Hazard Watch — real-time worksite hazard alerts from the glasses' motion sensors, plus an AI vision-scan preview for Meta Ray-Ban Display.">
+  <!-- Identify as MRBD-compatible -->
+  <meta name="mrbd-web-app-capable" content="yes">
+  <link rel="icon" href="icon-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <title>Skill Reality — Hazard Watch</title>
+  <style>
+    :root {
+      --blue:#1B74BC; --blue-bright:#4AA3E8; --blue-dim:rgba(74,163,232,0.26); --blue-faint:rgba(74,163,232,0.10);
+      --white:#F0F4F8; --amber:#F0B429; --green:#3DDC97; --red:#ff5a6e; --muted:rgba(240,244,248,0.55);
+      --ui:'Hanken Grotesk',-apple-system,system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+    }
+    * { box-sizing: border-box; -webkit-user-select: none; user-select: none; }
+    html, body {
+      margin: 0; padding: 0; width: 600px; height: 600px; overflow: hidden;
+      background: #000; color: var(--white); font-family: var(--ui); cursor: none;
+    }
+    .mono { font-family: var(--mono); }
+
+    .screen { position: absolute; inset: 0; width: 600px; height: 600px; display: none; }
+    .screen.active { display: flex; flex-direction: column; }
+
+    /* ---------- landing ---------- */
+    #enable { padding: 40px; align-items: center; justify-content: center; text-align: center; }
+    .lockup { display: flex; align-items: center; gap: 11px; margin-bottom: 22px; }
+    .lockup img { width: 26px; height: 26px; object-fit: contain; display: block; }
+    .wordmark { font-family: var(--ui); font-weight: 800; font-size: 19px; letter-spacing: -0.3px; color: #fff; }
+    .lk-div { width: 1px; height: 12px; background: rgba(240,244,248,0.22); }
+    .descriptor { font-family: var(--mono); font-size: 11px; letter-spacing: 0.5px; color: rgba(240,244,248,0.6); text-transform: uppercase; }
+    .title { font-family: var(--ui); font-size: 42px; font-weight: 800; letter-spacing: -1px; margin: 0 0 14px; }
+    .lede { font-size: 18px; line-height: 1.5; color: var(--muted); max-width: 460px; margin: 0 0 36px; }
+
+    /* ---------- shared bits ---------- */
+    .topbar { height: 40px; display: flex; align-items: center; justify-content: space-between; flex: 0 0 auto; }
+    .topbar .name { font-family: var(--ui); font-size: 15px; letter-spacing: 2px; color: var(--blue-bright); text-transform: uppercase; }
+    .chip { font-size: 14px; letter-spacing: 1px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--blue-dim); color: var(--muted); }
+    .chip.live { color: var(--green); border-color: rgba(61,220,151,0.55); }
+    .chip.sim  { color: var(--amber); border-color: rgba(240,180,41,0.55); }
+    .chip.preview { color: var(--amber); border-color: rgba(240,180,41,0.55); }
+    .panel { border: 2px solid var(--blue-dim); border-radius: 14px; background: rgba(27,116,188,0.14); padding: 14px; min-height: 88px; position: relative; }
+    .plabel { font-family: var(--ui); font-size: 14px; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; }
+    .focusable { transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease; }
+    .focusable:focus { outline: none; border-color: var(--blue-bright); background: rgba(27,116,188,0.28); box-shadow: 0 0 22px rgba(74,163,232,0.4); }
+    .btn {
+      border: 2px solid var(--blue-dim); border-radius: 14px; background: rgba(27,116,188,0.14);
+      color: var(--white); font-family: var(--ui); font-size: 20px; font-weight: 700; letter-spacing: 0.5px;
+      display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 88px; padding: 0 14px;
+      transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+    }
+    .btn .ic { font-size: 24px; color: var(--blue-bright); }
+    .hint { font-size: 15px; color: var(--muted); letter-spacing: 0.5px; text-align: center; padding-top: 6px; }
+    .kbd { display: inline-block; border: 1px solid var(--blue-dim); border-radius: 6px; padding: 1px 7px; color: var(--blue-bright); font-size: 14px; }
+
+    /* ---------- menu ---------- */
+    #menu { padding: 22px 24px 14px; }
+    #menu .cards { display: flex; flex-direction: column; gap: 12px; margin-top: 6px; }
+    .mcard { display: flex; align-items: center; gap: 16px; border: 2px solid var(--blue-dim); border-radius: 14px; background: rgba(27,116,188,0.14); padding: 0 18px; min-height: 96px; text-align: left; color: var(--white); }
+    .mcard .mi { font-size: 30px; width: 40px; text-align: center; color: var(--blue-bright); }
+    .mcard .mt { font-family: var(--ui); font-size: 21px; font-weight: 700; }
+    .mcard .md { font-size: 14px; color: var(--muted); margin-top: 2px; }
+    .mcard .arw { margin-left: auto; color: var(--blue-bright); font-size: 24px; opacity: 0.5; }
+    .focusable:focus .arw { opacity: 1; }
+    .alerts { margin-top: 16px; }
+    .alerts .ah { font-family: var(--ui); font-size: 12px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+    .arow { display: flex; align-items: center; gap: 10px; font-size: 14px; padding: 5px 0; border-top: 1px solid rgba(238,244,251,0.07); }
+    .arow .adot { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); flex: 0 0 auto; }
+    .arow .adot.high { background: var(--red); } .arow .adot.ppe { background: var(--blue-bright); }
+    .arow .at { flex: 1; } .arow .am { color: var(--muted); }
+    .aempty { font-size: 14px; color: var(--muted); padding-top: 4px; }
+
+    /* ---------- monitor ---------- */
+    #monitor { padding: 16px 18px 12px; gap: 12px; }
+    .status {
+      flex: 0 0 auto; border-radius: 16px; border: 2px solid var(--green); background: rgba(61,220,151,0.10);
+      padding: 20px 22px; display: flex; align-items: center; gap: 18px; min-height: 132px;
+      transition: border-color 200ms, background 200ms;
+    }
+    .status .sic { font-size: 54px; line-height: 1; }
+    .status .stext { flex: 1; }
+    .status .sbig { font-family: var(--ui); font-size: 34px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.05; }
+    .status .ssub { font-size: 16px; color: var(--muted); margin-top: 6px; }
+    .status.clear { border-color: var(--green); background: rgba(61,220,151,0.10); }
+    .status.clear .sic, .status.clear .sbig { color: var(--green); }
+    .status.caution { border-color: var(--amber); background: rgba(240,180,41,0.12); }
+    .status.caution .sic, .status.caution .sbig { color: var(--amber); }
+    .status.hazard { border-color: var(--red); background: rgba(255,90,110,0.14); animation: hazPulse 0.9s ease-in-out infinite; }
+    .status.hazard .sic, .status.hazard .sbig { color: var(--red); }
+    @keyframes hazPulse { 0%,100% { box-shadow: 0 0 0 rgba(255,90,110,0); } 50% { box-shadow: 0 0 30px rgba(255,90,110,0.5); } }
+
+    .reads { display: flex; gap: 12px; flex: 0 0 auto; height: 118px; }
+    .reads .panel { flex: 1; display: flex; flex-direction: column; }
+    .reads .big { font-family: var(--ui); font-size: 40px; font-weight: 800; line-height: 1; margin-top: auto; }
+    .reads .big small { font-size: 17px; color: var(--muted); font-weight: 600; }
+    .reads .warnv { color: var(--amber); } .reads .dangerv { color: var(--red); }
+    .mfoot { display: flex; gap: 12px; flex: 0 0 auto; height: 90px; margin-top: auto; }
+    .mfoot .btn { flex: 1; }
+    .btn.ackready { border-color: var(--red); background: rgba(255,90,110,0.18); }
+    .btn.ackready .ic { color: var(--red); }
+
+    /* ---------- vision (simulated) ---------- */
+    #vision { padding: 16px 18px 12px; gap: 10px; }
+    .viewport { position: relative; flex: 1 1 auto; border: 1px solid var(--blue-dim); border-radius: 12px; overflow: hidden;
+      background:
+        linear-gradient(rgba(74,163,232,0.05) 1px, transparent 1px) 0 0/100% 34px,
+        linear-gradient(90deg, rgba(74,163,232,0.05) 1px, transparent 1px) 0 0/34px 100%,
+        radial-gradient(120% 90% at 50% 120%, rgba(27,116,188,0.16), transparent 60%);
+    }
+    .scenetag { position: absolute; top: 10px; left: 12px; font-family: var(--mono); font-size: 12px; letter-spacing: 1px; color: var(--blue-bright); opacity: 0.8; }
+    .detcount { position: absolute; top: 10px; right: 12px; font-family: var(--mono); font-size: 12px; letter-spacing: 1px; color: var(--muted); }
+    .scanline { position: absolute; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--blue-bright), transparent); box-shadow: 0 0 12px rgba(74,163,232,0.7); animation: scan 2.6s linear infinite; }
+    @keyframes scan { 0% { top: 2%; opacity: 0; } 8% { opacity: 1; } 92% { opacity: 1; } 100% { top: 98%; opacity: 0; } }
+    /* framing reticle corners */
+    .retic { position: absolute; width: 22px; height: 22px; border: 2px solid rgba(74,163,232,0.5); }
+    .retic.tl { top: 8px; left: 8px; border-right: 0; border-bottom: 0; }
+    .retic.tr { top: 8px; right: 8px; border-left: 0; border-bottom: 0; }
+    .retic.bl { bottom: 8px; left: 8px; border-right: 0; border-top: 0; }
+    .retic.br { bottom: 8px; right: 8px; border-left: 0; border-top: 0; }
+    /* dim scene shapes */
+    .shape { position: absolute; border: 1px solid rgba(74,163,232,0.22); border-radius: 4px; }
+    /* hazard detection boxes */
+    .hbox { position: absolute; border: 2px solid var(--amber); border-radius: 4px; opacity: 0; animation: lockOn 320ms ease forwards; }
+    .hbox .hlabel { position: absolute; top: -22px; left: -2px; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.5px;
+      background: var(--amber); color: #10151b; padding: 2px 7px; border-radius: 4px 4px 4px 0; white-space: nowrap; }
+    .hbox.high { border-color: var(--red); } .hbox.high .hlabel { background: var(--red); color:#1a0d10; }
+    .hbox.med { border-color: var(--amber); } .hbox.med .hlabel { background: var(--amber); }
+    .hbox.ppe { border-color: var(--blue-bright); } .hbox.ppe .hlabel { background: var(--blue-bright); color:#0b1622; }
+    .hbox .corner { position: absolute; width: 10px; height: 10px; border: 2px solid currentColor; }
+    @keyframes lockOn { from { opacity: 0; transform: scale(1.14); } to { opacity: 1; transform: scale(1); } }
+    .advisory { flex: 0 0 auto; border: 2px solid var(--blue-dim); border-radius: 12px; background: rgba(27,116,188,0.14); padding: 12px 14px; min-height: 74px; display: flex; align-items: center; gap: 12px; }
+    .advisory .aic { font-size: 26px; }
+    .advisory .atop { font-family: var(--ui); font-size: 17px; font-weight: 700; }
+    .advisory .aact { font-size: 14px; color: var(--muted); margin-top: 2px; }
+    .vfoot { display: flex; gap: 12px; flex: 0 0 auto; height: 88px; }
+    .vfoot .btn { flex: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== LANDING ===================== -->
+  <section id="enable" class="screen active">
+    <div class="lockup"><img src="icon-192.png" alt="Skill Reality"><span class="wordmark">Skill Reality</span><span class="lk-div"></span><span class="descriptor">Frontline Performance AI</span></div>
+    <h1 class="title">Hazard Watch</h1>
+    <p class="lede">Real-time worksite hazard alerts from the glasses' onboard motion sensors — plus a preview of AI vision-based hazard spotting.</p>
+    <button id="enableBtn" class="btn focusable" data-action="enable" style="width: 340px; height: 92px; font-size: 22px;">
+      <span class="ic">◎</span> Begin Monitoring
+    </button>
+    <p class="hint" style="margin-top:14px"><span class="kbd">← ↑ ↓ →</span> move &nbsp;·&nbsp; <span class="kbd">Enter</span> select</p>
+  </section>
+
+  <!-- ===================== MENU ===================== -->
+  <section id="menu" class="screen">
+    <div class="topbar"><div class="name">◆ Hazard Watch</div><div id="menuChip" class="chip">CONNECTING…</div></div>
+    <div class="cards">
+      <button class="mcard focusable" data-action="open-monitor">
+        <span class="mi">⚠</span>
+        <span><span class="mt">Live Hazard Monitor</span><br><span class="md">Incline · impact · man-down — from real sensors</span></span>
+        <span class="arw">›</span>
+      </button>
+      <button class="mcard focusable" data-action="open-vision">
+        <span class="mi">◉</span>
+        <span><span class="mt">AI Vision Scan</span><br><span class="md">Camera hazard detection — concept preview</span></span>
+        <span class="arw">›</span>
+      </button>
+    </div>
+    <div class="alerts" id="alerts"></div>
+    <div class="hint"><span class="kbd">↑ ↓</span> choose &nbsp;·&nbsp; <span class="kbd">Enter</span> open</div>
+  </section>
+
+  <!-- ===================== MONITOR ===================== -->
+  <section id="monitor" class="screen">
+    <div class="topbar"><div class="name">◆ Live Monitor</div><div id="monChip" class="chip">CONNECTING…</div></div>
+    <div id="statusBox" class="status clear">
+      <div class="sic" id="statusIc">✓</div>
+      <div class="stext"><div class="sbig" id="statusBig">AREA CLEAR</div><div class="ssub" id="statusSub">No hazards detected — sensors nominal.</div></div>
+    </div>
+    <div class="reads">
+      <div class="panel"><div class="plabel">Incline</div><div class="big mono"><span id="incVal">0</span><small>°</small></div></div>
+      <div class="panel"><div class="plabel">Motion</div><div class="big mono"><span id="gVal">1.00</span><small> G</small></div></div>
+      <div class="panel"><div class="plabel">Peak</div><div class="big mono"><span id="peakVal">1.00</span><small> G</small></div></div>
+    </div>
+    <div class="mfoot">
+      <button id="ackBtn" class="btn focusable" data-action="ack"><span class="ic">✓</span> <span id="ackLbl">All Clear</span></button>
+      <button class="btn focusable" data-action="menu" style="flex:0 0 170px"><span class="ic">⌂</span> Menu</button>
+    </div>
+  </section>
+
+  <!-- ===================== VISION (SIMULATED) ===================== -->
+  <section id="vision" class="screen">
+    <div class="topbar"><div class="name">◉ AI Vision Scan</div><div class="chip preview">● PREVIEW · SIMULATED</div></div>
+    <div class="viewport" id="viewport">
+      <div class="retic tl"></div><div class="retic tr"></div><div class="retic bl"></div><div class="retic br"></div>
+      <div class="scanline"></div>
+      <div class="scenetag" id="sceneTag">—</div>
+      <div class="detcount" id="detCount">DETECTIONS 0</div>
+      <!-- shapes + hazard boxes injected here -->
+    </div>
+    <div class="advisory">
+      <div class="aic" id="advIc">⚠</div>
+      <div><div class="atop" id="advTop">Scanning…</div><div class="aact" id="advAct">Point the glasses at the work area.</div></div>
+    </div>
+    <div class="vfoot">
+      <button id="nextBtn" class="btn focusable" data-action="next-scene"><span class="ic">↻</span> Next Area</button>
+      <button class="btn focusable" data-action="menu" style="flex:0 0 170px"><span class="ic">⌂</span> Menu</button>
+    </div>
+  </section>
+
+  <script>
+  (function () {
+    "use strict";
+    var DPAD = { UP:'ArrowUp', DOWN:'ArrowDown', LEFT:'ArrowLeft', RIGHT:'ArrowRight', SELECT:'Enter', BACK:'Escape' };
+
+    // ---------- state ----------
+    var state = { g:1, peak:1, hdgOffset:0, pitchOffset:0, rollOffset:0, got:false, sim:false, enabled:false, started:false };
+    var raw = { p:0, r:0, g:1 };
+    var nav = { screen:'enable' };
+
+    // hazard tracking
+    var hz = { level:'clear', label:'', sub:'', manDown:false, manDownAt:0, vibSince:0, lastG:1, curKey:'' };
+
+    // ---------- hazard log (persisted) ----------
+    function logGet(){ try { return JSON.parse(localStorage.getItem('sr_hazard_log')||'[]'); } catch(e){ return []; } }
+    function logPush(entry){ var a=logGet(); a.unshift(entry); a=a.slice(0,4); try { localStorage.setItem('sr_hazard_log', JSON.stringify(a)); } catch(e){} }
+
+    // ---------- screens ----------
+    function show(id){
+      var s = document.querySelectorAll('.screen');
+      for (var i=0;i<s.length;i++) s[i].classList.remove('active');
+      document.getElementById(id).classList.add('active');
+      nav.screen = id;
+      var first = document.querySelector('#'+id+' .focusable');
+      if (first) first.focus();
+    }
+    function focusables(){ var a=document.querySelector('.screen.active'); return Array.prototype.slice.call(a.querySelectorAll('.focusable:not([disabled])')); }
+    function moveFocus(dir){ var f=focusables(); if(!f.length) return; var i=f.indexOf(document.activeElement);
+      if(i===-1){ f[0].focus(); return; } var n=(dir==='prev')?(i>0?i-1:f.length-1):(i<f.length-1?i+1:0); f[n].focus(); }
+
+    // ---------- sensors ----------
+    function onOrient(e){ if(e.alpha===null&&e.beta===null&&e.gamma===null) return; mark();
+      raw.p = e.beta!=null?e.beta:raw.p; raw.r = e.gamma!=null?e.gamma:raw.r; }
+    function onMotion(e){ var a=e.accelerationIncludingGravity; if(a&&a.x!=null){ mark(); raw.g = Math.sqrt(a.x*a.x+a.y*a.y+a.z*a.z)/9.81; } }
+    function mark(){ if(!state.got){ state.got=true; state.sim=false; setStatusChips('live'); } }
+
+    function startSensors(){ if(state.started) return; state.started=true;
+      var DOE=window.DeviceOrientationEvent;
+      function attach(){ window.addEventListener('deviceorientation',onOrient); window.addEventListener('devicemotion',onMotion);
+        setTimeout(function(){ if(!state.got){ state.sim=true; setStatusChips('sim'); } },1500); }
+      if(DOE && typeof DOE.requestPermission==='function'){
+        DOE.requestPermission().then(function(s){ if(s==='granted'){ reqMotion(); } else { state.sim=true; setStatusChips('sim'); } })
+          .catch(function(){ state.sim=true; setStatusChips('sim'); });
+      } else attach();
+      function reqMotion(){ var DME=window.DeviceMotionEvent;
+        if(DME && typeof DME.requestPermission==='function'){ DME.requestPermission().then(attach).catch(attach); } else attach(); }
+    }
+    function setStatusChips(kind){
+      [['menuChip'],['monChip']].forEach(function(x){ var c=document.getElementById(x[0]); if(!c) return;
+        c.className='chip'+(kind==='live'?' live':kind==='sim'?' sim':'');
+        c.textContent = kind==='live'?'● LIVE':kind==='sim'?'● SIMULATED':'CONNECTING…'; });
+    }
+
+    // ---------- simulation timeline (desktop preview only) ----------
+    // Drives raw.p / raw.r / raw.g through a repeating scenario so every hazard
+    // state is visible without real motion. On the glasses (real sensors) this
+    // never runs — state.sim stays false and your own movement drives it.
+    function simDrive(){
+      var t = (Date.now()/1000) % 26;
+      var p=0, r=0, g=1 + Math.sin(Date.now()/300)*0.03;
+      if (t < 4)      { /* calm */ }
+      else if (t < 9) { var k=(t-4)/5; r = k*36; p = k*10; }              // incline ramps into danger
+      else if (t <12) { var k=(12-t)/3; r = k*36; p = k*10; }             // ease back
+      else if (t <15) { g = 1 + Math.abs(Math.sin((t-12)*12))*1.1; }      // vibration burst
+      else if (t <16) { /* calm */ }
+      else if (t <16.4){ g = 2.7; }                                       // impact spike -> man-down
+      else            { g = 1 + Math.sin(Date.now()/500)*0.02; }          // lying still after impact
+      raw.p = p; raw.r = r; raw.g = g;
+    }
+
+    // ---------- hazard evaluation ----------
+    var IMPACT_G = 2.2, VIB_G = 1.75, INC_CAUTION = 15, INC_DANGER = 30;
+    function evalHazard(){
+      var p = raw.p - state.pitchOffset, r = raw.r - state.rollOffset;
+      var incline = Math.max(Math.abs(p), Math.abs(r));
+      var g = raw.g;
+      if (g > state.peak) state.peak = g;
+
+      // impact -> man-down (sticky until acknowledged)
+      if (!hz.manDown && g - hz.lastG > (IMPACT_G - 1) && g > IMPACT_G) { hz.manDown = true; hz.manDownAt = Date.now(); }
+      hz.lastG = g;
+
+      var level='clear', label='', sub='';
+      if (hz.manDown) {
+        level='hazard';
+        var secs = Math.max(0, 12 - Math.floor((Date.now()-hz.manDownAt)/1000));
+        label='IMPACT · MAN DOWN'; sub='Possible fall detected — auto-alert in '+secs+'s. Enter = I\'m OK.';
+        if (secs<=0) { hz.manDown=false; hz.manDownAt=0; }               // would have escalated to supervisor
+      } else if (incline >= INC_DANGER) {
+        level='hazard'; label='UNSAFE INCLINE'; sub=Math.round(incline)+'° tilt — fall / rollover risk. Correct footing.';
+      } else if (g >= VIB_G) {
+        if (!hz.vibSince) hz.vibSince = Date.now();
+        if (Date.now()-hz.vibSince > 1200) { level='caution'; label='HIGH VIBRATION'; sub=g.toFixed(1)+' G sustained — check tool / footing.'; }
+      } else if (incline >= INC_CAUTION) {
+        level='caution'; label='INCLINE CAUTION'; sub=Math.round(incline)+'° tilt — mind your balance.';
+      }
+      if (g < VIB_G) hz.vibSince = 0;
+
+      // edge-log new hazards
+      var key = level==='clear' ? '' : level+':'+label;
+      if (key && key !== hz.curKey) {
+        var sev = level==='hazard' ? 'high' : 'med';
+        logPush({ label:label, sev:sev, time:clock() });
+        renderAlerts();
+      }
+      hz.curKey = key; hz.level = level; hz.label = label; hz.sub = sub;
+      hz.incline = incline;
+    }
+    function clock(){ var d=new Date(); function z(n){ return (n<10?'0':'')+n; } return z(d.getHours())+':'+z(d.getMinutes()); }
+
+    // ---------- monitor render ----------
+    var mel = {
+      box: document.getElementById('statusBox'), ic: document.getElementById('statusIc'),
+      big: document.getElementById('statusBig'), sub: document.getElementById('statusSub'),
+      inc: document.getElementById('incVal'), g: document.getElementById('gVal'), peak: document.getElementById('peakVal'),
+      ackBtn: document.getElementById('ackBtn'), ackLbl: document.getElementById('ackLbl')
+    };
+    var _lastCls = '', _lastIncCls = '';
+    function renderMonitor(){
+      var lv = hz.level;
+      // Only rewrite class when it changes — reassigning every frame restarts
+      // the CSS border-color transition and freezes it mid-way.
+      var cls = 'status ' + lv;
+      if (cls !== _lastCls) { mel.box.className = cls; _lastCls = cls; }
+      mel.ic.textContent = lv==='hazard' ? '⚠' : lv==='caution' ? '△' : '✓';
+      mel.big.textContent = lv==='clear' ? 'AREA CLEAR' : hz.label;
+      mel.sub.textContent = lv==='clear' ? 'No hazards detected — sensors nominal.' : hz.sub;
+      mel.inc.textContent = Math.round(hz.incline||0);
+      var incCls = 'big mono' + ((hz.incline>=INC_DANGER)?' dangerv':(hz.incline>=INC_CAUTION)?' warnv':'');
+      if (incCls !== _lastIncCls) { mel.inc.parentElement.className = incCls; _lastIncCls = incCls; }
+      mel.g.textContent = raw.g.toFixed(2);
+      mel.peak.textContent = state.peak.toFixed(2);
+      // acknowledge button reflects man-down
+      if (hz.manDown) { mel.ackBtn.classList.add('ackready'); mel.ackLbl.textContent = "I'm OK"; mel.ackBtn.querySelector('.ic').textContent='✚'; }
+      else { mel.ackBtn.classList.remove('ackready'); mel.ackLbl.textContent = 'All Clear'; mel.ackBtn.querySelector('.ic').textContent='✓'; }
+    }
+    function acknowledge(){ if(hz.manDown){ hz.manDown=false; hz.manDownAt=0; } state.peak = raw.g; }
+
+    // ---------- alerts list (menu) ----------
+    function renderAlerts(){
+      var el = document.getElementById('alerts'); var log = logGet();
+      if (!log.length) { el.innerHTML = '<div class="ah">Recent alerts</div><div class="aempty">No alerts yet — start the monitor to log hazards.</div>'; return; }
+      el.innerHTML = '<div class="ah">Recent alerts</div>' + log.map(function(a){
+        return '<div class="arow"><span class="adot '+(a.sev||'')+'"></span><span class="at">'+a.label+'</span><span class="am mono">'+a.time+'</span></div>';
+      }).join('');
+    }
+
+    // ---------- vision (simulated) ----------
+    var SCENES = [
+      { name:'LOADING DOCK', hazards:[
+        { x:44,  y:96,  w:150, h:120, label:'SPILL · SLIP',     sev:'high', action:'Cordon and clean the spill before transit.' },
+        { x:360, y:70,  w:172, h:150, label:'BLOCKED EXIT',     sev:'med',  action:'Clear the egress path.' } ] },
+      { name:'MACHINE SHOP', hazards:[
+        { x:96,  y:64,  w:186, h:158, label:'MISSING GUARD',    sev:'high', action:'Fit the coupling guard before start-up.' },
+        { x:392, y:120, w:126, h:96,  label:'NO EYE PPE',       sev:'ppe',  action:'Don safety glasses.' } ] },
+      { name:'ELECTRICAL ROOM', hazards:[
+        { x:60,  y:80,  w:150, h:140, label:'EXPOSED WIRING',   sev:'high', action:'De-energize and lock out the panel.' },
+        { x:286, y:206, w:242, h:64,  label:'WET FLOOR',        sev:'med',  action:'Dry the floor and post signage.' } ] },
+      { name:'WAREHOUSE', hazards:[
+        { x:52,  y:60,  w:132, h:168, label:'UNSTABLE STACK',   sev:'high', action:'Restack and band the load.' },
+        { x:250, y:150, w:180, h:118, label:'FORKLIFT PATH',    sev:'med',  action:'Yield to the traffic lane.' },
+        { x:470, y:56,  w:96,  h:92,  label:'NO HARD HAT',      sev:'ppe',  action:'Don a hard hat.' } ] }
+    ];
+    var sevRank = { high:3, med:2, ppe:1 };
+    var vIdx = 0, vTimer = null, detTotal = 0;
+    function severityWord(s){ return s==='high'?'High':s==='med'?'Medium':'PPE'; }
+    function renderScene(idx){
+      var vp = document.getElementById('viewport');
+      // clear previous boxes/shapes
+      Array.prototype.slice.call(vp.querySelectorAll('.hbox,.shape')).forEach(function(n){ n.remove(); });
+      var sc = SCENES[idx];
+      document.getElementById('sceneTag').textContent = '▣ ' + sc.name;
+      // dim backdrop shapes (schematic scene)
+      var shapes = [ [30,150,120,110],[200,60,150,90],[300,180,200,80],[470,40,90,120] ];
+      shapes.forEach(function(s,i){ if(i>=sc.hazards.length+1) return; var d=document.createElement('div'); d.className='shape';
+        d.style.cssText='left:'+s[0]+'px;top:'+s[1]+'px;width:'+s[2]+'px;height:'+s[3]+'px;'; vp.appendChild(d); });
+      // hazard boxes, staggered lock-on
+      var top=null;
+      sc.hazards.forEach(function(h,i){
+        var b=document.createElement('div'); b.className='hbox '+h.sev;
+        b.style.cssText='left:'+h.x+'px;top:'+h.y+'px;width:'+h.w+'px;height:'+h.h+'px;animation-delay:'+(i*260)+'ms;';
+        b.innerHTML='<span class="hlabel">'+h.label+'</span>'
+          +'<span class="corner" style="top:-2px;left:-2px;border-right:0;border-bottom:0"></span>'
+          +'<span class="corner" style="top:-2px;right:-2px;border-left:0;border-bottom:0"></span>'
+          +'<span class="corner" style="bottom:-2px;left:-2px;border-right:0;border-top:0"></span>'
+          +'<span class="corner" style="bottom:-2px;right:-2px;border-left:0;border-top:0"></span>';
+        vp.appendChild(b);
+        if (!top || sevRank[h.sev] > sevRank[top.sev]) top = h;
+      });
+      detTotal += sc.hazards.length;
+      document.getElementById('detCount').textContent = 'DETECTIONS ' + sc.hazards.length;
+      // advisory = highest-severity hazard
+      var icon = top.sev==='high'?'⚠':top.sev==='ppe'?'◈':'△';
+      document.getElementById('advIc').textContent = icon;
+      document.getElementById('advTop').textContent = severityWord(top.sev)+' · '+top.label.replace(/ ·.*/,'');
+      document.getElementById('advAct').textContent = top.action;
+    }
+    function nextScene(){ vIdx = (vIdx+1) % SCENES.length; renderScene(vIdx); resetVTimer(); }
+    function resetVTimer(){ if(vTimer) clearInterval(vTimer); vTimer = setInterval(function(){ if(nav.screen==='vision') nextScene(); }, 5200); }
+    function enterVision(){ detTotal=0; vIdx=0; renderScene(0); resetVTimer(); show('vision'); }
+    function leaveVision(){ if(vTimer){ clearInterval(vTimer); vTimer=null; } }
+
+    // ---------- actions ----------
+    function act(el){
+      var a = el.getAttribute('data-action');
+      if (a==='enable') { startSensors(); renderAlerts(); show('menu'); }
+      else if (a==='open-monitor') { show('monitor'); }
+      else if (a==='open-vision') { enterVision(); }
+      else if (a==='menu') { leaveVision(); show('menu'); }
+      else if (a==='ack') { acknowledge(); }
+      else if (a==='next-scene') { nextScene(); }
+    }
+
+    // ---------- keyboard (D-pad) ----------
+    document.addEventListener('keydown', function(e){
+      var s = nav.screen;
+      if (e.key===DPAD.UP || e.key===DPAD.LEFT) moveFocus('prev');
+      else if (e.key===DPAD.DOWN || e.key===DPAD.RIGHT) moveFocus('next');
+      else if (e.key===DPAD.SELECT) { var el=document.activeElement; if(el && el.classList.contains('focusable')) act(el); }
+      else if (e.key===DPAD.BACK) { if(s==='monitor'||s==='vision'){ leaveVision(); show('menu'); } else if(s==='menu'){ show('enable'); } }
+      else return;
+      e.preventDefault();
+    });
+
+    // ---------- main loop ----------
+    function loop(){
+      if (state.sim) simDrive();
+      evalHazard();
+      if (nav.screen==='monitor') renderMonitor();
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+
+    renderAlerts();
+    document.getElementById('enableBtn').focus();
+  })();
+  </script>
+</body>
+</html>
