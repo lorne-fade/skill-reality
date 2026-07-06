@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Skill Reality — Phase 2: hazard-class taxonomy and dataset strategy for on-glasses hazard detection.">
+<link rel="icon" href="/favicon/icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
+<title>Skill Reality — Phase 2 · Detection Model</title>
+<style>html,body{margin:0;padding:0;background:#080A0E}</style>
+</head>
+<body>
+<style>
+  :root{
+    --bg:#080A0E; --bg2:#0C1219; --bg3:#111B24; --line:rgba(120,162,204,0.15);
+    --ink:#EAF1F8; --mut:#94A6B8; --dim:rgba(234,241,248,0.46);
+    --blue:#1B74BC; --bright:#4AA3E8; --green:#3DDC97; --amber:#F0B429; --red:#FF5A6E;
+    --sans:'Hanken Grotesk',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+    --wrap:900px;
+  }
+  *{box-sizing:border-box}
+  .page{background:radial-gradient(120% 60% at 50% -10%, rgba(27,116,188,0.16), transparent 55%), var(--bg);
+    color:var(--ink); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased; padding:0 20px 96px;}
+  .wrap{max-width:var(--wrap); margin:0 auto}
+  .eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:2.5px; text-transform:uppercase; color:var(--bright)}
+  h1,h2,h3{text-wrap:balance; margin:0; font-weight:800; letter-spacing:-0.02em}
+  .mono{font-family:var(--mono)} em{color:var(--ink); font-style:italic}
+
+  .top{padding:60px 0 38px; border-bottom:1px solid var(--line)}
+  .brandrow{display:flex; align-items:center; gap:10px; margin-bottom:24px}
+  .glyph{width:26px;height:26px;border-radius:6px;flex:0 0 auto;
+    background:conic-gradient(from 210deg at 50% 50%, var(--blue), var(--bright), var(--blue));
+    -webkit-mask:radial-gradient(circle at 50% 42%, transparent 22%, #000 23%); mask:radial-gradient(circle at 50% 42%, transparent 22%, #000 23%);}
+  .brandrow .bn{font-weight:800; font-size:15px} .brandrow .bd{font-family:var(--mono); font-size:11px; letter-spacing:1px; color:var(--dim); text-transform:uppercase; border-left:1px solid var(--line); padding-left:10px}
+  h1{font-size:clamp(30px,5vw,48px); line-height:1.03; margin:14px 0 0}
+  h1 .accent{color:var(--bright)}
+  .lede{font-size:18px; color:var(--mut); max-width:64ch; margin:16px 0 0}
+  .metastrip{display:flex; flex-wrap:wrap; gap:8px; margin-top:24px}
+  .chip{display:inline-flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11.5px; letter-spacing:0.4px; padding:5px 11px; border-radius:100px; border:1px solid var(--line); color:var(--mut); white-space:nowrap}
+  .chip::before{content:""; width:7px;height:7px;border-radius:50%; background:currentColor; flex:0 0 auto}
+  .chip.now{color:var(--green); border-color:rgba(61,220,151,0.4)}
+  .chip.gate{color:var(--amber); border-color:rgba(240,180,41,0.4)}
+  .chip.new{color:var(--bright); border-color:rgba(74,163,232,0.42)}
+
+  section{padding:50px 0 0}
+  .kick{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:20px}
+  .kick h2{font-size:clamp(21px,3.2vw,27px)}
+  .kick .n{font-family:var(--mono); font-size:13px; color:var(--dim)}
+  .sub{color:var(--mut); max-width:66ch; margin:-6px 0 24px}
+
+  /* tiers */
+  .tier{border:1px solid var(--line); border-radius:16px; background:var(--bg2); margin-bottom:14px; overflow:hidden}
+  .tierhead{display:flex; align-items:center; gap:14px; padding:15px 20px; border-bottom:1px solid var(--line); background:var(--bg3)}
+  .tierhead .tn{font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:4px 10px; border-radius:7px}
+  .tier.t1 .tn{color:var(--green); background:rgba(61,220,151,0.1); border:1px solid rgba(61,220,151,0.3)}
+  .tier.t2 .tn{color:var(--amber); background:rgba(240,180,41,0.1); border:1px solid rgba(240,180,41,0.3)}
+  .tier.t3 .tn{color:var(--red); background:rgba(255,90,110,0.1); border:1px solid rgba(255,90,110,0.3)}
+  .tierhead .tt{font-size:15px; font-weight:700}
+  .tierhead .td{font-size:12.5px; color:var(--mut); margin-left:auto; text-align:right}
+  .classes{display:flex; flex-direction:column}
+  .cl{display:grid; grid-template-columns:1fr auto auto; gap:12px; align-items:center; padding:12px 20px; border-top:1px solid var(--line)}
+  .cl:first-child{border-top:0}
+  .cl .cn{font-size:14.5px; font-weight:600}
+  .cl .cd{font-size:12px; color:var(--mut); margin-top:1px}
+  .pill{font-family:var(--mono); font-size:10px; letter-spacing:0.4px; padding:3px 8px; border-radius:5px; white-space:nowrap; text-align:center}
+  .sev-crit{color:var(--red); background:rgba(255,90,110,0.1); border:1px solid rgba(255,90,110,0.28)}
+  .sev-high{color:var(--amber); background:rgba(240,180,41,0.1); border:1px solid rgba(240,180,41,0.28)}
+  .sev-med{color:var(--bright); background:rgba(74,163,232,0.1); border:1px solid rgba(74,163,232,0.28)}
+  .dif{color:var(--mut); background:var(--bg3); border:1px solid var(--line)}
+
+  /* three-source cards */
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+  .card{background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:20px}
+  .card h3{font-size:16px; display:flex; align-items:center; gap:9px}
+  .card .ico{width:26px;height:26px;border-radius:7px; display:grid; place-items:center; font-size:13px; background:rgba(74,163,232,0.14); color:var(--bright); flex:0 0 auto}
+  .card p{margin:11px 0 13px; font-size:13px; color:var(--mut)}
+  .card .tag{font-family:var(--mono); font-size:10.5px; padding:3px 8px; border-radius:6px; background:var(--bg3); color:var(--mut); border:1px solid var(--line); display:inline-block; margin:0 4px 4px 0}
+  .card .foot{margin-top:10px; padding-top:12px; border-top:1px solid var(--line); font-size:12px}
+  .card .foot.g{color:var(--green)} .card .foot.a{color:var(--amber)} .card .foot.b{color:var(--bright)}
+
+  /* moat callout */
+  .moat{border:1px solid rgba(74,163,232,0.35); border-radius:16px; background:linear-gradient(180deg, rgba(27,116,188,0.14), var(--bg2)); padding:26px 28px}
+  .moat .lab{font-family:var(--mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--bright); margin-bottom:10px}
+  .moat h3{font-size:21px; margin-bottom:10px}
+  .moat p{margin:0; font-size:15px; color:var(--mut); max-width:70ch}
+  .moat .flow{display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; font-family:var(--mono); font-size:11.5px}
+  .moat .flow span{padding:6px 12px; border-radius:8px; background:var(--bg3); border:1px solid var(--line); color:var(--ink)}
+  .moat .flow .ar{border:0; background:transparent; color:var(--bright); padding:6px 2px}
+
+  /* two-col lists */
+  .split{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  .listcard{background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:22px}
+  .listcard h3{font-size:16px; margin-bottom:14px}
+  .listcard ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:11px}
+  .listcard li{font-size:13.5px; color:var(--mut); display:flex; gap:10px; align-items:flex-start}
+  .listcard li b{color:var(--ink); font-weight:600}
+  .listcard li .mk{flex:0 0 auto; font-family:var(--mono); font-size:12px; color:var(--bright); margin-top:1px}
+
+  .tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:14px; background:var(--bg2)}
+  table{border-collapse:collapse; width:100%; min-width:600px; font-size:13.5px}
+  th,td{text-align:left; padding:12px 16px; border-top:1px solid var(--line); vertical-align:top}
+  thead th{border-top:0; font-family:var(--mono); font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--dim); font-weight:500; background:var(--bg3)}
+  td.d{font-weight:600; color:var(--ink); width:26%} td.v{color:var(--mut)}
+
+  .foota{margin-top:52px; padding:24px; border:1px solid var(--line); border-radius:16px; background:linear-gradient(180deg, rgba(27,116,188,0.1), var(--bg2)); font-size:13.5px; color:var(--mut)}
+  .foota b{color:var(--ink)}
+  .disclaimer{margin-top:20px; font-size:12px; color:var(--dim); font-family:var(--mono); line-height:1.7}
+  .disclaimer a{color:var(--mut)}
+
+  @media(max-width:720px){ .grid3,.split{grid-template-columns:1fr} .cl{grid-template-columns:1fr auto; gap:8px} .cl .dif{grid-column:2} .tierhead .td{display:none} }
+</style>
+
+<div class="page">
+<div class="wrap">
+
+  <header class="top">
+    <div class="brandrow"><span class="glyph"></span><span class="bn">Skill Reality</span><span class="bd">Frontline Performance AI</span></div>
+    <div class="eyebrow">Build Map · Phase 2</div>
+    <h1>The detection model —<br><span class="accent">classes &amp; data</span></h1>
+    <p class="lede">This is the longest pole in the build. A hazard the model never learned is a hazard it will never flag — so the model is only ever as good as the classes we define and the images we label. Here's the hazard vocabulary, the tiered rollout, and the data strategy that turns the glasses themselves into the moat.</p>
+    <div class="metastrip">
+      <span class="chip gate">3–5 weeks to a v1 model</span>
+      <span class="chip new">Recall-first</span>
+      <span class="chip now">Data is the moat</span>
+    </div>
+  </header>
+
+  <!-- FRAMING -->
+  <section>
+    <div class="kick"><h2>Recall is the metric that matters</h2></div>
+    <p class="sub">In most vision products a false positive is an annoyance and a false negative is a shrug. Here a false negative is a hazard that walked past unflagged — a safety failure. So we optimize for <em>recall</em> on the safety-critical classes and hold a floor per class. But recall isn't free: a model that cries wolf gets muted, and a muted model catches nothing. The whole job is buying high recall without spending the worker's trust.</p>
+  </section>
+
+  <!-- TAXONOMY -->
+  <section>
+    <div class="kick"><h2>The hazard vocabulary</h2><span class="n">tiered by value × feasibility</span></div>
+    <p class="sub">Fourteen classes across three tiers. We ship the tier that's high-value <em>and</em> well-served by existing data first, then earn our way into the harder ones. Severity drives alert priority; difficulty drives how much custom data each needs.</p>
+
+    <div class="tier t1">
+      <div class="tierhead"><span class="tn">Tier 1</span><span class="tt">Ship first — static, high-value, public data exists</span><span class="td">weeks 1–3</span></div>
+      <div class="classes">
+        <div class="cl"><span><span class="cn">No hard hat</span><div class="cd">Head PPE absent in a work zone</div></span><span class="pill sev-crit">Critical</span><span class="pill dif">Well-served</span></div>
+        <div class="cl"><span><span class="cn">No hi-vis vest</span><div class="cd">High-visibility clothing absent</div></span><span class="pill sev-high">High</span><span class="pill dif">Well-served</span></div>
+        <div class="cl"><span><span class="cn">No eye protection</span><div class="cd">Safety glasses absent at task</div></span><span class="pill sev-high">High</span><span class="pill dif">Medium</span></div>
+        <div class="cl"><span><span class="cn">Spill / wet floor</span><div class="cd">Liquid on walking surface</div></span><span class="pill sev-high">High</span><span class="pill dif">Medium</span></div>
+        <div class="cl"><span><span class="cn">Blocked exit / egress</span><div class="cd">Obstructed doorway or path</div></span><span class="pill sev-high">High</span><span class="pill dif">Medium</span></div>
+      </div>
+    </div>
+
+    <div class="tier t2">
+      <div class="tierhead"><span class="tn">Tier 2</span><span class="tt">Custom data — static, thinner public coverage</span><span class="td">after Tier 1 lands</span></div>
+      <div class="classes">
+        <div class="cl"><span><span class="cn">Missing machine guard</span><div class="cd">Exposed moving/rotating part</div></span><span class="pill sev-crit">Critical</span><span class="pill dif">Hard</span></div>
+        <div class="cl"><span><span class="cn">Exposed / damaged wiring</span><div class="cd">Live conductor or frayed cable</div></span><span class="pill sev-crit">Critical</span><span class="pill dif">Hard</span></div>
+        <div class="cl"><span><span class="cn">Unstable stacking</span><div class="cd">Over-height or leaning load</div></span><span class="pill sev-high">High</span><span class="pill dif">Medium</span></div>
+        <div class="cl"><span><span class="cn">Trailing cable / trip</span><div class="cd">Cord across a walkway</div></span><span class="pill sev-med">Medium</span><span class="pill dif">Medium</span></div>
+        <div class="cl"><span><span class="cn">Open panel / LOTO gap</span><div class="cd">Energized panel without lockout</div></span><span class="pill sev-high">High</span><span class="pill dif">Hard</span></div>
+      </div>
+    </div>
+
+    <div class="tier t3">
+      <div class="tierhead"><span class="tn">Tier 3</span><span class="tt">Spatial &amp; dynamic — needs depth or motion reasoning</span><span class="td">research track</span></div>
+      <div class="classes">
+        <div class="cl"><span><span class="cn">Person–vehicle proximity</span><div class="cd">Worker in a forklift's path</div></span><span class="pill sev-crit">Critical</span><span class="pill dif">Very hard</span></div>
+        <div class="cl"><span><span class="cn">Person under suspended load</span><div class="cd">Worker beneath a lifted object</div></span><span class="pill sev-crit">Critical</span><span class="pill dif">Very hard</span></div>
+        <div class="cl"><span><span class="cn">Unguarded edge / opening</span><div class="cd">Fall exposure at height</div></span><span class="pill sev-crit">Critical</span><span class="pill dif">Hard</span></div>
+        <div class="cl"><span><span class="cn">No fall harness at height</span><div class="cd">Working elevated, unclipped</div></span><span class="pill sev-crit">Critical</span><span class="pill dif">Hard</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY HARD -->
+  <section>
+    <div class="kick"><h2>Why worksite vision is hard</h2></div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Challenge</th><th>What it does to the model — and the answer</th></tr></thead>
+        <tbody>
+          <tr><td class="d">Small, distant objects</td><td class="v">A hard hat 15 m away is a few pixels. Keep input resolution up, tile the frame, and weight small-object recall in training.</td></tr>
+          <tr><td class="d">Occlusion &amp; clutter</td><td class="v">PPE and guards get half-hidden by bodies and gear. Needs varied, real-world angles — exactly what stock data lacks.</td></tr>
+          <tr><td class="d">POV motion blur</td><td class="v">A head-worn camera never holds still. Train on motion-blurred frames; don't only label crisp stills.</td></tr>
+          <tr><td class="d">Class imbalance</td><td class="v">Hazards are rare in footage — thousands of "fine" frames per violation. Mine hard negatives; oversample the rare classes.</td></tr>
+          <tr><td class="d">The domain gap</td><td class="v">Public data is CCTV and stock photography; the product sees worker-POV. This is the core problem — and the opportunity below.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- DATA SOURCES -->
+  <section>
+    <div class="kick"><h2>Where the data comes from</h2><span class="n">three sources, one flywheel</span></div>
+    <div class="grid3">
+      <div class="card">
+        <h3><span class="ico">▤</span> Public — bootstrap</h3>
+        <p>Get Tier 1 PPE moving in days, not weeks. Strong open sets exist for helmets, vests, and glasses.</p>
+        <div><span class="tag">SH17 · 8k img / 17 cls</span><span class="tag">Roboflow Construction Safety</span><span class="tag">CHV hardhat/vest</span></div>
+        <div class="foot a">⚠ Licenses vary — SH17 is research-only. Vet before any commercial train.</div>
+      </div>
+      <div class="card">
+        <h3><span class="ico">◉</span> Proprietary — the moat</h3>
+        <p>Capture POV footage from the glasses on real and mock sites, then label it. This closes the domain gap and no competitor has it.</p>
+        <div><span class="tag">Glasses POV capture</span><span class="tag">Mock-site staging</span><span class="tag">Pilot footage</span></div>
+        <div class="foot g">✓ The defensible asset — starts with Phase 0/1 spike frames.</div>
+      </div>
+      <div class="card">
+        <h3><span class="ico">◇</span> Synthetic — the gaps</h3>
+        <p>For hazards you can't safely stage — a missing guard on live equipment — render and augment with domain randomization.</p>
+        <div><span class="tag">Rendered scenes</span><span class="tag">Copy-paste aug</span><span class="tag">Domain randomization</span></div>
+        <div class="foot b">◆ Fills rare, dangerous classes without staging risk.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOAT -->
+  <section>
+    <div class="moat">
+      <div class="lab">The insight worth building around</div>
+      <h3>The glasses are the data flywheel</h3>
+      <p>Every competitor can download the same public datasets — so a model trained only on them isn't a moat, it's a commodity. What no one else has is <em>worker-POV footage of your customers' actual hazards</em>, captured by the same camera that will run inference. Wire the pipeline so every pilot frame can be reviewed, labeled, and folded back into training. The product improves itself the more it's worn.</p>
+      <div class="flow">
+        <span>Glasses capture</span><span class="ar">→</span><span>Uncertain frames surfaced</span><span class="ar">→</span><span>Labeled</span><span class="ar">→</span><span>Retrain</span><span class="ar">→</span><span>Better on-device model</span><span class="ar">↺</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PIPELINE + EVAL -->
+  <section>
+    <div class="kick"><h2>Labeling &amp; evaluation</h2></div>
+    <div class="split">
+      <div class="listcard">
+        <h3>Labeling pipeline</h3>
+        <ul>
+          <li><span class="mk">01</span><span><b>Ontology first.</b> Precise class definitions with the edge cases written down — partial PPE, distance thresholds, "when is a cable a trip hazard."</span></li>
+          <li><span class="mk">02</span><span><b>Tooling.</b> CVAT / Roboflow / Labelbox for bounding boxes; a schema every annotator shares.</span></li>
+          <li><span class="mk">03</span><span><b>QA.</b> Multi-annotator on a sample, measure inter-annotator agreement, adjudicate disagreements.</span></li>
+          <li><span class="mk">04</span><span><b>Active learning.</b> The model surfaces its most uncertain frames; label those next, not random ones.</span></li>
+          <li><span class="mk">05</span><span><b>Volume.</b> ~1–2k instances per class to start; more for the hard, imbalanced ones.</span></li>
+        </ul>
+      </div>
+      <div class="listcard">
+        <h3>Evaluation that tells the truth</h3>
+        <ul>
+          <li><span class="mk">✓</span><span><b>Split by site, not at random.</b> Same-site frames leak; a held-out worksite is the only honest generalization test.</span></li>
+          <li><span class="mk">✓</span><span><b>Headline metric: per-class recall</b> at a fixed precision, with an agreed floor for critical classes (e.g. ≥ 0.90 hard-hat recall).</span></li>
+          <li><span class="mk">✓</span><span><b>False-negatives are the review.</b> Every miss on a critical class gets looked at — that's the safety audit.</span></li>
+          <li><span class="mk">✓</span><span><b>On-device, not lab.</b> Measure the quantized model at target FPS on the phone, not the full model on a workstation.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ETHICS + EXIT -->
+  <section>
+    <div class="kick"><h2>People are in every frame</h2></div>
+    <p class="sub">Detecting PPE means detecting people. That carries obligations, and getting them right is also what makes the product deployable: process on-device, never run face recognition or identify individuals, keep only what training needs, and get site consent before any capture. Design this in from the first labeled frame — retrofitting privacy is how safety tools get banned from the floor.</p>
+    <div class="foota">
+      <b>What Phase 2 ships.</b> A labeled dataset v1 (Tier 1 classes), a quantized Core ML / TFLite model clearing the agreed recall floor on a held-out site at target FPS, an evaluation report that leads with false-negatives, and a running capture → label → retrain loop. That model drops straight into the Phase 1 pipeline and hands Phase 3 something real to reason about. The dataset — not the model — is the asset that compounds.
+    </div>
+    <p class="disclaimer">
+      Dataset references: <a href="https://github.com/ahmadmughees/SH17dataset">SH17</a> (8,099 images / 75,994 instances / 17 classes, research-use license), Roboflow Universe <a href="https://universe.roboflow.com/roboflow-universe-projects/construction-site-safety">Construction Site Safety</a>, and CHV colored-hardhat/vest sets. Class tiers, volume targets, and recall floors are Skill Reality planning choices to validate against pilot data, not fixed requirements. On-device runtime per current YOLO-n / Core ML / TFLite practice.
+    </p>
+  </section>
+
+</div>
+</div>
+</body>
+</html>
