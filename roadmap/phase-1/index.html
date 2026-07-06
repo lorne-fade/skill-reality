@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Skill Reality — Phase 1: the thin vertical slice. One hazard end-to-end on real glasses: pipeline spec, decision rule, and acceptance protocol.">
+<link rel="icon" href="/favicon/icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
+<title>Skill Reality — Phase 1 · Vertical Slice</title>
+<style>html,body{margin:0;padding:0;background:#080A0E}</style>
+</head>
+<body>
+<style>
+  :root{
+    --bg:#080A0E; --bg2:#0C1219; --bg3:#111B24; --line:rgba(120,162,204,0.15);
+    --ink:#EAF1F8; --mut:#94A6B8; --dim:rgba(234,241,248,0.46);
+    --blue:#1B74BC; --bright:#4AA3E8; --green:#3DDC97; --amber:#F0B429; --red:#FF5A6E;
+    --sans:'Hanken Grotesk',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+    --wrap:900px;
+  }
+  *{box-sizing:border-box}
+  .page{background:radial-gradient(120% 60% at 50% -10%, rgba(27,116,188,0.16), transparent 55%), var(--bg);
+    color:var(--ink); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased; padding:0 20px 96px;}
+  .wrap{max-width:var(--wrap); margin:0 auto}
+  .eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:2.5px; text-transform:uppercase; color:var(--bright)}
+  h1,h2,h3{text-wrap:balance; margin:0; font-weight:800; letter-spacing:-0.02em}
+  .mono{font-family:var(--mono)} em{color:var(--ink); font-style:italic}
+
+  .top{padding:60px 0 38px; border-bottom:1px solid var(--line)}
+  .brandrow{display:flex; align-items:center; gap:10px; margin-bottom:24px}
+  .glyph{width:26px;height:26px;border-radius:6px;flex:0 0 auto;
+    background:conic-gradient(from 210deg at 50% 50%, var(--blue), var(--bright), var(--blue));
+    -webkit-mask:radial-gradient(circle at 50% 42%, transparent 22%, #000 23%); mask:radial-gradient(circle at 50% 42%, transparent 22%, #000 23%);}
+  .brandrow .bn{font-weight:800; font-size:15px} .brandrow .bd{font-family:var(--mono); font-size:11px; letter-spacing:1px; color:var(--dim); text-transform:uppercase; border-left:1px solid var(--line); padding-left:10px}
+  h1{font-size:clamp(30px,5vw,48px); line-height:1.03; margin:14px 0 0}
+  h1 .accent{color:var(--bright)}
+  .lede{font-size:18px; color:var(--mut); max-width:64ch; margin:16px 0 0}
+  .metastrip{display:flex; flex-wrap:wrap; gap:8px; margin-top:24px}
+  .chip{display:inline-flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11.5px; letter-spacing:0.4px; padding:5px 11px; border-radius:100px; border:1px solid var(--line); color:var(--mut); white-space:nowrap}
+  .chip::before{content:""; width:7px;height:7px;border-radius:50%; background:currentColor; flex:0 0 auto}
+  .chip.now{color:var(--green); border-color:rgba(61,220,151,0.4)}
+  .chip.gate{color:var(--amber); border-color:rgba(240,180,41,0.4)}
+  .chip.new{color:var(--bright); border-color:rgba(74,163,232,0.42)}
+
+  section{padding:50px 0 0}
+  .kick{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:20px}
+  .kick h2{font-size:clamp(21px,3.2vw,27px)}
+  .kick .n{font-family:var(--mono); font-size:13px; color:var(--dim)}
+  .sub{color:var(--mut); max-width:66ch; margin:-6px 0 24px}
+
+  /* pipeline stages */
+  .pipe{display:flex; flex-direction:column; gap:0}
+  .stage{display:grid; grid-template-columns:64px 1fr; gap:20px; padding:20px 0; border-top:1px solid var(--line)}
+  .stage:first-child{border-top:0}
+  .stage .sn{font-family:var(--mono); font-size:12px; color:var(--bright); position:relative}
+  .stage .sn .num{display:grid; place-items:center; width:40px; height:40px; border-radius:11px; background:rgba(74,163,232,0.12); border:1px solid rgba(74,163,232,0.3); font-size:15px; font-weight:700; color:var(--ink)}
+  .stage h3{font-size:17px; display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+  .stage h3 .tech{font-family:var(--mono); font-size:11px; color:var(--dim); font-weight:400; letter-spacing:0.4px}
+  .stage p{margin:8px 0 0; font-size:14px; color:var(--mut); max-width:66ch}
+  .stage .spec{margin-top:11px; display:flex; flex-wrap:wrap; gap:6px}
+  .tag{font-family:var(--mono); font-size:11px; padding:3px 9px; border-radius:6px; background:var(--bg3); color:var(--mut); border:1px solid var(--line)}
+  .tag.hot{color:var(--bright); border-color:rgba(74,163,232,0.35)}
+
+  /* decision rule card */
+  .rule{border:1px solid rgba(74,163,232,0.35); border-radius:16px; background:linear-gradient(180deg, rgba(27,116,188,0.12), var(--bg2)); padding:22px 26px; margin-top:18px}
+  .rule .lab{font-family:var(--mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--bright); margin-bottom:10px}
+  .rule .logic{font-family:var(--mono); font-size:13px; line-height:1.9; color:var(--ink); overflow-x:auto; white-space:pre}
+  .rule .logic .c{color:var(--dim)} .rule .logic .k{color:var(--bright)} .rule .logic .v{color:var(--amber)}
+  .rule p{margin:12px 0 0; font-size:13px; color:var(--mut)}
+
+  /* variant adapters */
+  .tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:14px; background:var(--bg2)}
+  table{border-collapse:collapse; width:100%; min-width:620px; font-size:13.5px}
+  th,td{text-align:left; padding:12px 16px; border-top:1px solid var(--line); vertical-align:top}
+  thead th{border-top:0; font-family:var(--mono); font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--dim); font-weight:500; background:var(--bg3)}
+  td.d{font-weight:600; color:var(--ink); width:28%} td.v{color:var(--mut)}
+  .b{font-family:var(--mono); font-size:10.5px; padding:3px 8px; border-radius:6px; white-space:nowrap}
+  .b.go{color:var(--green); background:rgba(61,220,151,0.12); border:1px solid rgba(61,220,151,0.3)}
+  .b.adapt{color:var(--amber); background:rgba(240,180,41,0.1); border:1px solid rgba(240,180,41,0.3)}
+  .b.pivot{color:var(--red); background:rgba(255,90,110,0.1); border:1px solid rgba(255,90,110,0.3)}
+
+  /* acceptance protocol */
+  .proto{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  .listcard{background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:22px}
+  .listcard h3{font-size:16px; margin-bottom:14px}
+  .listcard ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:11px}
+  .listcard li{font-size:13.5px; color:var(--mut); display:flex; gap:10px; align-items:flex-start}
+  .listcard li b{color:var(--ink); font-weight:600}
+  .listcard li .mk{flex:0 0 auto; font-family:var(--mono); font-size:12px; color:var(--bright); margin-top:1px}
+  .listcard.pass li .mk{color:var(--green)}
+
+  /* weeks */
+  .days{display:flex; flex-direction:column}
+  .day{display:grid; grid-template-columns:110px 1fr; gap:20px; padding:16px 0; border-top:1px solid var(--line)}
+  .day:first-child{border-top:0}
+  .day .dd{font-family:var(--mono); font-size:12px; color:var(--bright); letter-spacing:0.5px}
+  .day .dt{font-size:14px; color:var(--mut)} .day .dt b{color:var(--ink); font-weight:600}
+
+  /* non-goals */
+  .nongoals{background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:22px 24px}
+  .nongoals h3{font-size:15px; font-family:var(--mono); letter-spacing:1px; text-transform:uppercase; color:var(--dim); font-weight:500; margin-bottom:14px}
+  .nongoals ul{margin:0; padding:0; list-style:none; display:grid; grid-template-columns:1fr 1fr; gap:10px 24px}
+  .nongoals li{font-size:13.5px; color:var(--mut); display:flex; gap:9px; align-items:flex-start}
+  .nongoals li::before{content:"✕"; color:var(--red); font-family:var(--mono); font-size:12px; flex:0 0 auto; margin-top:2px; opacity:.8}
+  .nongoals li b{color:var(--ink); font-weight:600}
+
+  .exit{margin-top:18px; font-size:13px; color:var(--ink); background:var(--bg2); border:1px solid var(--line); border-left:2px solid var(--green); border-radius:0 10px 10px 0; padding:13px 16px}
+  .exit b{color:var(--green); font-family:var(--mono); font-size:11px; letter-spacing:0.8px; text-transform:uppercase; display:block; margin-bottom:3px; font-weight:500}
+
+  .foota{margin-top:52px; padding:24px; border:1px solid var(--line); border-radius:16px; background:linear-gradient(180deg, rgba(27,116,188,0.1), var(--bg2)); font-size:13.5px; color:var(--mut)}
+  .foota b{color:var(--ink)}
+  .disclaimer{margin-top:20px; font-size:12px; color:var(--dim); font-family:var(--mono); line-height:1.7}
+  .disclaimer a{color:var(--mut)}
+
+  @media(max-width:720px){
+    .proto{grid-template-columns:1fr}
+    .nongoals ul{grid-template-columns:1fr}
+    .stage{grid-template-columns:48px 1fr; gap:14px}
+    .day{grid-template-columns:1fr; gap:4px}
+  }
+</style>
+
+<div class="page">
+<div class="wrap">
+
+  <header class="top">
+    <div class="brandrow"><span class="glyph"></span><span class="bn">Skill Reality</span><span class="bd">Frontline Performance AI</span></div>
+    <div class="eyebrow">Build Map · Phase 1</div>
+    <h1>The thin vertical slice —<br><span class="accent">one hazard, end to end</span></h1>
+    <p class="lede">Before widening anything, prove the whole chain once: glasses see a bare head, worker gets a hard-hat alert, within seconds, on real hardware. One hazard, one platform, one alert — every stage real, nothing polished. This is the spec.</p>
+    <div class="metastrip">
+      <span class="chip gate">2–3 weeks</span>
+      <span class="chip new">Consumes Phase 0's answers</span>
+      <span class="chip now">Off-the-shelf model only</span>
+    </div>
+  </header>
+
+  <!-- WHY THIS SHAPE -->
+  <section>
+    <div class="kick"><h2>Why "no hard hat," why one slice</h2></div>
+    <p class="sub">The slice hazard is <em>no hard hat</em> because it maximizes what we prove per week: it's safety-critical, it's the best-served class in public data (pretrained detectors exist — zero training required), a human can stage it safely in seconds, and success is unambiguous. The point of the slice is not the hazard — it's that after it works, every remaining risk in the program is a <em>known kind</em> of work: more classes (Phase 2) and better judgment (Phase 3), on a pipeline that already runs.</p>
+    <p class="sub">One platform only — <b style="color:var(--ink)">iOS first</b> (Core ML on the Neural Engine is the fastest route to on-device FPS; Android/TFLite is an equally viable swap if the team's stronger there). Porting is Phase 5 work, not slice work.</p>
+  </section>
+
+  <!-- PIPELINE -->
+  <section>
+    <div class="kick"><h2>The pipeline, stage by stage</h2><span class="n">five stages · all real · none polished</span></div>
+    <div class="pipe">
+
+      <div class="stage">
+        <div class="sn"><span class="num">1</span></div>
+        <div>
+          <h3>Capture <span class="tech">Device Access SDK → frame buffer</span></h3>
+          <p>Subscribe to the glasses' camera per the M1 answer (stream or periodic pull). Timestamp every frame at arrival, drop stale frames rather than queueing — the detector should always eat the freshest frame, never a backlog.</p>
+          <div class="spec"><span class="tag hot">freshest-frame policy</span><span class="tag">arrival timestamps</span><span class="tag">target: M1's measured FPS</span></div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="sn"><span class="num">2</span></div>
+        <div>
+          <h3>Preprocess <span class="tech">resize · normalize</span></h3>
+          <p>Letterbox to the model's input (640×640), normalize, convert pixel format once — whatever M1 said the glasses deliver (JPEG or YUV) gets converted here and nowhere else.</p>
+          <div class="spec"><span class="tag">640×640 letterbox</span><span class="tag">single conversion point</span></div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="sn"><span class="num">3</span></div>
+        <div>
+          <h3>Detect <span class="tech">off-the-shelf YOLOv8n → Core ML</span></h3>
+          <p>A pretrained construction-safety checkpoint (Roboflow Universe publishes several with <span class="mono">person / hardhat / no-hardhat</span> style classes) exported to Core ML, INT8-quantized, running on the Neural Engine. <em>No custom training in this phase</em> — mediocre accuracy is fine; the slice proves plumbing, Phase 2 buys accuracy.</p>
+          <div class="spec"><span class="tag hot">pretrained only</span><span class="tag">INT8 · ANE</span><span class="tag">budget ~30–60 ms/frame</span><span class="tag">license-vetted checkpoint</span></div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="sn"><span class="num">4</span></div>
+        <div>
+          <h3>Decide <span class="tech">debounced rule, not raw detections</span></h3>
+          <p>Raw per-frame detections flicker; alerting on them destroys trust in an afternoon. The slice ships one explicit, tunable rule — see below — with hysteresis and a cooldown. This tiny rules layer is the seed of Phase 3.</p>
+          <div class="spec"><span class="tag hot">K-of-N confirmation</span><span class="tag">hysteresis</span><span class="tag">cooldown</span></div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="sn"><span class="num">5</span></div>
+        <div>
+          <h3>Alert <span class="tech">HUD card + audio, Hazard Watch language</span></h3>
+          <p>One alert, rendered to whatever surface M3 said exists (card or overlay): <em>"⚠ No hard hat — don a hard hat before entering."</em> Amber/red severity color, one action line, an audio chime — copied verbatim from the Hazard Watch advisory format so the UX is already familiar.</p>
+          <div class="spec"><span class="tag">M3's surface class</span><span class="tag">audio mirror</span><span class="tag">reuse /hazard/ copy</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="rule">
+      <div class="lab">The decision rule · v0 — every constant is a knob, logged with every alert</div>
+      <div class="logic"><span class="k">RAISE</span> when: person detected <span class="c">AND</span> head region lacks hardhat
+            in ≥ <span class="v">3 of last 5</span> frames  <span class="c">(K-of-N confirmation)</span>
+<span class="k">CLEAR</span> when: hardhat present in ≥ <span class="v">3 of last 5</span> frames   <span class="c">(hysteresis — no flicker)</span>
+<span class="k">COOLDOWN</span>: <span class="v">30 s</span> per hazard after raise             <span class="c">(don't nag)</span>
+<span class="k">CONFIDENCE</span>: detection counts only above <span class="v">0.45</span>       <span class="c">(tune against false alarms)</span></div>
+      <p>Tuning these four numbers against the walk-up protocol below <em>is</em> the week-3 work. They ship in the findings memo alongside the latency numbers.</p>
+    </div>
+  </section>
+
+  <!-- VARIANT ADAPTERS -->
+  <section>
+    <div class="kick"><h2>Adapting to Phase 0's verdict</h2><span class="n">the slice bends, it doesn't break</span></div>
+    <p class="sub">Phase 0's decision matrix selects a design variant; the slice absorbs it at exactly two stages — capture cadence and alert surface. Everything else is identical across variants, which is the point of building it as a pipeline.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Phase 0 said</th><th>The slice becomes</th><th></th></tr></thead>
+        <tbody>
+          <tr><td class="d">≥ 10 fps, free-draw display</td><td class="v">Continuous watch; alert renders as a positioned callout. The full demo, for real.</td><td><span class="b go">Ideal</span></td></tr>
+          <tr><td class="d">3–10 fps, or card-only</td><td class="v">Same continuous watch; alert is a glanceable card. K-of-N window widens to match FPS.</td><td><span class="b adapt">Likely</span></td></tr>
+          <tr><td class="d">&lt; 2 fps / &gt; 3 s latency</td><td class="v">On-demand: worker triggers a scan, gets a verdict card. Decision rule collapses to single-shot + confidence.</td><td><span class="b pivot">Reframe</span></td></tr>
+          <tr><td class="d">&lt; 20 min battery</td><td class="v">Capture duty-cycles (N s on / M s off); the acceptance protocol adds a battery leg per cycle mode.</td><td><span class="b adapt">Adapt</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ACCEPTANCE -->
+  <section>
+    <div class="kick"><h2>The walk-up protocol</h2><span class="n">acceptance is measured, not vibed</span></div>
+    <div class="proto">
+      <div class="listcard">
+        <h3>Protocol</h3>
+        <ul>
+          <li><span class="mk">01</span><span><b>Two subjects</b> — one wearing a hard hat, one bare-headed, same clothing otherwise.</span></li>
+          <li><span class="mk">02</span><span><b>Three distances</b> — 3 m, 5 m, 8 m from the wearer.</span></li>
+          <li><span class="mk">03</span><span><b>Two conditions</b> — indoor shop lighting and outdoor daylight.</span></li>
+          <li><span class="mk">04</span><span><b>10 trials per cell</b>, randomized order; wearer walks and turns normally — POV blur is part of the test.</span></li>
+          <li><span class="mk">05</span><span><b>Log everything</b> — per-frame JSONL: timestamps per leg, detections, rule state, alert events; battery snapshot per minute.</span></li>
+        </ul>
+      </div>
+      <div class="listcard pass">
+        <h3>Pass bar (slice-grade, not product-grade)</h3>
+        <ul>
+          <li><span class="mk">✓</span><span><b>≥ 80% alert rate</b> on bare-head trials at 3 m and 5 m.</span></li>
+          <li><span class="mk">✓</span><span><b>Median time-to-alert ≤ 2 s</b> from bare head entering frame (or per the Phase-0-adjusted budget).</span></li>
+          <li><span class="mk">✓</span><span><b>Zero alerts</b> across all hat-worn trials — false alarms are what get the product muted.</span></li>
+          <li><span class="mk">✓</span><span><b>Session survives 30 min</b> continuous (or the duty-cycle equivalent) without a crash or thermal shutdown.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- WEEKS -->
+  <section>
+    <div class="kick"><h2>Week by week</h2></div>
+    <div class="days">
+      <div class="day"><div class="dd">Week 1</div><div class="dt"><b>Skeleton flowing.</b> Phase 0's harness grows into the pipeline: frames land in a stub detector, a hardcoded alert reaches the HUD + audio. Latency legs instrumented from day one — the plumbing is the deliverable.</div></div>
+      <div class="day"><div class="dd">Week 2</div><div class="dt"><b>Real detector in.</b> Export the pretrained checkpoint to Core ML, hit inference budget on-device, wire the decision rule, replace the hardcoded alert with the real raise/clear path.</div></div>
+      <div class="day"><div class="dd">Week 3</div><div class="dt"><b>Tune + prove.</b> Run the walk-up protocol, tune the four knobs, fix what falls out, re-run to the pass bar. Record the demo, write the findings memo.</div></div>
+    </div>
+  </section>
+
+  <!-- NON-GOALS -->
+  <section>
+    <div class="kick"><h2>Deliberately out of scope</h2></div>
+    <div class="nongoals">
+      <h3>The slice stays thin — these wait</h3>
+      <ul>
+        <li><span><b>No custom training.</b> Pretrained weights only; accuracy is Phase 2's job.</span></li>
+        <li><span><b>No second hazard class.</b> One class proves the chain; more prove nothing new.</span></li>
+        <li><span><b>No Android port.</b> One platform; porting is Phase 5.</span></li>
+        <li><span><b>No cloud, no fleet, no dashboard.</b> Logs stay on the phone as files.</span></li>
+        <li><span><b>No UI beyond the one alert.</b> No settings, no history screen, no onboarding.</span></li>
+        <li><span><b>No battery optimization.</b> Measure it, log it, fix it later — unless Phase 0 forced duty-cycling.</span></li>
+      </ul>
+    </div>
+    <div class="exit"><b>Exit criteria</b>Walk up bare-headed, get the alert on the glasses within the budget, zero false alarms with the hat on, 30 minutes without falling over — measured by the protocol, on video, with the numbers in the memo.</div>
+  </section>
+
+  <!-- SHIPS -->
+  <section>
+    <div class="foota">
+      <b>What Phase 1 ships.</b> A working demo on real hardware (recorded), the measured latency table per pipeline leg, the tuned decision-rule constants, a battery/thermal profile, and — the real asset — a pipeline where Phase 2's custom model is a <em>drop-in file replacement</em> at stage 3 and Phase 3's judgment layer is a <em>module swap</em> at stage 4. The slice also starts the data flywheel: every protocol frame is labeled-by-construction (we know who wore the hat) and becomes the first proprietary POV training data for Phase 2.
+    </div>
+    <p class="disclaimer">
+      Depends on Phase 0 outputs: M1 cadence sets the capture mode and K-of-N window, M2 sets the latency budget, M3 sets the alert surface, M4 decides duty-cycling. Pretrained checkpoint licenses vary — vet before use (several Roboflow Universe construction-safety models; SH17-derived weights are research-only). Pass-bar numbers are slice-grade planning defaults, deliberately below the product-grade recall floors defined in Phase 2.
+    </p>
+  </section>
+
+</div>
+</div>
+</body>
+</html>
