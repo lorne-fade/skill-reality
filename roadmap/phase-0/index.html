@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Skill Reality — Phase 0 de-risk spike: five measurements, targets, and the decision matrix for on-glasses hazard vision.">
+<link rel="icon" href="/favicon/icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
+<title>Skill Reality — Phase 0 · De-Risk Spike</title>
+<style>html,body{margin:0;padding:0;background:#080A0E}</style>
+</head>
+<body>
+<style>
+  :root{
+    --bg:#080A0E; --bg2:#0C1219; --bg3:#111B24; --line:rgba(120,162,204,0.15);
+    --ink:#EAF1F8; --mut:#94A6B8; --dim:rgba(234,241,248,0.46);
+    --blue:#1B74BC; --bright:#4AA3E8; --green:#3DDC97; --amber:#F0B429; --red:#FF5A6E;
+    --sans:'Hanken Grotesk',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+    --wrap:900px;
+  }
+  *{box-sizing:border-box}
+  .page{
+    background:radial-gradient(120% 60% at 50% -10%, rgba(27,116,188,0.16), transparent 55%), var(--bg);
+    color:var(--ink); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased; padding:0 20px 96px;
+  }
+  .wrap{max-width:var(--wrap); margin:0 auto}
+  .eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:2.5px; text-transform:uppercase; color:var(--bright)}
+  h1,h2,h3{text-wrap:balance; margin:0; font-weight:800; letter-spacing:-0.02em}
+  .mono{font-family:var(--mono)} .tnum{font-variant-numeric:tabular-nums}
+
+  .top{padding:60px 0 38px; border-bottom:1px solid var(--line)}
+  .brandrow{display:flex; align-items:center; gap:10px; margin-bottom:24px}
+  .glyph{width:26px;height:26px;border-radius:6px;flex:0 0 auto;
+    background:conic-gradient(from 210deg at 50% 50%, var(--blue), var(--bright), var(--blue));
+    -webkit-mask:radial-gradient(circle at 50% 42%, transparent 22%, #000 23%); mask:radial-gradient(circle at 50% 42%, transparent 22%, #000 23%);}
+  .brandrow .bn{font-weight:800; font-size:15px} .brandrow .bd{font-family:var(--mono); font-size:11px; letter-spacing:1px; color:var(--dim); text-transform:uppercase; border-left:1px solid var(--line); padding-left:10px}
+  h1{font-size:clamp(30px,5vw,48px); line-height:1.03; margin:14px 0 0}
+  h1 .accent{color:var(--bright)}
+  .lede{font-size:18px; color:var(--mut); max-width:64ch; margin:16px 0 0}
+  .metastrip{display:flex; flex-wrap:wrap; gap:8px; margin-top:24px}
+  .chip{display:inline-flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11.5px; letter-spacing:0.4px; padding:5px 11px; border-radius:100px; border:1px solid var(--line); color:var(--mut); white-space:nowrap}
+  .chip::before{content:""; width:7px;height:7px;border-radius:50%; background:currentColor; flex:0 0 auto}
+  .chip.now{color:var(--green); border-color:rgba(61,220,151,0.4)}
+  .chip.gate{color:var(--amber); border-color:rgba(240,180,41,0.4)}
+  .chip.new{color:var(--bright); border-color:rgba(74,163,232,0.42)}
+
+  section{padding:50px 0 0}
+  .kick{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:20px}
+  .kick h2{font-size:clamp(21px,3.2vw,27px)}
+  .kick .n{font-family:var(--mono); font-size:13px; color:var(--dim)}
+  .sub{color:var(--mut); max-width:66ch; margin:-6px 0 24px}
+
+  /* prerequisites checklist */
+  .checkgrid{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  .checkcol{background:var(--bg2); border:1px solid var(--line); border-radius:14px; padding:18px 20px}
+  .checkcol h3{font-size:13px; font-family:var(--mono); letter-spacing:1px; text-transform:uppercase; color:var(--dim); font-weight:500; margin-bottom:13px}
+  .checkcol ul{margin:0;padding:0;list-style:none; display:flex; flex-direction:column; gap:10px}
+  .checkcol li{font-size:13.5px; color:var(--mut); display:flex; gap:10px; align-items:flex-start}
+  .checkcol li::before{content:"▢"; color:var(--bright); flex:0 0 auto; font-size:13px; margin-top:1px}
+  .checkcol li b{color:var(--ink); font-weight:600}
+
+  /* two tracks */
+  .tracks{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  .track{background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:20px 22px; position:relative}
+  .track .step{position:absolute; top:18px; right:20px; font-family:var(--mono); font-size:11px; color:var(--dim)}
+  .track h3{font-size:17px; display:flex; align-items:center; gap:9px}
+  .track .ico{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;font-size:13px;background:rgba(74,163,232,0.14);color:var(--bright);flex:0 0 auto}
+  .track p{font-size:13.5px; color:var(--mut); margin:11px 0 0}
+  .track .why{margin-top:12px; font-size:12.5px; color:var(--ink); border-left:2px solid var(--bright); padding-left:11px}
+
+  /* measurement cards */
+  .measures{display:flex; flex-direction:column; gap:14px}
+  .m{background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:0; overflow:hidden}
+  .m .mhead{display:flex; align-items:center; gap:13px; padding:16px 20px; border-bottom:1px solid var(--line); background:var(--bg3)}
+  .m .mid{font-family:var(--mono); font-size:12px; font-weight:700; color:var(--bright); background:rgba(74,163,232,0.12); border:1px solid rgba(74,163,232,0.3); border-radius:7px; padding:4px 9px; flex:0 0 auto}
+  .m .q{font-size:16px; font-weight:700; letter-spacing:-0.01em}
+  .m .mbody{display:grid; grid-template-columns:1fr 1fr; gap:0}
+  .m .cell{padding:15px 20px}
+  .m .cell + .cell{border-left:1px solid var(--line)}
+  .m .lab{font-family:var(--mono); font-size:10.5px; letter-spacing:1px; text-transform:uppercase; color:var(--dim); margin-bottom:7px}
+  .m .cell p{margin:0; font-size:13px; color:var(--mut)}
+  .m .target{color:var(--green); font-weight:600}
+  .m .gate{display:flex; gap:11px; align-items:flex-start; padding:13px 20px; border-top:1px solid var(--line); background:rgba(255,90,110,0.05)}
+  .m .gate .gk{font-family:var(--mono); font-size:10.5px; letter-spacing:0.8px; text-transform:uppercase; color:var(--red); flex:0 0 auto; margin-top:2px}
+  .m .gate p{margin:0; font-size:12.5px; color:var(--mut)}
+
+  /* results table */
+  .tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:14px; background:var(--bg2)}
+  table{border-collapse:collapse; width:100%; min-width:600px; font-size:13.5px}
+  th,td{text-align:left; padding:12px 16px; border-top:1px solid var(--line); vertical-align:middle}
+  thead th{border-top:0; font-family:var(--mono); font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--dim); font-weight:500; background:var(--bg3)}
+  td.metric{font-weight:600; color:var(--ink)} td.tgt{color:var(--mut); font-family:var(--mono); font-size:12.5px}
+  td.fill{color:var(--dim); font-family:var(--mono)}
+  .blank{display:inline-block; min-width:70px; border-bottom:1px dashed rgba(120,162,204,0.4); height:1em}
+
+  /* timeline */
+  .days{display:flex; flex-direction:column}
+  .day{display:grid; grid-template-columns:120px 1fr; gap:20px; padding:16px 0; border-top:1px solid var(--line)}
+  .day:first-child{border-top:0}
+  .day .dd{font-family:var(--mono); font-size:12px; color:var(--bright); letter-spacing:0.5px}
+  .day .dt{font-size:14px; color:var(--mut)} .day .dt b{color:var(--ink); font-weight:600}
+
+  /* decision matrix */
+  .matrix{overflow-x:auto; border:1px solid var(--line); border-radius:14px; background:var(--bg2)}
+  .matrix table{min-width:660px}
+  td.out{width:38%; color:var(--ink); font-weight:600}
+  td.cons{width:52%; color:var(--mut)}
+  td.badge{width:10%}
+  .b{font-family:var(--mono); font-size:10.5px; padding:3px 8px; border-radius:6px; white-space:nowrap}
+  .b.go{color:var(--green); background:rgba(61,220,151,0.12); border:1px solid rgba(61,220,151,0.3)}
+  .b.adapt{color:var(--amber); background:rgba(240,180,41,0.1); border:1px solid rgba(240,180,41,0.3)}
+  .b.pivot{color:var(--red); background:rgba(255,90,110,0.1); border:1px solid rgba(255,90,110,0.3)}
+
+  .foota{margin-top:52px; padding:24px; border:1px solid var(--line); border-radius:16px; background:linear-gradient(180deg, rgba(27,116,188,0.1), var(--bg2)); font-size:13.5px; color:var(--mut)}
+  .foota b{color:var(--ink)}
+  .foota .out{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+  .disclaimer{margin-top:20px; font-size:12px; color:var(--dim); font-family:var(--mono); line-height:1.7}
+
+  @media(max-width:720px){
+    .checkgrid,.tracks{grid-template-columns:1fr}
+    .m .mbody{grid-template-columns:1fr} .m .cell + .cell{border-left:0; border-top:1px solid var(--line)}
+    .day{grid-template-columns:1fr; gap:4px}
+  }
+</style>
+
+<div class="page">
+<div class="wrap">
+
+  <header class="top">
+    <div class="brandrow"><span class="glyph"></span><span class="bn">Skill Reality</span><span class="bd">Frontline Performance AI</span></div>
+    <div class="eyebrow">Build Map · Phase 0</div>
+    <h1>The <span class="accent">de-risk</span> spike</h1>
+    <p class="lede">One to two weeks, a throwaway harness, and five measurements that decide the whole architecture. Meta ships the camera, audio, and display access — but not the numbers. This spike gets the numbers before a line of product code is written.</p>
+    <div class="metastrip">
+      <span class="chip gate">1–2 weeks</span>
+      <span class="chip new">Throwaway harness</span>
+      <span class="chip now">Gates Phase 1</span>
+    </div>
+  </header>
+
+  <!-- OBJECTIVE -->
+  <section>
+    <div class="kick"><h2>What this spike must answer</h2></div>
+    <p class="sub">Five questions, in priority order. The first two can end the "continuous real-time overlay" dream on their own — run them first. Everything downstream (model, UX, battery strategy) is designed around these answers, so guessing them is the most expensive mistake available.</p>
+    <div class="tracks">
+      <div class="track">
+        <span class="step">Track A · days 1–2</span>
+        <h3><span class="ico">◫</span> Mock Device Kit</h3>
+        <p>Stand up the SDK against Meta's simulated device before hardware is in hand. Learn the real API surface — how you subscribe to frames, how you push to the display, what permissions fire — and build the logging harness.</p>
+        <div class="why">De-risks integration so the physical-device days are spent measuring, not fighting the build.</div>
+      </div>
+      <div class="track">
+        <span class="step">Track B · days 3–7</span>
+        <h3><span class="ico">◉</span> Physical unit</h3>
+        <p>The same harness on a real Meta Ray-Ban Display + paired phone. This is where the numbers come from — cadence, latency, display behavior, battery — under conditions the Mock Kit can't fake.</p>
+        <div class="why">Mock fidelity is itself an unknown (M5); trust only the physical numbers for go/no-go.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PREREQUISITES -->
+  <section>
+    <div class="kick"><h2>Before you start</h2><span class="n">clear the access path — it can gate day one</span></div>
+    <div class="checkgrid">
+      <div class="checkcol">
+        <h3>Access &amp; accounts</h3>
+        <ul>
+          <li><b>Meta developer account</b> approved for the wearables preview</li>
+          <li><b>Developer Mode</b> on (tap version 5× in App Info, then toggle)</li>
+          <li>Glasses <b>paired</b> to the Meta AI app; joined an <b>invite-only release channel</b></li>
+          <li>Confirm the <b>tester cap</b> and any approval lead time</li>
+        </ul>
+      </div>
+      <div class="checkcol">
+        <h3>Hardware &amp; tooling</h3>
+        <ul>
+          <li><b>Meta Ray-Ban Display</b> unit, fully charged + a spare if possible</li>
+          <li>Paired <b>iPhone (iOS 15.2+)</b> or <b>Android 10+</b> phone</li>
+          <li><b>Xcode 14+</b> or <b>Android Studio Flamingo+</b>; DAT SDK from GitHub</li>
+          <li><b>Firmware + Meta AI app versions aligned</b> to the SDK's dependency table</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEASUREMENTS -->
+  <section>
+    <div class="kick"><h2>The five measurements</h2><span class="n">method · target · gate</span></div>
+    <div class="measures">
+
+      <div class="m">
+        <div class="mhead"><span class="mid">M1</span><span class="q">How fast can we get frames off the glasses?</span></div>
+        <div class="mbody">
+          <div class="cell"><div class="lab">Method</div><p>Subscribe to the camera stream; log arrival timestamps for 60s. Compute mean &amp; 95th-percentile FPS, jitter, resolution, and pixel format. Note whether it's a continuous push-stream or a pull-per-capture.</p></div>
+          <div class="cell"><div class="lab">Target</div><p><span class="target">≥ 5 fps sustained</span> (≥ 15 ideal), short side <span class="target">≥ 640 px</span> so small objects survive. Record format — JPEG vs raw YUV changes the pipeline.</p></div>
+        </div>
+        <div class="gate"><span class="gk">No-go</span><p>Under ~2 fps means "continuous real-time" is off the table — reframe as a periodic scan, and design the UX around that from the start.</p></div>
+      </div>
+
+      <div class="m">
+        <div class="mhead"><span class="mid">M2</span><span class="q">What's the glass-to-alert latency, end to end?</span></div>
+        <div class="mbody">
+          <div class="cell"><div class="lab">Method</div><p>Timestamp three legs: frame captured → frame ready on phone → alert visible on the HUD. Film the display leg with a high-frame-rate phone camera against an on-screen millisecond clock.</p></div>
+          <div class="cell"><div class="lab">Target</div><p><span class="target">&lt; 1.5 s</span> capture-to-alert for a usable warning; &lt; 0.7 s excellent. Budget ~30–60 ms for on-device inference inside that.</p></div>
+        </div>
+        <div class="gate"><span class="gk">No-go</span><p>Over ~3 s and alerts are advisory, not "avoid-it-now" — which points to on-demand scanning rather than always-on watching.</p></div>
+      </div>
+
+      <div class="m">
+        <div class="mhead"><span class="mid">M3</span><span class="q">What can the HUD actually draw?</span></div>
+        <div class="mbody">
+          <div class="cell"><div class="lab">Method</div><p>Attempt three outputs in order: (a) a text card, (b) icon + text alert, (c) a positioned box / free graphic. Record which succeed, plus max refresh rate, dwell time, color depth, and safe-area limits.</p></div>
+          <div class="cell"><div class="lab">Target</div><p>Classify the surface: <span class="target">notification-only</span>, <span class="target">card</span>, or <span class="target">free-draw overlay</span>. This single answer decides whether boxes live on the glass or in phone/review.</p></div>
+        </div>
+        <div class="gate"><span class="gk">Constraint</span><p>If it's card-only (the likely case), the on-glasses UX is a glanceable alert; the bounding-box view moves to the phone companion and post-shift review.</p></div>
+      </div>
+
+      <div class="m">
+        <div class="mhead"><span class="mid">M4</span><span class="q">How long does continuous capture last?</span></div>
+        <div class="mbody">
+          <div class="cell"><div class="lab">Method</div><p>From full charge, run capture plus a stub inference load at target FPS continuously. Log battery % per minute on both glasses and phone; note any thermal throttling or heat warnings.</p></div>
+          <div class="cell"><div class="lab">Target</div><p><span class="target">≥ 45–60 min</span> continuous on the glasses for demo viability; a shift-long tool likely needs duty-cycling regardless.</p></div>
+        </div>
+        <div class="gate"><span class="gk">No-go</span><p>Under ~20 min means always-on is impractical — design capture to duty-cycle: wake on gesture or context, sleep otherwise.</p></div>
+      </div>
+
+      <div class="m">
+        <div class="mhead"><span class="mid">M5</span><span class="q">What do access, privacy, and the Mock Kit really impose?</span></div>
+        <div class="mbody">
+          <div class="cell"><div class="lab">Method</div><p>Log the approval lead time and tester cap. Observe the capture-indicator LED and any consent prompt behavior. Diff one Mock Device Kit run against the physical unit to gauge fidelity.</p></div>
+          <div class="cell"><div class="lab">Target</div><p>A known tester ceiling, a documented capture-consent behavior, and a sense of how far the Mock Kit can be trusted for future dev without hardware.</p></div>
+        </div>
+        <div class="gate"><span class="gk">Watch</span><p>Always-on POV camera carries real consent obligations — start the data-handling stance now, not at pilot.</p></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- RESULTS TABLE -->
+  <section>
+    <div class="kick"><h2>Record your numbers</h2><span class="n">fill this in — it is the spike's output</span></div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Measurement</th><th>Target</th><th>Measured</th><th>Verdict</th></tr></thead>
+        <tbody>
+          <tr><td class="metric">M1 · Frame cadence</td><td class="tgt">≥ 5 fps · ≥ 640px</td><td class="fill"><span class="blank"></span> fps</td><td class="fill"><span class="blank"></span></td></tr>
+          <tr><td class="metric">M2 · Capture → alert</td><td class="tgt">&lt; 1.5 s</td><td class="fill"><span class="blank"></span> s</td><td class="fill"><span class="blank"></span></td></tr>
+          <tr><td class="metric">M3 · Display surface</td><td class="tgt">free-draw preferred</td><td class="fill"><span class="blank"></span></td><td class="fill"><span class="blank"></span></td></tr>
+          <tr><td class="metric">M4 · Continuous runtime</td><td class="tgt">≥ 45 min</td><td class="fill"><span class="blank"></span> min</td><td class="fill"><span class="blank"></span></td></tr>
+          <tr><td class="metric">M5 · Tester cap / privacy</td><td class="tgt">documented</td><td class="fill"><span class="blank"></span></td><td class="fill"><span class="blank"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section>
+    <div class="kick"><h2>Day by day</h2><span class="n">buffer the front for access approval</span></div>
+    <div class="days">
+      <div class="day"><div class="dd">Days 1–2</div><div class="dt"><b>Access + Mock Kit + harness.</b> Clear the checklist, integrate the SDK against the Mock Device Kit, and build the throwaway logging harness (timestamps to CSV, a few toggles).</div></div>
+      <div class="day"><div class="dd">Days 3–4</div><div class="dt"><b>M1 + M2 on hardware.</b> Camera cadence and end-to-end latency on a physical unit — the two answers that can end the continuous-overlay path.</div></div>
+      <div class="day"><div class="dd">Days 5–6</div><div class="dt"><b>M3 + M4.</b> Probe what the display renders; run the battery + thermal soak with a stub inference load.</div></div>
+      <div class="day"><div class="dd">Day 7</div><div class="dt"><b>M5 + edges.</b> Access mechanics, capture-consent behavior, Mock-vs-real fidelity diff.</div></div>
+      <div class="day"><div class="dd">Days 8–9</div><div class="dt"><b>Analyze + decide.</b> Fill the results table, run the decision matrix, write the one-page findings memo, and lock the Phase 1 architecture variant.</div></div>
+    </div>
+  </section>
+
+  <!-- DECISION MATRIX -->
+  <section>
+    <div class="kick"><h2>Decision matrix</h2><span class="n">outcome → what you build in Phase 1</span></div>
+    <p class="sub">The spike doesn't pass or fail — it selects a design. Each outcome routes to a different, still-valuable product. The only real failure is not knowing which one you're in before you commit.</p>
+    <div class="matrix">
+      <table>
+        <thead><tr><th>If the numbers say…</th><th>…then Phase 1 builds</th><th></th></tr></thead>
+        <tbody>
+          <tr><td class="out">≥ 10 fps, &lt; 1.5 s, free-draw display</td><td class="cons">Continuous live overlay — the full vision as demoed, boxes registered on the glass.</td><td class="badge"><span class="b go">Ideal</span></td></tr>
+          <tr><td class="out">3–10 fps, or card-only display</td><td class="cons">Periodic scan + glanceable alert cards on the glass; the bounding-box view lives in the phone app and review. Still a real product.</td><td class="badge"><span class="b adapt">Likely</span></td></tr>
+          <tr><td class="out">&lt; 2 fps or &gt; 3 s latency</td><td class="cons">On-demand scan — the worker triggers a look ("scan this panel"), not always-on watching. Reframes the pitch, keeps the value.</td><td class="badge"><span class="b pivot">Reframe</span></td></tr>
+          <tr><td class="out">&lt; 20 min battery</td><td class="cons">Duty-cycled capture — wake on gesture or context, sleep otherwise; pair with the always-on sensor monitor for coverage.</td><td class="badge"><span class="b adapt">Adapt</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- WHAT IT SHIPS -->
+  <section>
+    <div class="foota">
+      <b>What the spike ships.</b> A one-page findings memo with the five measured numbers, the selected design variant from the matrix, and the Phase 0 risk chips recolored from unknown to known — the concrete input Phase 1 needs to build the right thin slice instead of the wrong one. Total cost: one to two weeks and a throwaway harness, against an architecture decision worth months.
+      <div class="out">
+        <span class="chip now">M1 cadence — resolved</span>
+        <span class="chip now">M2 latency — resolved</span>
+        <span class="chip now">M3 display — resolved</span>
+        <span class="chip now">M4 battery — resolved</span>
+        <span class="chip now">M5 access — resolved</span>
+      </div>
+    </div>
+    <p class="disclaimer">
+      Target thresholds are Skill Reality planning defaults for a usable frontline warning, not Meta specifications — adjust them to the pilot's real tolerance. Meta does not publish camera FPS, latency, display-overlay capability, or battery-under-load figures; every number in the results table is an output of this spike, measured on hardware. Sources: Meta Wearables Device Access Toolkit getting-started + preview docs.
+    </p>
+  </section>
+
+</div>
+</div>
+</body>
+</html>

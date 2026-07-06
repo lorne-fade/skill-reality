@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Skill Reality — internal build map for real camera-based on-glasses hazard detection via Meta's Device Access Toolkit.">
+<link rel="icon" href="/favicon/icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
+<title>Skill Reality — Hazard Vision · Build Map</title>
+<style>html,body{margin:0;padding:0;background:#080A0E}</style>
+</head>
+<body>
+<style>
+  :root{
+    --bg:#080A0E; --bg2:#0C1219; --bg3:#111B24; --line:rgba(120,162,204,0.15);
+    --ink:#EAF1F8; --mut:#94A6B8; --dim:rgba(234,241,248,0.46);
+    --blue:#1B74BC; --bright:#4AA3E8; --green:#3DDC97; --amber:#F0B429; --red:#FF5A6E;
+    --sans:'Hanken Grotesk',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+    --wrap:900px;
+  }
+  *{box-sizing:border-box}
+  .page{
+    background:
+      radial-gradient(120% 60% at 50% -10%, rgba(27,116,188,0.16), transparent 55%),
+      var(--bg);
+    color:var(--ink); font-family:var(--sans); line-height:1.55;
+    -webkit-font-smoothing:antialiased; padding:0 20px 96px;
+  }
+  .wrap{max-width:var(--wrap); margin:0 auto}
+  .eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:2.5px; text-transform:uppercase; color:var(--bright)}
+  h1,h2,h3{text-wrap:balance; margin:0; font-weight:800; letter-spacing:-0.02em}
+  a{color:var(--bright)}
+  .mono{font-family:var(--mono)}
+  .tnum{font-variant-numeric:tabular-nums}
+
+  /* ---- masthead ---- */
+  .top{padding:64px 0 40px; border-bottom:1px solid var(--line)}
+  .brandrow{display:flex; align-items:center; gap:10px; margin-bottom:26px}
+  .glyph{width:26px;height:26px;border-radius:6px;flex:0 0 auto;
+    background:conic-gradient(from 210deg at 50% 50%, var(--blue), var(--bright), var(--blue));
+    -webkit-mask:radial-gradient(circle at 50% 42%, transparent 22%, #000 23%); mask:radial-gradient(circle at 50% 42%, transparent 22%, #000 23%);}
+  .brandrow .bn{font-weight:800; font-size:15px; letter-spacing:-0.01em}
+  .brandrow .bd{font-family:var(--mono); font-size:11px; letter-spacing:1px; color:var(--dim); text-transform:uppercase; border-left:1px solid var(--line); padding-left:10px}
+  h1{font-size:clamp(32px,5.4vw,52px); line-height:1.02; margin:16px 0 0}
+  h1 .accent{color:var(--bright)}
+  .lede{font-size:19px; color:var(--mut); max-width:62ch; margin:18px 0 0}
+  .metastrip{display:flex; flex-wrap:wrap; gap:8px; margin-top:26px}
+
+  /* ---- chips ---- */
+  .chip{display:inline-flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11.5px; letter-spacing:0.4px;
+    padding:5px 11px; border-radius:100px; border:1px solid var(--line); color:var(--mut); white-space:nowrap}
+  .chip::before{content:""; width:7px; height:7px; border-radius:50%; background:currentColor; flex:0 0 auto}
+  .chip.now{color:var(--green); border-color:rgba(61,220,151,0.4)}
+  .chip.gate{color:var(--amber); border-color:rgba(240,180,41,0.4)}
+  .chip.risk{color:var(--red); border-color:rgba(255,90,110,0.42)}
+  .chip.new{color:var(--bright); border-color:rgba(74,163,232,0.42)}
+
+  section{padding:52px 0 0}
+  .kick{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:22px}
+  .kick h2{font-size:clamp(22px,3.2vw,28px)}
+  .kick .n{font-family:var(--mono); font-size:13px; color:var(--dim)}
+  .sub{color:var(--mut); max-width:64ch; margin:-8px 0 24px}
+
+  /* ---- the shift callout ---- */
+  .shift{display:grid; grid-template-columns:1fr auto 1fr; gap:0; align-items:stretch; border:1px solid var(--line); border-radius:16px; overflow:hidden; background:var(--bg2)}
+  .shift .col{padding:22px 24px}
+  .shift .col.to{background:linear-gradient(180deg, rgba(27,116,188,0.12), transparent)}
+  .shift .lab{font-family:var(--mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--dim); margin-bottom:8px}
+  .shift .big{font-size:18px; font-weight:700}
+  .shift .col p{margin:8px 0 0; font-size:14px; color:var(--mut)}
+  .shift .arrow{display:flex; align-items:center; justify-content:center; padding:0 6px; color:var(--bright); font-size:26px; background:var(--bg3)}
+
+  /* ---- architecture diagram ---- */
+  .diagramwrap{overflow-x:auto; padding:6px 2px 14px; -webkit-overflow-scrolling:touch}
+  .diagram{display:flex; align-items:stretch; gap:0; min-width:760px}
+  .node{flex:1 1 0; min-width:150px; background:var(--bg2); border:1px solid var(--line); border-radius:14px; padding:16px 15px; position:relative}
+  .node .role{font-family:var(--mono); font-size:10.5px; letter-spacing:1px; text-transform:uppercase; color:var(--dim)}
+  .node .nm{font-weight:700; font-size:15.5px; margin:7px 0 8px; letter-spacing:-0.01em}
+  .node ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:5px}
+  .node li{font-size:12.5px; color:var(--mut); display:flex; gap:7px; align-items:flex-start}
+  .node li::before{content:""; width:5px;height:5px;border-radius:50%; background:var(--bright); margin-top:6px; flex:0 0 auto; opacity:.8}
+  .conn{flex:0 0 34px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; color:var(--dim)}
+  .conn .up,.conn .dn{font-size:12px; line-height:1}
+  .conn .up{color:var(--bright)} .conn .dn{color:var(--amber)}
+  .flowkey{display:flex; gap:18px; flex-wrap:wrap; margin-top:6px; font-family:var(--mono); font-size:11.5px; color:var(--dim)}
+  .flowkey span::before{content:"—  "; }
+  .flowkey .a::before{color:var(--bright)} .flowkey .b::before{color:var(--amber)}
+
+  /* ---- subsystem cards ---- */
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+  .card{background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:20px}
+  .card h3{font-size:17px; display:flex; align-items:center; gap:9px}
+  .card .ico{width:26px;height:26px;border-radius:7px; display:grid; place-items:center; font-size:14px; background:rgba(74,163,232,0.14); color:var(--bright); flex:0 0 auto}
+  .card p{margin:11px 0 14px; font-size:13.5px; color:var(--mut)}
+  .card .tech{display:flex; flex-wrap:wrap; gap:6px}
+  .tag{font-family:var(--mono); font-size:11px; padding:3px 8px; border-radius:6px; background:var(--bg3); color:var(--mut); border:1px solid var(--line)}
+  .card .foot{margin-top:14px; padding-top:13px; border-top:1px solid var(--line)}
+
+  /* ---- phases timeline ---- */
+  .phases{display:flex; flex-direction:column; gap:0}
+  .phase{display:grid; grid-template-columns:56px 1fr; gap:20px; padding:22px 0; border-top:1px solid var(--line)}
+  .phase:first-child{border-top:0}
+  .phase .idx{font-family:var(--mono); font-size:13px; color:var(--bright); position:relative}
+  .phase .idx .num{font-size:26px; font-weight:800; color:var(--ink); letter-spacing:-0.03em}
+  .phase .idx .dot{display:block; width:9px;height:9px;border-radius:50%; background:var(--blue); box-shadow:0 0 0 4px rgba(27,116,188,0.16); margin:10px 0 0 2px}
+  .ph .htitle{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+  .ph h3{font-size:18px}
+  .ph .dur{font-family:var(--mono); font-size:11.5px; color:var(--amber); letter-spacing:0.5px}
+  .ph .goal{color:var(--mut); font-size:14px; margin:7px 0 12px; max-width:64ch}
+  .ph .work{display:grid; grid-template-columns:1fr 1fr; gap:6px 22px; margin:0 0 12px; padding:0; list-style:none}
+  .ph .work li{font-size:13px; color:var(--mut); display:flex; gap:8px; align-items:flex-start}
+  .ph .work li::before{content:"→"; color:var(--bright); flex:0 0 auto; font-family:var(--mono); font-size:12px; margin-top:1px}
+  .ph .exit{font-size:12.5px; color:var(--ink); background:var(--bg2); border:1px solid var(--line); border-left:2px solid var(--green); border-radius:0 8px 8px 0; padding:9px 13px}
+  .ph .exit b{color:var(--green); font-family:var(--mono); font-size:11px; letter-spacing:0.8px; text-transform:uppercase; display:block; margin-bottom:2px; font-weight:500}
+
+  /* ---- risk table ---- */
+  .tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:14px; background:var(--bg2)}
+  table{border-collapse:collapse; width:100%; min-width:640px; font-size:13.5px}
+  th,td{text-align:left; padding:13px 16px; vertical-align:top; border-top:1px solid var(--line)}
+  thead th{border-top:0; font-family:var(--mono); font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--dim); font-weight:500; background:var(--bg3)}
+  td.r{font-weight:700; color:var(--ink); width:22%}
+  td.why{color:var(--mut); width:34%}
+  td.fix{color:var(--mut); width:34%}
+  td.sev{width:10%}
+  .sevpill{font-family:var(--mono); font-size:10.5px; letter-spacing:0.5px; padding:3px 8px; border-radius:6px; white-space:nowrap}
+  .sevpill.hi{color:var(--red); background:rgba(255,90,110,0.12); border:1px solid rgba(255,90,110,0.3)}
+  .sevpill.md{color:var(--amber); background:rgba(240,180,41,0.1); border:1px solid rgba(240,180,41,0.3)}
+
+  /* ---- reuse + team ---- */
+  .split{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  .listcard{background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:22px}
+  .listcard h3{font-size:16px; margin-bottom:14px}
+  .listcard ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:11px}
+  .listcard li{font-size:13.5px; color:var(--mut); display:flex; gap:10px; align-items:flex-start}
+  .listcard li b{color:var(--ink); font-weight:600}
+  .listcard li .mk{flex:0 0 auto; font-family:var(--mono); font-size:11px; color:var(--green); margin-top:2px}
+  .team li .mk{color:var(--bright)}
+
+  .foota{margin-top:56px; padding:24px; border:1px solid var(--line); border-radius:16px; background:linear-gradient(180deg, rgba(27,116,188,0.1), var(--bg2)); font-size:13.5px; color:var(--mut)}
+  .foota b{color:var(--ink)}
+  .disclaimer{margin-top:22px; font-size:12px; color:var(--dim); font-family:var(--mono); line-height:1.7}
+
+  @media(max-width:720px){
+    .shift{grid-template-columns:1fr} .shift .arrow{padding:8px; font-size:20px; transform:rotate(90deg)}
+    .grid3{grid-template-columns:1fr}
+    .ph .work{grid-template-columns:1fr}
+    .split{grid-template-columns:1fr}
+    .phase{grid-template-columns:40px 1fr; gap:14px}
+  }
+</style>
+
+<div class="page">
+<div class="wrap">
+
+  <!-- MASTHEAD -->
+  <header class="top">
+    <div class="brandrow">
+      <span class="glyph"></span>
+      <span class="bn">Skill Reality</span>
+      <span class="bd">Frontline Performance AI</span>
+    </div>
+    <div class="eyebrow">Build Map · Hazard Watch</div>
+    <h1>Putting <span class="accent">real hazard vision</span><br>on the glasses</h1>
+    <p class="lede">Today's Hazard Watch web app reads motion sensors and simulates the camera view. Making the vision <em>real</em> — the camera actually spotting a missing guard or a spill — means stepping off the web platform and onto Meta's native Device Access Toolkit. Here's the route, the pieces, and the unknowns to pin down first.</p>
+    <div class="metastrip">
+      <span class="chip now">Sensor monitor ships today</span>
+      <span class="chip gate">Camera path · preview-gated</span>
+      <span class="chip new">Native companion build</span>
+      <span class="chip risk">3 unknowns to validate</span>
+    </div>
+  </header>
+
+  <!-- THE SHIFT -->
+  <section>
+    <div class="kick"><h2>The platform shift</h2></div>
+    <p class="sub">The web app and the camera app are two different animals. The web app is instant and needs nothing but a URL; it can never touch the camera. The camera app is a native mobile build that pairs with the glasses — more capable, but review-gated until Meta opens general publishing in 2026.</p>
+    <div class="shift">
+      <div class="col from">
+        <div class="lab">Today — Web App</div>
+        <div class="big">Instant URL, sensors only</div>
+        <p>Loads on the glasses from a link. Motion, orientation, geolocation, local storage. No camera, no mic — a hard platform limit. This is where coach/, hud/ and Hazard Watch live.</p>
+      </div>
+      <div class="arrow">→</div>
+      <div class="col to">
+        <div class="lab">Next — Device Access Toolkit</div>
+        <div class="big">Native app, camera POV</div>
+        <p>An iOS/Android app paired through the Meta AI app. Hands-free POV camera capture, open-ear audio, display output. Distributed to your own testers now; public listing in 2026.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARCHITECTURE -->
+  <section>
+    <div class="kick"><h2>How it fits together</h2></div>
+    <p class="sub">The detection app does not run on the glasses — it runs on a paired phone, with the Meta AI app as the link layer. Camera frames flow from the glasses to the phone, the phone runs the detection, and concise alerts flow back to the glasses' display and open-ear speakers.</p>
+    <div class="diagramwrap">
+      <div class="diagram">
+        <div class="node">
+          <div class="role">Sensor + Surface</div>
+          <div class="nm">Meta Ray-Ban Display</div>
+          <ul><li>POV camera (capture)</li><li>HUD glanceable alert</li><li>Open-ear audio warning</li></ul>
+        </div>
+        <div class="conn"><span class="up">frames ▸</span><span class="dn">◂ alert</span></div>
+        <div class="node">
+          <div class="role">Link Layer</div>
+          <div class="nm">Meta AI App</div>
+          <ul><li>Pairing + auth</li><li>Device Access API</li><li>Capture indicator</li></ul>
+        </div>
+        <div class="conn"><span class="up">SDK ▸</span><span class="dn">◂ render</span></div>
+        <div class="node">
+          <div class="role">The brain · on phone</div>
+          <div class="nm">Hazard Watch App</div>
+          <ul><li>Frame pipeline</li><li>On-device detector</li><li>Hazard rules + UX</li></ul>
+        </div>
+        <div class="conn"><span class="up">sync ▸</span><span class="dn">◂ models</span></div>
+        <div class="node">
+          <div class="role">Optional · cloud</div>
+          <div class="nm">Fleet + Training</div>
+          <ul><li>Model training</li><li>Alert log / dashboard</li><li>OTA model updates</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="flowkey">
+      <span class="a">Camera + control flow out to the phone/cloud</span>
+      <span class="b">Alerts + models flow back to the worker</span>
+    </div>
+  </section>
+
+  <!-- SUBSYSTEMS -->
+  <section>
+    <div class="kick"><h2>Three subsystems to build</h2></div>
+    <div class="grid3">
+      <div class="card">
+        <h3><span class="ico">◉</span> Capture</h3>
+        <p>Pull the POV frames off the glasses through the Toolkit and feed a steady pipeline to the detector. Cadence is the open question — design for periodic frame-grab (a few per second) before assuming full video.</p>
+        <div class="tech"><span class="tag">Device Access SDK</span><span class="tag">AVFoundation / CameraX</span><span class="tag">frame buffer</span></div>
+        <div class="foot"><span class="chip gate">Preview SDK access</span></div>
+      </div>
+      <div class="card">
+        <h3><span class="ico">◆</span> Detect</h3>
+        <p>Run a lightweight object detector on each frame, on the phone, so nothing leaves the device. Classes are the safety vocabulary: PPE, spills, missing guards, exposed wiring, blocked exits, person–vehicle proximity.</p>
+        <div class="tech"><span class="tag">YOLOv8n–v12n</span><span class="tag">Core ML</span><span class="tag">TFLite / LiteRT</span><span class="tag">INT8 quant</span></div>
+        <div class="foot"><span class="chip new">New model + dataset</span></div>
+      </div>
+      <div class="card">
+        <h3><span class="ico">⚠</span> Alert</h3>
+        <p>Turn detections into one calm, glanceable warning: hazard, severity, and the one action to take — mirrored to open-ear audio. Reuse Hazard Watch's status language and advisory copy verbatim.</p>
+        <div class="tech"><span class="tag">HUD render API</span><span class="tag">audio cue</span><span class="tag">debounce / severity</span></div>
+        <div class="foot"><span class="chip risk">Display richness TBD</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHASES -->
+  <section>
+    <div class="kick"><h2>The build, in phases</h2><span class="n">~3–4 months to a field pilot</span></div>
+    <div class="phases">
+
+      <div class="phase">
+        <div class="idx"><span class="num">0</span><span class="dot"></span></div>
+        <div class="ph">
+          <div class="htitle"><h3>Access &amp; de-risk spike</h3><span class="dur">1–2 weeks</span></div>
+          <p class="goal">Get into the developer preview and answer the questions the docs don't — before writing real product code. This phase exists to kill surprises.</p>
+          <ul class="work">
+            <li>Enable Developer Mode; join release channels</li>
+            <li>Stand up the Mock Device Kit + a physical unit</li>
+            <li>Measure camera cadence, resolution, latency</li>
+            <li>Probe what the HUD can actually render</li>
+          </ul>
+          <div class="exit"><b>Exit criteria</b>We know frames-per-second, glass-to-phone latency, and whether the display can show boxes or only cards. Go / no-go on "real-time."</div>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="idx"><span class="num">1</span><span class="dot"></span></div>
+        <div class="ph">
+          <div class="htitle"><h3>Thin vertical slice</h3><span class="dur">2–3 weeks</span></div>
+          <p class="goal">One hazard, end to end, on real hardware: prove the whole chain before widening it. Pick "no hard hat" — a well-served, high-value PPE class.</p>
+          <ul class="work">
+            <li>Capture → phone → off-the-shelf detector</li>
+            <li>Single alert pushed to the HUD + audio</li>
+            <li>Wire in the Hazard Watch alert UX</li>
+            <li>Instrument latency + battery draw</li>
+          </ul>
+          <div class="exit"><b>Exit criteria</b>Walk up to a bare head, get a hard-hat alert on the glasses within a second or two. The pipeline is real.</div>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="idx"><span class="num">2</span><span class="dot"></span></div>
+        <div class="ph">
+          <div class="htitle"><h3>The detection model</h3><span class="dur">3–5 weeks</span></div>
+          <p class="goal">Replace the stock detector with a purpose-built one that knows your worksite's hazards, small and fast enough to run on a phone.</p>
+          <ul class="work">
+            <li>Assemble + label a hazard dataset</li>
+            <li>Fine-tune a YOLO-n / MobileNet-SSD model</li>
+            <li>Quantize + export to Core ML / TFLite</li>
+            <li>Evaluate recall per class — misses are the risk</li>
+          </ul>
+          <div class="exit"><b>Exit criteria</b>A quantized model hitting agreed recall on a held-out set for the first 4–6 hazard classes, running at target FPS on-device.</div>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="idx"><span class="num">3</span><span class="dot"></span></div>
+        <div class="ph">
+          <div class="htitle"><h3>Hazard logic &amp; on-glasses UX</h3><span class="dur">2–3 weeks</span></div>
+          <p class="goal">Detections aren't alerts. Add the judgment layer — severity, debouncing, "don't cry wolf" — and the calm glanceable output a worker can trust mid-task.</p>
+          <ul class="work">
+            <li>Severity + persistence rules per class</li>
+            <li>Debounce so flicker never nags</li>
+            <li>Visual + audio alert routing</li>
+            <li>On-device log → optional fleet sync</li>
+          </ul>
+          <div class="exit"><b>Exit criteria</b>A tester wears it through a task and gets timely, uncluttered alerts with a low false-alarm rate they'd tolerate.</div>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="idx"><span class="num">4</span><span class="dot"></span></div>
+        <div class="ph">
+          <div class="htitle"><h3>Field pilot</h3><span class="dur">3–4 weeks</span></div>
+          <p class="goal">Put it on real heads in a real environment through the invite-only tester channel, and tune against ground truth — especially the hazards it misses.</p>
+          <ul class="work">
+            <li>Release to a pilot crew via test channel</li>
+            <li>Log detections vs. observed reality</li>
+            <li>Tune thresholds; retrain on hard cases</li>
+            <li>Battery, comfort, and consent review</li>
+          </ul>
+          <div class="exit"><b>Exit criteria</b>A signed-off pilot: measured detection rate, acceptable false-alarms, and a safety sign-off on failure modes.</div>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="idx"><span class="num">5</span><span class="dot"></span></div>
+        <div class="ph">
+          <div class="htitle"><h3>Harden &amp; path to publish</h3><span class="dur">ongoing → 2026 GA</span></div>
+          <p class="goal">Turn the pilot into a product: fleet dashboard, OTA model updates, privacy posture, and the partner review needed to publish publicly when Meta opens it.</p>
+          <ul class="work">
+            <li>Fleet dashboard + audit trail</li>
+            <li>OTA model update channel</li>
+            <li>Privacy / data-handling docs</li>
+            <li>Apply for publish access</li>
+          </ul>
+          <div class="exit"><b>Exit criteria</b>Publishable build, documented privacy stance, and a repeatable path to add hazard classes without a re-architecture.</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- RISKS -->
+  <section>
+    <div class="kick"><h2>Validate these first</h2><span class="n">the Phase 0 spike exists for this</span></div>
+    <p class="sub">Meta's public docs confirm the Toolkit gives camera, audio, and display access on a paired phone — but they don't publish the numbers that decide whether "real-time hazard vision" is a product or a science project. Pin these down in week one.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Unknown</th><th>Why it decides the design</th><th>How to de-risk in the spike</th><th>Severity</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="r">Camera cadence &amp; latency</td>
+            <td class="why">Continuous video vs. periodic capture changes everything — "real-time" may mean a few frames per second, not 30.</td>
+            <td class="fix">Stream from a physical unit and log frame timestamps + glass-to-phone delay.</td>
+            <td class="sev"><span class="sevpill hi">Critical</span></td>
+          </tr>
+          <tr>
+            <td class="r">Display overlay richness</td>
+            <td class="why">If the HUD shows cards/text, not registered boxes, the on-glasses UX is a glanceable alert — the boxes live in review, not live overlay.</td>
+            <td class="fix">Push a test overlay and see what the Display API actually accepts.</td>
+            <td class="sev"><span class="sevpill hi">Critical</span></td>
+          </tr>
+          <tr>
+            <td class="r">Battery &amp; thermal</td>
+            <td class="why">Continuous capture + on-device inference is a power draw; a 20-minute battery isn't a shift-long tool.</td>
+            <td class="fix">Run the Phase 1 slice for 30–60 min and measure drain + heat.</td>
+            <td class="sev"><span class="sevpill md">High</span></td>
+          </tr>
+          <tr>
+            <td class="r">Detection recall in the field</td>
+            <td class="why">A missed hazard is a safety failure, not a bug. Field conditions — glare, motion, tiny objects — hurt recall.</td>
+            <td class="fix">Evaluate on held-out worksite footage; treat false-negatives as the primary metric.</td>
+            <td class="sev"><span class="sevpill md">High</span></td>
+          </tr>
+          <tr>
+            <td class="r">Publishing &amp; privacy path</td>
+            <td class="why">Public listing is partner-gated until 2026, and always-on POV camera carries real consent obligations.</td>
+            <td class="fix">Confirm tester-channel limits; draft the capture-consent + data-handling stance early.</td>
+            <td class="sev"><span class="sevpill md">High</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- REUSE + TEAM -->
+  <section>
+    <div class="kick"><h2>What carries over — and who builds it</h2></div>
+    <div class="split">
+      <div class="listcard">
+        <h3>Reused from today's demos</h3>
+        <ul>
+          <li><span class="mk">✓</span><span><b>Brand system</b> — palette, type, dark-safe tile logo, the whole visual language ports straight over.</span></li>
+          <li><span class="mk">✓</span><span><b>Hazard taxonomy &amp; advisory copy</b> — the classes and "here's the one action" wording are already written.</span></li>
+          <li><span class="mk">✓</span><span><b>Alert UX</b> — the status banner, severity colors and glanceable layout become the HUD language.</span></li>
+          <li><span class="mk">✓</span><span><b>Sensor monitor ships now</b> — incline / vibration / man-down needs no camera, so it can launch inside the native app on day one.</span></li>
+        </ul>
+      </div>
+      <div class="listcard team">
+        <h3>Team &amp; shape of effort</h3>
+        <ul>
+          <li><span class="mk">▸</span><span><b>1 native mobile engineer</b> (iOS or Android to start) — Toolkit integration, capture pipeline, HUD output.</span></li>
+          <li><span class="mk">▸</span><span><b>1 ML engineer</b> — dataset, training, quantization, on-device eval.</span></li>
+          <li><span class="mk">▸</span><span><b>~0.5 designer</b> — adapt the alert UX to the HUD's real constraints.</span></li>
+          <li><span class="mk">▸</span><span><b>Safety SME, part-time</b> — hazard classes, severity, and sign-off on failure modes.</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foota">
+      <b>Bottom line.</b> A working prototype — one hazard, end to end on real glasses — is roughly a month out, gated only by preview access and the Phase 0 answers. A tuned, safety-reviewed field pilot is a 3–4 month effort. Public distribution waits on Meta's 2026 general availability. The honest first step is the Phase 0 spike: it's cheap, and it tells us whether continuous on-glasses hazard vision is a build or a wait.
+    </div>
+    <p class="disclaimer">
+      Sources — Meta Wearables Device Access Toolkit &amp; Web Apps developer docs (developers.meta.com, wearables.developer.meta.com); lightweight on-device detection per current YOLO-n / MobileNet-SSD + Core ML / TFLite practice and published PPE-detection benchmarks. Durations and team sizes are planning estimates, not commitments. Camera FPS, latency, display-overlay capability, and battery figures are NOT published by Meta and are marked here as spike outputs, not knowns.
+    </p>
+  </section>
+
+</div>
+</div>
+</body>
+</html>

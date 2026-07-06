@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Skill Reality — internal roadmap for on-glasses hazard vision.">
+<link rel="icon" href="/favicon/icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
+<title>Skill Reality — Hazard Vision Roadmap</title>
+<style>
+  :root{
+    --bg:#080A0E; --bg2:#0C1219; --bg3:#111B24; --line:rgba(120,162,204,0.15);
+    --ink:#EAF1F8; --mut:#94A6B8; --dim:rgba(234,241,248,0.46);
+    --blue:#1B74BC; --bright:#4AA3E8; --green:#3DDC97; --amber:#F0B429;
+    --sans:'Hanken Grotesk',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:radial-gradient(120% 55% at 50% -8%, rgba(27,116,188,0.18), transparent 55%), var(--bg);
+    color:var(--ink); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
+    min-height:100vh; padding:0 20px 80px;
+  }
+  .wrap{max-width:820px; margin:0 auto}
+  a{color:var(--bright); text-decoration:none}
+  .top{padding:64px 0 20px}
+  .brandrow{display:flex; align-items:center; gap:10px; margin-bottom:26px}
+  .glyph{width:26px;height:26px;border-radius:6px;flex:0 0 auto;
+    background:conic-gradient(from 210deg at 50% 50%, var(--blue), var(--bright), var(--blue));
+    -webkit-mask:radial-gradient(circle at 50% 42%, transparent 22%, #000 23%); mask:radial-gradient(circle at 50% 42%, transparent 22%, #000 23%);}
+  .bn{font-weight:800; font-size:15px} .bd{font-family:var(--mono); font-size:11px; letter-spacing:1px; color:var(--dim); text-transform:uppercase; border-left:1px solid var(--line); padding-left:10px}
+  .eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:2.5px; text-transform:uppercase; color:var(--bright)}
+  h1{font-size:clamp(30px,5vw,46px); font-weight:800; letter-spacing:-0.02em; line-height:1.04; margin:14px 0 0; text-wrap:balance}
+  h1 .accent{color:var(--bright)}
+  .lede{font-size:18px; color:var(--mut); max-width:60ch; margin:16px 0 0}
+
+  .docs{display:flex; flex-direction:column; gap:14px; margin-top:40px}
+  .doc{display:flex; align-items:flex-start; gap:18px; background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:22px 24px; transition:border-color .16s, background .16s, transform .16s}
+  .doc:hover{border-color:rgba(74,163,232,0.5); background:var(--bg3); transform:translateY(-1px)}
+  .doc:focus-visible{outline:2px solid var(--bright); outline-offset:2px}
+  .doc .idx{font-family:var(--mono); font-size:12px; color:var(--bright); background:rgba(74,163,232,0.12); border:1px solid rgba(74,163,232,0.3); border-radius:8px; padding:6px 10px; flex:0 0 auto}
+  .doc h2{font-size:19px; font-weight:700; letter-spacing:-0.01em; margin:0; display:flex; align-items:center; gap:10px}
+  .doc p{margin:7px 0 0; font-size:14px; color:var(--mut)}
+  .doc .arw{margin-left:auto; align-self:center; color:var(--bright); font-size:22px; opacity:.5; flex:0 0 auto}
+  .doc:hover .arw{opacity:1}
+  .doc .meta{margin-top:11px; display:flex; gap:7px; flex-wrap:wrap}
+  .chip{font-family:var(--mono); font-size:11px; letter-spacing:0.4px; padding:4px 10px; border-radius:100px; border:1px solid var(--line); color:var(--mut)}
+  .chip.gate{color:var(--amber); border-color:rgba(240,180,41,0.4)}
+  .chip.now{color:var(--green); border-color:rgba(61,220,151,0.4)}
+
+  .prototypes{margin-top:34px; padding:20px 24px; border:1px solid var(--line); border-radius:16px; background:var(--bg2)}
+  .prototypes .h{font-family:var(--mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--dim); margin-bottom:12px}
+  .protolinks{display:flex; flex-wrap:wrap; gap:10px}
+  .protolinks a{display:inline-flex; align-items:center; gap:8px; font-size:13.5px; color:var(--ink); background:var(--bg3); border:1px solid var(--line); border-radius:10px; padding:9px 14px; transition:border-color .16s}
+  .protolinks a:hover{border-color:rgba(74,163,232,0.5)}
+  .protolinks a .d{width:7px;height:7px;border-radius:50%;background:var(--green)}
+  .protolinks a .m{font-family:var(--mono); font-size:11.5px; color:var(--dim)}
+
+  .note{margin-top:34px; font-size:12.5px; color:var(--dim); font-family:var(--mono); line-height:1.7; border-top:1px solid var(--line); padding-top:20px}
+  .note b{color:var(--mut); font-weight:500}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brandrow"><span class="glyph"></span><span class="bn">Skill Reality</span><span class="bd">Frontline Performance AI</span></div>
+      <div class="eyebrow">Internal · Roadmap</div>
+      <h1>On-Glasses <span class="accent">Hazard Vision</span></h1>
+      <p class="lede">Where Hazard Watch goes next — from the sensor-based demo shipping today toward real camera detection on the glasses. Two working documents for the team.</p>
+    </header>
+
+    <div class="docs">
+      <a class="doc" href="/roadmap/build-map/">
+        <span class="idx">01</span>
+        <span>
+          <h2>The Build Map</h2>
+          <p>The full picture: the web-app-to-native platform shift, the on-phone architecture, three subsystems, the six phases, risks, and team. Start here.</p>
+          <span class="meta"><span class="chip">Overview</span><span class="chip gate">~3–4 mo to pilot</span></span>
+        </span>
+        <span class="arw">›</span>
+      </a>
+
+      <a class="doc" href="/roadmap/phase-0/">
+        <span class="idx">02</span>
+        <span>
+          <h2>Phase 0 · De-Risk Spike</h2>
+          <p>The executable first step: five measurements with targets and go/no-go gates, a Mock-Device-Kit test plan, a results table, and the decision matrix that selects the architecture.</p>
+          <span class="meta"><span class="chip">Action plan</span><span class="chip now">1–2 weeks</span></span>
+        </span>
+        <span class="arw">›</span>
+      </a>
+    </div>
+
+    <div class="prototypes">
+      <div class="h">Live prototypes on the glasses</div>
+      <div class="protolinks">
+        <a href="/coach/"><span class="d"></span>Field Coach <span class="m">/coach</span></a>
+        <a href="/hud/"><span class="d"></span>Sensor HUD <span class="m">/hud</span></a>
+        <a href="/hazard/"><span class="d"></span>Hazard Watch <span class="m">/hazard</span></a>
+      </div>
+    </div>
+
+    <p class="note"><b>Internal &amp; unlisted.</b> These pages aren't indexed by search engines or linked from skillreality.com — but the site has no login, so treat the URL as the only gate and share it with the team only. Ask if you'd like it access-controlled.</p>
+  </div>
+</body>
+</html>
