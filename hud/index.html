@@ -7,19 +7,18 @@
   <meta name="description" content="Skill Reality Sensor HUD — live compass, level, and motion readouts for Meta Ray-Ban Display.">
   <!-- Identify as MRBD-compatible -->
   <meta name="mrbd-web-app-capable" content="yes">
-  <link rel="icon" href="icon-96.png" sizes="96x96">
-  <link rel="icon" href="favicon-52.png" sizes="52x52">
+  <link rel="icon" href="glyph-bright.png">
+  <link rel="icon" href="icon-192.png" sizes="192x192">
   <link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <title>Skill Reality — Sensor HUD</title>
   <style>
     :root {
-      --cyan: #00e5ff;
-      --cyan-dim: rgba(0,229,255,0.22);
-      --cyan-faint: rgba(0,229,255,0.10);
-      --white: #eafcff;
-      --amber: #ffcc33;
-      --green: #34ff9e;
-      --muted: rgba(234,252,255,0.55);
+      --blue:#1B74BC; --blue-bright:#4AA3E8; --blue-dim:rgba(74,163,232,0.26); --blue-faint:rgba(74,163,232,0.10);
+      --white:#F0F4F8; --amber:#F0B429; --green:#3DDC97; --muted:rgba(240,244,248,0.55);
+      --ui:'Hanken Grotesk',-apple-system,system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
     }
     * { box-sizing: border-box; -webkit-user-select: none; user-select: none; }
     html, body {
@@ -28,10 +27,10 @@
       overflow: hidden;
       background: #000;
       color: var(--white);
-      font-family: -apple-system, "Helvetica Neue", system-ui, sans-serif;
+      font-family: var(--ui);
       cursor: none;
     }
-    .mono { font-family: ui-monospace, "SF Mono", "Roboto Mono", Menlo, monospace; }
+    .mono { font-family: var(--mono); }
 
     /* ---------- screens ---------- */
     .screen { position: absolute; inset: 0; width: 600px; height: 600px; display: none; }
@@ -40,42 +39,46 @@
     /* ---------- enable screen ---------- */
     #enable { padding: 40px; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
     #enable.active { display: flex; }
-    .brand { font-size: 15px; letter-spacing: 3px; color: var(--cyan); text-transform: uppercase; margin-bottom: 10px; }
-    .title { font-size: 42px; font-weight: 800; letter-spacing: -1px; margin: 0 0 16px; }
+    .lockup { display: flex; align-items: center; gap: 11px; margin-bottom: 22px; }
+    .lockup img { width: 26px; height: 26px; object-fit: contain; display: block; }
+    .wordmark { font-family: var(--ui); font-weight: 800; font-size: 19px; letter-spacing: -0.3px; color: #fff; }
+    .lk-div { width: 1px; height: 12px; background: rgba(240,244,248,0.22); }
+    .descriptor { font-family: var(--mono); font-size: 11px; letter-spacing: 0.5px; color: rgba(240,244,248,0.6); text-transform: uppercase; }
+    .title { font-family: var(--ui); font-size: 42px; font-weight: 800; letter-spacing: -1px; margin: 0 0 16px; }
     .lede { font-size: 18px; line-height: 1.5; color: var(--muted); max-width: 440px; margin: 0 0 40px; }
 
     /* ---------- dashboard ---------- */
     #dash { padding: 18px; display: none; flex-direction: column; gap: 12px; }
     #dash.active { display: flex; }
     .topbar { height: 38px; display: flex; align-items: center; justify-content: space-between; flex: 0 0 auto; }
-    .topbar .name { font-size: 16px; letter-spacing: 2px; color: var(--cyan); text-transform: uppercase; }
-    .chip { font-size: 14px; letter-spacing: 1px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--cyan-dim); color: var(--muted); }
-    .chip.live { color: var(--green); border-color: rgba(52,255,158,0.5); }
-    .chip.sim  { color: var(--amber); border-color: rgba(255,204,51,0.5); }
+    .topbar .name { font-family: var(--ui); font-size: 16px; letter-spacing: 2px; color: var(--blue-bright); text-transform: uppercase; }
+    .chip { font-size: 14px; letter-spacing: 1px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--blue-dim); color: var(--muted); }
+    .chip.live { color: var(--green); border-color: rgba(61,220,151,0.55); }
+    .chip.sim  { color: var(--amber); border-color: rgba(240,180,41,0.55); }
 
     .panel {
-      border: 2px solid var(--cyan-dim);
+      border: 2px solid var(--blue-dim);
       border-radius: 14px;
-      background: rgba(0,20,28,0.35);
+      background: rgba(27,116,188,0.14);
       padding: 14px;
       transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
       min-height: 88px; /* glasses minimum tap target */
       position: relative;
     }
-    .panel .plabel { font-size: 15px; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; }
+    .panel .plabel { font-family: var(--ui); font-size: 15px; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; }
     .focusable:focus {
       outline: none;
-      border-color: var(--cyan);
-      background: rgba(0,40,54,0.55);
-      box-shadow: 0 0 22px rgba(0,229,255,0.35);
+      border-color: var(--blue-bright);
+      background: rgba(27,116,188,0.28);
+      box-shadow: 0 0 22px rgba(74,163,232,0.4);
     }
 
     /* compass */
     #compassPanel { flex: 0 0 auto; height: 224px; display: flex; align-items: center; gap: 18px; }
     .compass-wrap { width: 196px; height: 196px; position: relative; flex: 0 0 auto; }
     .compass-read { flex: 1; }
-    .compass-read .heading { font-size: 62px; font-weight: 800; line-height: 1; }
-    .compass-read .cardinal { font-size: 30px; color: var(--cyan); font-weight: 700; margin-top: 2px; }
+    .compass-read .heading { font-family: var(--ui); font-size: 62px; font-weight: 800; line-height: 1; }
+    .compass-read .cardinal { font-family: var(--ui); font-size: 30px; color: var(--blue-bright); font-weight: 700; margin-top: 2px; }
     .compass-read .sub { font-size: 15px; color: var(--muted); margin-top: 8px; }
     .needle-pointer { position: absolute; top: -2px; left: 50%; transform: translateX(-50%); width: 0; height: 0;
       border-left: 9px solid transparent; border-right: 9px solid transparent; border-top: 14px solid var(--amber); }
@@ -84,39 +87,39 @@
     .row { display: flex; gap: 12px; flex: 0 0 auto; height: 150px; }
     .row .panel { flex: 1; display: flex; flex-direction: column; }
     .level-stage { flex: 1; position: relative; margin-top: 6px; }
-    .cross { position: absolute; inset: 0; border: 1px solid var(--cyan-faint); border-radius: 10px; }
-    .cross:before, .cross:after { content: ""; position: absolute; background: var(--cyan-faint); }
+    .cross { position: absolute; inset: 0; border: 1px solid var(--blue-faint); border-radius: 10px; }
+    .cross:before, .cross:after { content: ""; position: absolute; background: var(--blue-faint); }
     .cross:before { left: 50%; top: 8%; bottom: 8%; width: 1px; transform: translateX(-50%); }
     .cross:after { top: 50%; left: 8%; right: 8%; height: 1px; transform: translateY(-50%); }
-    .target { position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; margin: -23px 0 0 -23px; border: 1px solid var(--cyan-dim); border-radius: 50%; }
+    .target { position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; margin: -23px 0 0 -23px; border: 1px solid var(--blue-dim); border-radius: 50%; }
     .bubble { position: absolute; left: 50%; top: 50%; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%;
-      background: var(--green); box-shadow: 0 0 16px rgba(52,255,158,0.7); transition: transform 90ms linear, background 140ms; }
-    .bubble.off { background: var(--amber); box-shadow: 0 0 16px rgba(255,204,51,0.7); }
+      background: var(--green); box-shadow: 0 0 16px rgba(61,220,151,0.7); transition: transform 90ms linear, background 140ms; }
+    .bubble.off { background: var(--amber); box-shadow: 0 0 16px rgba(240,180,41,0.7); }
     .level-vals { font-size: 15px; color: var(--muted); margin-top: 6px; }
     .level-vals b { color: var(--white); font-weight: 600; }
 
-    .g-big { font-size: 52px; font-weight: 800; line-height: 1; margin-top: 8px; }
+    .g-big { font-family: var(--ui); font-size: 52px; font-weight: 800; line-height: 1; margin-top: 8px; }
     .g-big small { font-size: 20px; color: var(--muted); font-weight: 600; }
-    .gbar-track { height: 12px; border-radius: 8px; background: rgba(0,229,255,0.12); margin-top: 12px; overflow: hidden; }
-    .gbar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--cyan), var(--amber)); transition: width 90ms linear; }
+    .gbar-track { height: 12px; border-radius: 8px; background: rgba(74,163,232,0.14); margin-top: 12px; overflow: hidden; }
+    .gbar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--blue-bright), var(--amber)); transition: width 90ms linear; }
     .g-peak { font-size: 15px; color: var(--muted); margin-top: 8px; }
     .g-peak b { color: var(--amber); font-weight: 700; }
 
     /* footer buttons */
     .footer { display: flex; gap: 12px; flex: 0 0 auto; height: 88px; }
     .btn {
-      flex: 1; border: 2px solid var(--cyan-dim); border-radius: 14px; background: rgba(0,20,28,0.35);
-      color: var(--white); font-size: 20px; font-weight: 700; letter-spacing: 0.5px;
+      flex: 1; border: 2px solid var(--blue-dim); border-radius: 14px; background: rgba(27,116,188,0.14);
+      color: var(--white); font-family: var(--ui); font-size: 20px; font-weight: 700; letter-spacing: 0.5px;
       display: flex; align-items: center; justify-content: center; gap: 10px;
       min-height: 88px; transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
     }
-    .btn .ic { font-size: 24px; color: var(--cyan); }
+    .btn .ic { font-size: 24px; color: var(--blue-bright); }
 
     .hint { font-size: 15px; color: var(--muted); letter-spacing: 0.5px; }
-    .kbd { display: inline-block; border: 1px solid var(--cyan-dim); border-radius: 6px; padding: 1px 7px; color: var(--cyan); font-size: 14px; }
+    .kbd { display: inline-block; border: 1px solid var(--blue-dim); border-radius: 6px; padding: 1px 7px; color: var(--blue-bright); font-size: 14px; }
     #enable .hint { margin-top: 8px; }
 
-    @keyframes pulse { 0%,100% { box-shadow: 0 0 22px rgba(0,229,255,0.35);} 50% { box-shadow: 0 0 34px rgba(0,229,255,0.8);} }
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 22px rgba(74,163,232,0.4);} 50% { box-shadow: 0 0 34px rgba(74,163,232,0.85);} }
     .pulsing { animation: pulse 0.5s ease; }
   </style>
 </head>
@@ -124,7 +127,7 @@
 
   <!-- ===================== ENABLE SCREEN ===================== -->
   <section id="enable" class="screen active">
-    <div class="brand">Skill Reality</div>
+    <div class="lockup"><img src="glyph-bright.png" alt="Skill Reality"><span class="wordmark">Skill Reality</span><span class="lk-div"></span><span class="descriptor">Frontline Performance AI</span></div>
     <h1 class="title">Sensor HUD</h1>
     <p class="lede">Live compass, level, and motion — straight from the glasses' onboard sensors. A quick demo of what the hardware can feel.</p>
     <button id="enableBtn" class="btn focusable" data-action="enable" style="max-width: 320px; height: 92px; font-size: 22px;">
@@ -144,9 +147,9 @@
     <div id="compassPanel" class="panel focusable" tabindex="-1" data-action="recenter-compass">
       <div class="compass-wrap">
         <svg viewBox="0 0 196 196" width="196" height="196">
-          <circle cx="98" cy="98" r="92" fill="none" stroke="rgba(0,229,255,0.16)" stroke-width="2"/>
+          <circle cx="98" cy="98" r="92" fill="none" stroke="rgba(74,163,232,0.18)" stroke-width="2"/>
           <g id="compassDial">
-            <circle cx="98" cy="98" r="80" fill="none" stroke="rgba(0,229,255,0.10)" stroke-width="1"/>
+            <circle cx="98" cy="98" r="80" fill="none" stroke="rgba(74,163,232,0.10)" stroke-width="1"/>
             <!-- ticks + cardinal labels generated in JS -->
           </g>
         </svg>
@@ -216,7 +219,7 @@
         var ln = document.createElementNS(svgns, 'line');
         ln.setAttribute('x1', x1); ln.setAttribute('y1', y1);
         ln.setAttribute('x2', x2); ln.setAttribute('y2', y2);
-        ln.setAttribute('stroke', major ? 'rgba(0,229,255,0.85)' : 'rgba(0,229,255,0.30)');
+        ln.setAttribute('stroke', major ? 'rgba(74,163,232,0.9)' : 'rgba(74,163,232,0.32)');
         ln.setAttribute('stroke-width', major ? 2.5 : 1.5);
         dial.appendChild(ln);
         if (cardinals[a]) {
@@ -225,10 +228,10 @@
           var t = document.createElementNS(svgns, 'text');
           t.setAttribute('x', tx); t.setAttribute('y', ty + 6);
           t.setAttribute('text-anchor', 'middle');
-          t.setAttribute('fill', a === 0 ? '#ffcc33' : '#00e5ff');
+          t.setAttribute('fill', a === 0 ? '#F0B429' : '#4AA3E8');
           t.setAttribute('font-size', a === 0 ? '20' : '17');
-          t.setAttribute('font-weight', '700');
-          t.setAttribute('font-family', 'ui-monospace, monospace');
+          t.setAttribute('font-weight', '800');
+          t.setAttribute('font-family', 'IBM Plex Mono, monospace');
           t.textContent = cardinals[a];
           dial.appendChild(t);
         }
