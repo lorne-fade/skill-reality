@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- Lock the glasses viewport: fixed 600x600, no zoom -->
+  <meta name="viewport" content="width=600, height=600, initial-scale=1.0, user-scalable=no">
+  <meta name="description" content="Skill Reality Sensor HUD — live compass, level, and motion readouts for Meta Ray-Ban Display.">
+  <!-- Identify as MRBD-compatible -->
+  <meta name="mrbd-web-app-capable" content="yes">
+  <link rel="icon" href="icon-96.png" sizes="96x96">
+  <link rel="icon" href="favicon-52.png" sizes="52x52">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180">
+  <title>Skill Reality — Sensor HUD</title>
+  <style>
+    :root {
+      --cyan: #00e5ff;
+      --cyan-dim: rgba(0,229,255,0.22);
+      --cyan-faint: rgba(0,229,255,0.10);
+      --white: #eafcff;
+      --amber: #ffcc33;
+      --green: #34ff9e;
+      --muted: rgba(234,252,255,0.55);
+    }
+    * { box-sizing: border-box; -webkit-user-select: none; user-select: none; }
+    html, body {
+      margin: 0; padding: 0;
+      width: 600px; height: 600px;
+      overflow: hidden;
+      background: #000;
+      color: var(--white);
+      font-family: -apple-system, "Helvetica Neue", system-ui, sans-serif;
+      cursor: none;
+    }
+    .mono { font-family: ui-monospace, "SF Mono", "Roboto Mono", Menlo, monospace; }
+
+    /* ---------- screens ---------- */
+    .screen { position: absolute; inset: 0; width: 600px; height: 600px; display: none; }
+    .screen.active { display: block; }
+
+    /* ---------- enable screen ---------- */
+    #enable { padding: 40px; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    #enable.active { display: flex; }
+    .brand { font-size: 15px; letter-spacing: 3px; color: var(--cyan); text-transform: uppercase; margin-bottom: 10px; }
+    .title { font-size: 42px; font-weight: 800; letter-spacing: -1px; margin: 0 0 16px; }
+    .lede { font-size: 18px; line-height: 1.5; color: var(--muted); max-width: 440px; margin: 0 0 40px; }
+
+    /* ---------- dashboard ---------- */
+    #dash { padding: 18px; display: none; flex-direction: column; gap: 12px; }
+    #dash.active { display: flex; }
+    .topbar { height: 38px; display: flex; align-items: center; justify-content: space-between; flex: 0 0 auto; }
+    .topbar .name { font-size: 16px; letter-spacing: 2px; color: var(--cyan); text-transform: uppercase; }
+    .chip { font-size: 14px; letter-spacing: 1px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--cyan-dim); color: var(--muted); }
+    .chip.live { color: var(--green); border-color: rgba(52,255,158,0.5); }
+    .chip.sim  { color: var(--amber); border-color: rgba(255,204,51,0.5); }
+
+    .panel {
+      border: 2px solid var(--cyan-dim);
+      border-radius: 14px;
+      background: rgba(0,20,28,0.35);
+      padding: 14px;
+      transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+      min-height: 88px; /* glasses minimum tap target */
+      position: relative;
+    }
+    .panel .plabel { font-size: 15px; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; }
+    .focusable:focus {
+      outline: none;
+      border-color: var(--cyan);
+      background: rgba(0,40,54,0.55);
+      box-shadow: 0 0 22px rgba(0,229,255,0.35);
+    }
+
+    /* compass */
+    #compassPanel { flex: 0 0 auto; height: 224px; display: flex; align-items: center; gap: 18px; }
+    .compass-wrap { width: 196px; height: 196px; position: relative; flex: 0 0 auto; }
+    .compass-read { flex: 1; }
+    .compass-read .heading { font-size: 62px; font-weight: 800; line-height: 1; }
+    .compass-read .cardinal { font-size: 30px; color: var(--cyan); font-weight: 700; margin-top: 2px; }
+    .compass-read .sub { font-size: 15px; color: var(--muted); margin-top: 8px; }
+    .needle-pointer { position: absolute; top: -2px; left: 50%; transform: translateX(-50%); width: 0; height: 0;
+      border-left: 9px solid transparent; border-right: 9px solid transparent; border-top: 14px solid var(--amber); }
+
+    /* middle row: level + motion */
+    .row { display: flex; gap: 12px; flex: 0 0 auto; height: 150px; }
+    .row .panel { flex: 1; display: flex; flex-direction: column; }
+    .level-stage { flex: 1; position: relative; margin-top: 6px; }
+    .cross { position: absolute; inset: 0; border: 1px solid var(--cyan-faint); border-radius: 10px; }
+    .cross:before, .cross:after { content: ""; position: absolute; background: var(--cyan-faint); }
+    .cross:before { left: 50%; top: 8%; bottom: 8%; width: 1px; transform: translateX(-50%); }
+    .cross:after { top: 50%; left: 8%; right: 8%; height: 1px; transform: translateY(-50%); }
+    .target { position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; margin: -23px 0 0 -23px; border: 1px solid var(--cyan-dim); border-radius: 50%; }
+    .bubble { position: absolute; left: 50%; top: 50%; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%;
+      background: var(--green); box-shadow: 0 0 16px rgba(52,255,158,0.7); transition: transform 90ms linear, background 140ms; }
+    .bubble.off { background: var(--amber); box-shadow: 0 0 16px rgba(255,204,51,0.7); }
+    .level-vals { font-size: 15px; color: var(--muted); margin-top: 6px; }
+    .level-vals b { color: var(--white); font-weight: 600; }
+
+    .g-big { font-size: 52px; font-weight: 800; line-height: 1; margin-top: 8px; }
+    .g-big small { font-size: 20px; color: var(--muted); font-weight: 600; }
+    .gbar-track { height: 12px; border-radius: 8px; background: rgba(0,229,255,0.12); margin-top: 12px; overflow: hidden; }
+    .gbar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--cyan), var(--amber)); transition: width 90ms linear; }
+    .g-peak { font-size: 15px; color: var(--muted); margin-top: 8px; }
+    .g-peak b { color: var(--amber); font-weight: 700; }
+
+    /* footer buttons */
+    .footer { display: flex; gap: 12px; flex: 0 0 auto; height: 88px; }
+    .btn {
+      flex: 1; border: 2px solid var(--cyan-dim); border-radius: 14px; background: rgba(0,20,28,0.35);
+      color: var(--white); font-size: 20px; font-weight: 700; letter-spacing: 0.5px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      min-height: 88px; transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+    }
+    .btn .ic { font-size: 24px; color: var(--cyan); }
+
+    .hint { font-size: 15px; color: var(--muted); letter-spacing: 0.5px; }
+    .kbd { display: inline-block; border: 1px solid var(--cyan-dim); border-radius: 6px; padding: 1px 7px; color: var(--cyan); font-size: 14px; }
+    #enable .hint { margin-top: 8px; }
+
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 22px rgba(0,229,255,0.35);} 50% { box-shadow: 0 0 34px rgba(0,229,255,0.8);} }
+    .pulsing { animation: pulse 0.5s ease; }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== ENABLE SCREEN ===================== -->
+  <section id="enable" class="screen active">
+    <div class="brand">Skill Reality</div>
+    <h1 class="title">Sensor HUD</h1>
+    <p class="lede">Live compass, level, and motion — straight from the glasses' onboard sensors. A quick demo of what the hardware can feel.</p>
+    <button id="enableBtn" class="btn focusable" data-action="enable" style="max-width: 320px; height: 92px; font-size: 22px;">
+      <span class="ic">◎</span> Enable Sensors
+    </button>
+    <p class="hint">Swipe or <span class="kbd">← ↑ ↓ →</span> to move &nbsp;·&nbsp; pinch or <span class="kbd">Enter</span> to select</p>
+  </section>
+
+  <!-- ===================== DASHBOARD ===================== -->
+  <section id="dash" class="screen">
+    <div class="topbar">
+      <div class="name">◆ Sensor HUD</div>
+      <div id="statusChip" class="chip">CONNECTING…</div>
+    </div>
+
+    <!-- Compass -->
+    <div id="compassPanel" class="panel focusable" tabindex="-1" data-action="recenter-compass">
+      <div class="compass-wrap">
+        <svg viewBox="0 0 196 196" width="196" height="196">
+          <circle cx="98" cy="98" r="92" fill="none" stroke="rgba(0,229,255,0.16)" stroke-width="2"/>
+          <g id="compassDial">
+            <circle cx="98" cy="98" r="80" fill="none" stroke="rgba(0,229,255,0.10)" stroke-width="1"/>
+            <!-- ticks + cardinal labels generated in JS -->
+          </g>
+        </svg>
+        <div class="needle-pointer"></div>
+      </div>
+      <div class="compass-read">
+        <div class="plabel">Heading</div>
+        <div class="heading mono"><span id="hdgVal">—</span><span style="font-size:26px;">°</span></div>
+        <div class="cardinal" id="hdgCard">—</div>
+        <div class="sub">Enter to recenter north</div>
+      </div>
+    </div>
+
+    <!-- Level + Motion -->
+    <div class="row">
+      <div id="levelPanel" class="panel focusable" tabindex="-1" data-action="recenter-level">
+        <div class="plabel">Level</div>
+        <div class="level-stage">
+          <div class="cross"></div>
+          <div class="target"></div>
+          <div id="bubble" class="bubble"></div>
+        </div>
+        <div class="level-vals mono">pitch <b id="pitchVal">0°</b> &nbsp; roll <b id="rollVal">0°</b></div>
+      </div>
+
+      <div id="motionPanel" class="panel focusable" tabindex="-1" data-action="reset-peak">
+        <div class="plabel">Motion</div>
+        <div class="g-big mono"><span id="gVal">0.00</span><small> G</small></div>
+        <div class="gbar-track"><div id="gBar" class="gbar-fill"></div></div>
+        <div class="g-peak mono">peak <b id="gPeak">0.00 G</b> · Enter resets</div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <button id="recenterBtn" class="btn focusable" data-action="recenter-all"><span class="ic">⊕</span> Recenter</button>
+      <button id="menuBtn" class="btn focusable" data-action="menu"><span class="ic">⌂</span> Menu</button>
+    </div>
+  </section>
+
+  <script>
+  (function () {
+    "use strict";
+
+    // ---------- Input constants ----------
+    var DPAD = { UP:'ArrowUp', DOWN:'ArrowDown', LEFT:'ArrowLeft', RIGHT:'ArrowRight', SELECT:'Enter', BACK:'Escape' };
+
+    // ---------- State ----------
+    var state = {
+      heading: 0, pitch: 0, roll: 0, g: 1.0, peak: 0,
+      hdgOffset: 0, pitchOffset: 0, rollOffset: 0,
+      gotSensor: false, simulated: false, enabled: false
+    };
+    var lastEventTs = 0;
+
+    // ---------- Build compass ticks/labels once ----------
+    (function buildDial() {
+      var dial = document.getElementById('compassDial');
+      var svgns = 'http://www.w3.org/2000/svg';
+      var cardinals = { 0:'N', 90:'E', 180:'S', 270:'W' };
+      for (var a = 0; a < 360; a += 15) {
+        var rad = a * Math.PI / 180;
+        var major = (a % 90 === 0);
+        var r1 = major ? 62 : 70, r2 = 80;
+        var x1 = 98 + Math.sin(rad) * r1, y1 = 98 - Math.cos(rad) * r1;
+        var x2 = 98 + Math.sin(rad) * r2, y2 = 98 - Math.cos(rad) * r2;
+        var ln = document.createElementNS(svgns, 'line');
+        ln.setAttribute('x1', x1); ln.setAttribute('y1', y1);
+        ln.setAttribute('x2', x2); ln.setAttribute('y2', y2);
+        ln.setAttribute('stroke', major ? 'rgba(0,229,255,0.85)' : 'rgba(0,229,255,0.30)');
+        ln.setAttribute('stroke-width', major ? 2.5 : 1.5);
+        dial.appendChild(ln);
+        if (cardinals[a]) {
+          var rl = 48;
+          var tx = 98 + Math.sin(rad) * rl, ty = 98 - Math.cos(rad) * rl;
+          var t = document.createElementNS(svgns, 'text');
+          t.setAttribute('x', tx); t.setAttribute('y', ty + 6);
+          t.setAttribute('text-anchor', 'middle');
+          t.setAttribute('fill', a === 0 ? '#ffcc33' : '#00e5ff');
+          t.setAttribute('font-size', a === 0 ? '20' : '17');
+          t.setAttribute('font-weight', '700');
+          t.setAttribute('font-family', 'ui-monospace, monospace');
+          t.textContent = cardinals[a];
+          dial.appendChild(t);
+        }
+      }
+    })();
+
+    // ---------- Screen management ----------
+    function show(id) {
+      var screens = document.querySelectorAll('.screen');
+      for (var i = 0; i < screens.length; i++) screens[i].classList.remove('active');
+      document.getElementById(id).classList.add('active');
+      // focus first focusable in the shown screen
+      var first = document.querySelector('#' + id + ' .focusable');
+      if (first) first.focus();
+    }
+
+    // ---------- Focus navigation (D-pad) ----------
+    function focusables() {
+      var active = document.querySelector('.screen.active');
+      return Array.prototype.slice.call(
+        active.querySelectorAll('.focusable:not([disabled])')
+      );
+    }
+    function moveFocus(dir) {
+      var f = focusables();
+      if (!f.length) return;
+      var idx = f.indexOf(document.activeElement);
+      if (idx === -1) { f[0].focus(); return; }
+      var next = (dir === 'prev')
+        ? (idx > 0 ? idx - 1 : f.length - 1)
+        : (idx < f.length - 1 ? idx + 1 : 0);
+      f[next].focus();
+    }
+
+    document.addEventListener('keydown', function (e) {
+      switch (e.key) {
+        case DPAD.UP:
+        case DPAD.LEFT:  moveFocus('prev'); break;
+        case DPAD.DOWN:
+        case DPAD.RIGHT: moveFocus('next'); break;
+        case DPAD.SELECT:
+          if (document.activeElement && document.activeElement.classList.contains('focusable')) {
+            activate(document.activeElement);
+          }
+          break;
+        case DPAD.BACK:
+          if (document.getElementById('dash').classList.contains('active')) show('enable');
+          break;
+        default: return;
+      }
+      e.preventDefault();
+    });
+
+    // ---------- Activation (Enter) ----------
+    function activate(el) {
+      var action = el.getAttribute('data-action');
+      el.classList.remove('pulsing'); void el.offsetWidth; el.classList.add('pulsing');
+      switch (action) {
+        case 'enable': enableSensors(); break;
+        case 'menu': show('enable'); break;
+        case 'recenter-all': recenter(true, true); break;
+        case 'recenter-compass': recenter(true, false); break;
+        case 'recenter-level': recenter(false, true); break;
+        case 'reset-peak': state.peak = 0; break;
+      }
+    }
+
+    function recenter(compass, level) {
+      if (compass) state.hdgOffset = rawHeading;
+      if (level) { state.pitchOffset = rawPitch; state.rollOffset = rawRoll; }
+    }
+
+    // ---------- Sensors ----------
+    var rawHeading = 0, rawPitch = 0, rawRoll = 0;
+
+    function onOrientation(e) {
+      if (e.alpha === null && e.beta === null && e.gamma === null) return;
+      lastEventTs = Date.now();
+      if (!state.gotSensor) { state.gotSensor = true; state.simulated = false; setStatus('live'); }
+      // webkitCompassHeading is more accurate on iOS; fall back to 360-alpha
+      rawHeading = (typeof e.webkitCompassHeading === 'number')
+        ? e.webkitCompassHeading
+        : (e.alpha != null ? (360 - e.alpha) : rawHeading);
+      rawPitch = e.beta != null ? e.beta : rawPitch;
+      rawRoll  = e.gamma != null ? e.gamma : rawRoll;
+    }
+    function onMotion(e) {
+      lastEventTs = Date.now();
+      var a = e.accelerationIncludingGravity;
+      if (a && a.x != null) {
+        var g = Math.sqrt(a.x*a.x + a.y*a.y + a.z*a.z) / 9.81;
+        state.g = g;
+        if (g > state.peak) state.peak = g;
+        if (!state.gotSensor) { state.gotSensor = true; state.simulated = false; setStatus('live'); }
+      }
+    }
+
+    function startIMU() {
+      window.addEventListener('deviceorientation', onOrientation);
+      window.addEventListener('devicemotion', onMotion);
+      // if no real events arrive shortly, fall back to simulation for desktop preview
+      setTimeout(function () {
+        if (!state.gotSensor) { state.simulated = true; setStatus('sim'); }
+      }, 1500);
+    }
+
+    function enableSensors() {
+      if (state.enabled) { show('dash'); return; }
+      state.enabled = true;
+      show('dash');
+      setStatus('connecting');
+      var DOE = window.DeviceOrientationEvent;
+      if (DOE && typeof DOE.requestPermission === 'function') {
+        DOE.requestPermission().then(function (s) {
+          if (s === 'granted') { requestMotionThenStart(); }
+          else { state.simulated = true; setStatus('sim'); }
+        }).catch(function () { state.simulated = true; setStatus('sim'); });
+      } else {
+        startIMU();
+      }
+    }
+    function requestMotionThenStart() {
+      var DME = window.DeviceMotionEvent;
+      if (DME && typeof DME.requestPermission === 'function') {
+        DME.requestPermission().then(function () { startIMU(); }).catch(function () { startIMU(); });
+      } else { startIMU(); }
+    }
+
+    function setStatus(kind) {
+      var chip = document.getElementById('statusChip');
+      chip.className = 'chip' + (kind === 'live' ? ' live' : kind === 'sim' ? ' sim' : '');
+      chip.textContent = kind === 'live' ? '● LIVE' : kind === 'sim' ? '● SIMULATED' : 'CONNECTING…';
+    }
+
+    // ---------- Render loop ----------
+    var el = {
+      dial: document.getElementById('compassDial'),
+      hdg: document.getElementById('hdgVal'), card: document.getElementById('hdgCard'),
+      bubble: document.getElementById('bubble'), pitch: document.getElementById('pitchVal'), roll: document.getElementById('rollVal'),
+      g: document.getElementById('gVal'), gbar: document.getElementById('gBar'), gpeak: document.getElementById('gPeak')
+    };
+    function cardinal(h) {
+      var dirs = ['N','NE','E','SE','S','SW','W','NW'];
+      return dirs[Math.round(h / 45) % 8];
+    }
+    function lerpAngle(a, b, t) {
+      var d = ((b - a + 540) % 360) - 180;
+      return a + d * t;
+    }
+    var dispHdg = 0;
+    function render() {
+      // simulation values
+      if (state.simulated) {
+        var now = Date.now() / 1000;
+        rawHeading = (now * 12) % 360;
+        rawPitch = Math.sin(now * 0.8) * 22;
+        rawRoll = Math.cos(now * 0.6) * 16;
+        state.g = 1.0 + Math.sin(now * 2.2) * 0.35 + Math.max(0, Math.sin(now * 0.5)) * 0.4;
+        if (state.g > state.peak) state.peak = state.g;
+      }
+      // heading (relative to recenter offset)
+      var h = ((rawHeading - state.hdgOffset) % 360 + 360) % 360;
+      dispHdg = lerpAngle(dispHdg, h, 0.2);
+      var dh = ((dispHdg % 360) + 360) % 360;
+      el.dial.setAttribute('transform', 'rotate(' + (-dh) + ' 98 98)');
+      el.hdg.textContent = Math.round(h);
+      el.card.textContent = cardinal(h);
+      // level
+      var p = rawPitch - state.pitchOffset, r = rawRoll - state.rollOffset;
+      el.pitch.textContent = Math.round(p) + '°';
+      el.roll.textContent = Math.round(r) + '°';
+      var maxOff = 44;
+      var bx = Math.max(-maxOff, Math.min(maxOff, r * 1.6));
+      var by = Math.max(-maxOff, Math.min(maxOff, p * 1.6));
+      el.bubble.style.transform = 'translate(' + bx + 'px,' + by + 'px)';
+      var levelOk = Math.abs(p) < 5 && Math.abs(r) < 5;
+      el.bubble.classList.toggle('off', !levelOk);
+      // g-force
+      el.g.textContent = state.g.toFixed(2);
+      el.gbar.style.width = Math.max(0, Math.min(100, (state.g / 2) * 100)) + '%';
+      el.gpeak.textContent = state.peak.toFixed(2) + ' G';
+      requestAnimationFrame(render);
+    }
+    requestAnimationFrame(render);
+
+    // start focused on the enable button
+    document.getElementById('enableBtn').focus();
+  })();
+  </script>
+</body>
+</html>
