@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Skill Reality — Phase 4: the field pilot. Shadow→live→prove protocol, ground-truth pass bar, and the consent & privacy pack.">
+<link rel="icon" href="/favicon/icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
+<title>Skill Reality — Phase 4 · Field Pilot</title>
+<style>html,body{margin:0;padding:0;background:#080A0E}</style>
+</head>
+<body>
+<style>
+  :root{
+    --bg:#080A0E; --bg2:#0C1219; --bg3:#111B24; --line:rgba(120,162,204,0.15);
+    --ink:#EAF1F8; --mut:#94A6B8; --dim:rgba(234,241,248,0.46);
+    --blue:#1B74BC; --bright:#4AA3E8; --green:#3DDC97; --amber:#F0B429; --red:#FF5A6E;
+    --sans:'Hanken Grotesk',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+    --wrap:900px;
+  }
+  *{box-sizing:border-box}
+  .page{background:radial-gradient(120% 60% at 50% -10%, rgba(27,116,188,0.16), transparent 55%), var(--bg);
+    color:var(--ink); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased; padding:0 20px 96px;}
+  .wrap{max-width:var(--wrap); margin:0 auto}
+  .eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:2.5px; text-transform:uppercase; color:var(--bright)}
+  h1,h2,h3{text-wrap:balance; margin:0; font-weight:800; letter-spacing:-0.02em}
+  .mono{font-family:var(--mono)} em{color:var(--ink); font-style:italic}
+
+  .top{padding:60px 0 38px; border-bottom:1px solid var(--line)}
+  .brandrow{display:flex; align-items:center; gap:10px; margin-bottom:24px}
+  .glyph{width:26px;height:26px;border-radius:6px;flex:0 0 auto;
+    background:conic-gradient(from 210deg at 50% 50%, var(--blue), var(--bright), var(--blue));
+    -webkit-mask:radial-gradient(circle at 50% 42%, transparent 22%, #000 23%); mask:radial-gradient(circle at 50% 42%, transparent 22%, #000 23%);}
+  .brandrow .bn{font-weight:800; font-size:15px} .brandrow .bd{font-family:var(--mono); font-size:11px; letter-spacing:1px; color:var(--dim); text-transform:uppercase; border-left:1px solid var(--line); padding-left:10px}
+  h1{font-size:clamp(30px,5vw,48px); line-height:1.03; margin:14px 0 0}
+  h1 .accent{color:var(--bright)}
+  .lede{font-size:18px; color:var(--mut); max-width:64ch; margin:16px 0 0}
+  .metastrip{display:flex; flex-wrap:wrap; gap:8px; margin-top:24px}
+  .chip{display:inline-flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11.5px; letter-spacing:0.4px; padding:5px 11px; border-radius:100px; border:1px solid var(--line); color:var(--mut); white-space:nowrap}
+  .chip::before{content:""; width:7px;height:7px;border-radius:50%; background:currentColor; flex:0 0 auto}
+  .chip.now{color:var(--green); border-color:rgba(61,220,151,0.4)}
+  .chip.gate{color:var(--amber); border-color:rgba(240,180,41,0.4)}
+  .chip.new{color:var(--bright); border-color:rgba(74,163,232,0.42)}
+
+  section{padding:50px 0 0}
+  .kick{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:20px}
+  .kick h2{font-size:clamp(21px,3.2vw,27px)}
+  .kick .n{font-family:var(--mono); font-size:13px; color:var(--dim)}
+  .sub{color:var(--mut); max-width:66ch; margin:-6px 0 24px}
+
+  /* principle callout */
+  .principle{border:1px solid rgba(74,163,232,0.35); border-radius:16px; background:linear-gradient(180deg, rgba(27,116,188,0.14), var(--bg2)); padding:26px 28px}
+  .principle .lab{font-family:var(--mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--bright); margin-bottom:10px}
+  .principle h3{font-size:21px; margin-bottom:10px}
+  .principle p{margin:0; font-size:15px; color:var(--mut); max-width:70ch}
+
+  /* preconditions checklist */
+  .checkgrid{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  .checkcol{background:var(--bg2); border:1px solid var(--line); border-radius:14px; padding:18px 20px}
+  .checkcol h3{font-size:13px; font-family:var(--mono); letter-spacing:1px; text-transform:uppercase; color:var(--dim); font-weight:500; margin-bottom:13px}
+  .checkcol ul{margin:0;padding:0;list-style:none; display:flex; flex-direction:column; gap:10px}
+  .checkcol li{font-size:13.5px; color:var(--mut); display:flex; gap:10px; align-items:flex-start}
+  .checkcol li::before{content:"▢"; color:var(--bright); flex:0 0 auto; font-size:13px; margin-top:1px}
+  .checkcol li b{color:var(--ink); font-weight:600}
+
+  /* weeks timeline */
+  .weeks{display:flex; flex-direction:column}
+  .week{display:grid; grid-template-columns:130px 1fr; gap:20px; padding:20px 0; border-top:1px solid var(--line)}
+  .week:first-child{border-top:0}
+  .week .wd{font-family:var(--mono); font-size:12px; color:var(--bright); letter-spacing:0.5px}
+  .week .wd .mode{display:inline-block; margin-top:7px; font-size:10px; letter-spacing:0.8px; padding:3px 8px; border-radius:6px}
+  .mode.shadow{color:var(--amber); background:rgba(240,180,41,0.1); border:1px solid rgba(240,180,41,0.3)}
+  .mode.live{color:var(--green); background:rgba(61,220,151,0.1); border:1px solid rgba(61,220,151,0.3)}
+  .week h3{font-size:16px}
+  .week p{margin:6px 0 0; font-size:13.5px; color:var(--mut); max-width:64ch}
+  .week .pts{margin:10px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:5px}
+  .week .pts li{font-size:13px; color:var(--mut); display:flex; gap:8px}
+  .week .pts li::before{content:"→"; color:var(--bright); font-family:var(--mono); font-size:12px; flex:0 0 auto}
+
+  /* measurement table */
+  .tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:14px; background:var(--bg2)}
+  table{border-collapse:collapse; width:100%; min-width:640px; font-size:13.5px}
+  th,td{text-align:left; padding:12px 16px; border-top:1px solid var(--line); vertical-align:top}
+  thead th{border-top:0; font-family:var(--mono); font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--dim); font-weight:500; background:var(--bg3)}
+  td.m{font-weight:600; color:var(--ink); width:26%} td.v{color:var(--mut)}
+  td.t{font-family:var(--mono); font-size:12.5px; color:var(--green); white-space:nowrap}
+
+  /* consent pack */
+  .pack{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+  .packitem{background:var(--bg2); border:1px solid var(--line); border-radius:14px; padding:17px 18px}
+  .packitem .pn{font-family:var(--mono); font-size:10.5px; letter-spacing:1px; text-transform:uppercase; color:var(--bright); margin-bottom:8px}
+  .packitem h3{font-size:14.5px; margin-bottom:7px}
+  .packitem p{margin:0; font-size:12.5px; color:var(--mut)}
+
+  /* lists */
+  .split{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  .listcard{background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:22px}
+  .listcard h3{font-size:16px; margin-bottom:14px}
+  .listcard ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:11px}
+  .listcard li{font-size:13.5px; color:var(--mut); display:flex; gap:10px; align-items:flex-start}
+  .listcard li b{color:var(--ink); font-weight:600}
+  .listcard li .mk{flex:0 0 auto; font-family:var(--mono); font-size:12px; color:var(--bright); margin-top:1px}
+  .listcard.pass li .mk{color:var(--green)}
+
+  .exit{margin-top:18px; font-size:13px; color:var(--ink); background:var(--bg2); border:1px solid var(--line); border-left:2px solid var(--green); border-radius:0 10px 10px 0; padding:13px 16px}
+  .exit b{color:var(--green); font-family:var(--mono); font-size:11px; letter-spacing:0.8px; text-transform:uppercase; display:block; margin-bottom:3px; font-weight:500}
+
+  .foota{margin-top:52px; padding:24px; border:1px solid var(--line); border-radius:16px; background:linear-gradient(180deg, rgba(27,116,188,0.1), var(--bg2)); font-size:13.5px; color:var(--mut)}
+  .foota b{color:var(--ink)}
+  .disclaimer{margin-top:20px; font-size:12px; color:var(--dim); font-family:var(--mono); line-height:1.7}
+
+  @media(max-width:720px){
+    .checkgrid,.split{grid-template-columns:1fr}
+    .pack{grid-template-columns:1fr}
+    .week{grid-template-columns:1fr; gap:6px}
+  }
+</style>
+
+<div class="page">
+<div class="wrap">
+
+  <header class="top">
+    <div class="brandrow"><span class="glyph"></span><span class="bn">Skill Reality</span><span class="bd">Frontline Performance AI</span></div>
+    <div class="eyebrow">Build Map · Phase 4</div>
+    <h1>The field pilot —<br><span class="accent">ground truth or it didn't happen</span></h1>
+    <p class="lede">Everything before this phase happened on our terms: staged hazards, cooperative testers, controlled light. The pilot puts the prototype on real heads at a real site for four weeks and measures it against what a human safety observer actually saw. It ends with numbers and a signature, not a vibe.</p>
+    <div class="metastrip">
+      <span class="chip gate">4 weeks on-site</span>
+      <span class="chip new">Needs a signed pilot site</span>
+      <span class="chip now">Ends in a signed report</span>
+    </div>
+  </header>
+
+  <!-- PRINCIPLE -->
+  <section>
+    <div class="principle">
+      <div class="lab">The rule that governs everything on site</div>
+      <h3>Augment, never replace</h3>
+      <p>For the entire pilot, Hazard Watch is a <em>supplementary</em> layer. Every existing safety control — spotters, permits, LOTO, toolbox talks — runs exactly as before. No procedure is relaxed because "the glasses are watching," no alert substitutes for a human judgment, and any incident follows the site's normal protocol first, ours second. This isn't just ethics; it's what makes a site willing to sign, and it keeps the pilot's failure modes survivable while the numbers are still unproven.</p>
+    </div>
+  </section>
+
+  <!-- PRECONDITIONS -->
+  <section>
+    <div class="kick"><h2>Before day one</h2><span class="n">the pilot doesn't start until every box is checked</span></div>
+    <div class="checkgrid">
+      <div class="checkcol">
+        <h3>Program inputs</h3>
+        <ul>
+          <li><b>Phases 1–3 passed</b> — slice demo, model at recall floor, judgment layer through its wear-test</li>
+          <li><b>Pilot site signed</b> — one site, named site sponsor, agreed hazard focus (which Tier 1 classes matter there)</li>
+          <li><b>Consent pack executed</b> — every document in the pack below, signed before any capture</li>
+          <li><b>Safety SME committed</b> — owns the ground-truth observation plan and the final sign-off</li>
+        </ul>
+      </div>
+      <div class="checkcol">
+        <h3>Logistics</h3>
+        <ul>
+          <li><b>Crew recruited</b> — 3–5 volunteer workers, mixed roles, opt-in with the right to withdraw at any time</li>
+          <li><b>Hardware kit</b> — one glasses + phone pair per worker, plus one spare pair and charging plan</li>
+          <li><b>Tester channel live</b> — pilot build distributed via Meta's invite-only release channel</li>
+          <li><b>Daily data path</b> — event logs pulled to a review machine each shift end (files, no cloud dependency)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- WEEKS -->
+  <section>
+    <div class="kick"><h2>Four weeks, three modes</h2><span class="n">shadow → live → prove</span></div>
+    <div class="weeks">
+
+      <div class="week">
+        <div class="wd">Week 1<br><span class="mode shadow">SHADOW MODE</span></div>
+        <div>
+          <h3>The system watches, workers see nothing</h3>
+          <p>Full pipeline runs, every detection and judgment is logged — but no alerts render. Meanwhile the safety observer independently logs real hazards on paper. This week produces the baseline: what the site's actual hazard rate is, and what the model would have said about it, with zero risk of alert fatigue poisoning the pilot on day two.</p>
+          <ul class="pts">
+            <li>Ground-truth log vs. shadow detections → field recall &amp; false-alarm baseline per class</li>
+            <li>Battery, comfort, and connectivity reality-check across full shifts</li>
+            <li>Threshold + rate-cap retune on real data before anyone hears an alert</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="week">
+        <div class="wd">Weeks 2–3<br><span class="mode live">LIVE ALERTS</span></div>
+        <div>
+          <h3>Alerts on, tuning loop running</h3>
+          <p>Workers get real alerts, tuned from week 1's baseline. Every evening: logs pulled, misses and false alarms reviewed against the observer's record, hard frames labeled and queued for the retrain loop. One mid-point model/policy update ships at the end of week 2 — versioned, so before/after is measurable.</p>
+          <ul class="pts">
+            <li>Daily triage: every critical-class miss reviewed within 24 h</li>
+            <li>Weekly worker debriefs — 15 min, structured, anonymous-comment option</li>
+            <li>Phase 3 trust metrics tracked per worker per shift (ack latency, mute events, agreement)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="week">
+        <div class="wd">Week 4<br><span class="mode live">SIGN-OFF RUNS</span></div>
+        <div>
+          <h3>Frozen build, measured week</h3>
+          <p>No more tuning. The final build runs a full week untouched while the observer logs ground truth. This week's numbers — not the tuned-daily weeks — are the pilot's reported results. Ends with the SME's structured sign-off review and the worker exit interviews.</p>
+          <ul class="pts">
+            <li>All pass-bar metrics measured on the frozen build only</li>
+            <li>SME failure-mode review: every miss, every false alarm, dispositioned</li>
+            <li>Exit interviews: would this crew keep wearing it? Verbatims for the report</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MEASUREMENT -->
+  <section>
+    <div class="kick"><h2>The pass bar</h2><span class="n">measured in week 4, on the frozen build</span></div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Metric</th><th>How it's measured</th><th>Target</th></tr></thead>
+        <tbody>
+          <tr><td class="m">Field recall — critical classes</td><td class="v">Model detections vs. the safety observer's independent hazard log</td><td class="t">≥ 0.85</td></tr>
+          <tr><td class="m">Field recall — other Tier 1</td><td class="v">Same ground-truth comparison, per class</td><td class="t">≥ 0.70</td></tr>
+          <tr><td class="m">False alarms</td><td class="v">Alerts the worker or observer dispositioned as wrong</td><td class="t">≤ 1 / worker / shift</td></tr>
+          <tr><td class="m">Trust metrics</td><td class="v">Phase 3's four proxies, from event logs</td><td class="t">all four hit</td></tr>
+          <tr><td class="m">Wearability</td><td class="v">Continuous or duty-cycled runtime vs. the site's task blocks; comfort survey</td><td class="t">full task blocks, no removal</td></tr>
+          <tr><td class="m">Safety regressions</td><td class="v">Any incident or near-miss where the system contributed negatively</td><td class="t">zero, hard gate</td></tr>
+          <tr><td class="m">Crew verdict</td><td class="v">Exit interview: "would you keep wearing it?"</td><td class="t">majority yes</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- CONSENT PACK -->
+  <section>
+    <div class="kick"><h2>The consent &amp; privacy pack</h2><span class="n">six documents, signed before any capture</span></div>
+    <p class="sub">A POV camera on a worker records colleagues who never opted in. The pack exists to make that legitimate, and drafting it starts <em>now</em> — legal review is the longest lead-time item in this phase, and in works-council jurisdictions it can be the longest in the program.</p>
+    <div class="pack">
+      <div class="packitem"><div class="pn">P1</div><h3>Site agreement</h3><p>Scope, duration, hazard focus, the augment-never-replace clause, termination rights, and who owns the pilot report.</p></div>
+      <div class="packitem"><div class="pn">P2</div><h3>Worker opt-in</h3><p>Plain-language consent for wearers: what's captured, what's inferred, right to withdraw any time without consequence.</p></div>
+      <div class="packitem"><div class="pn">P3</div><h3>Bystander policy</h3><p>Zone signage, crew briefing for non-wearers, capture-indicator explanation, and how a colleague objects.</p></div>
+      <div class="packitem"><div class="pn">P4</div><h3>Data handling</h3><p>On-device processing statement, what leaves the phone (labeled frames only, reviewed), retention clock, deletion path.</p></div>
+      <div class="packitem"><div class="pn">P5</div><h3>No-surveillance clause</h3><p>Explicit: no individual identification, no face recognition, no performance monitoring, no disciplinary use — ever.</p></div>
+      <div class="packitem"><div class="pn">P6</div><h3>Incident protocol</h3><p>If the system misses or misleads around a real event: site protocol first, preserved logs, joint review, disclosure duties.</p></div>
+    </div>
+  </section>
+
+  <!-- ROLES + EXIT -->
+  <section>
+    <div class="kick"><h2>Who's on the ground</h2></div>
+    <div class="split">
+      <div class="listcard">
+        <h3>The pilot team</h3>
+        <ul>
+          <li><span class="mk">▸</span><span><b>Pilot lead (us)</b> — on site weeks 1 and 4, daily triage remotely in between.</span></li>
+          <li><span class="mk">▸</span><span><b>Safety observer</b> — the site's own safety person or our SME embedded; owns the ground-truth log, blind to model output during shifts.</span></li>
+          <li><span class="mk">▸</span><span><b>Site sponsor</b> — clears access, schedules crews, first escalation point.</span></li>
+          <li><span class="mk">▸</span><span><b>ML engineer (remote)</b> — nightly triage, labels hard frames, ships the week-2 update.</span></li>
+        </ul>
+      </div>
+      <div class="listcard pass">
+        <h3>What the pilot ships</h3>
+        <ul>
+          <li><span class="mk">✓</span><span><b>The pilot report</b> — pass-bar table, failure-mode dispositions, SME signature. This is the document sales and investors get.</span></li>
+          <li><span class="mk">✓</span><span><b>Model + policy v2</b> — retrained on real POV footage; the flywheel is now running on customer data.</span></li>
+          <li><span class="mk">✓</span><span><b>The consent pack as a template</b> — reusable per site from now on.</span></li>
+          <li><span class="mk">✓</span><span><b>Case-study raw material</b> — verbatims, before/after numbers, footage cleared for use.</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="exit"><b>Exit criteria</b>Week-4 frozen-build numbers hit the pass bar, zero safety regressions, the SME signs the failure-mode review, and a majority of the crew would keep wearing it. Any critical-class miss without a disposition blocks sign-off.</div>
+  </section>
+
+  <!-- SHIPS -->
+  <section>
+    <div class="foota">
+      <b>Why this phase is the one that matters commercially.</b> Everything before it produces engineering confidence; this phase produces the three assets a safety product actually sells on — a signed report with field numbers, a reference customer who kept the system after the pilot, and proprietary training data from real work. If the pass bar isn't hit, the report still ships: it says exactly which classes fell short and by how much, and the program loops those classes back through Phase 2 with a month of real footage in hand. Either way, the flywheel is turning.
+    </div>
+    <p class="disclaimer">
+      Pass-bar targets are planning defaults to be ratified with the site sponsor and SME before week 1 — the site's own risk profile may raise them. Ground-truth comparison assumes an observer log; where the site runs existing incident/near-miss reporting, reconcile against that too. Works-council / GDPR jurisdictions: pack review can take 4–8 weeks — start before Phase 3 completes. Tester distribution via Meta invite-only release channels per the Device Access Toolkit preview terms.
+    </p>
+  </section>
+
+</div>
+</div>
+</body>
+</html>

@@ -11,6 +11,8 @@ markdown files are the source of truth; the published team-facing HTML lives at
 | Phase 1 — Vertical Slice | [`phase-1-vertical-slice.md`](phase-1-vertical-slice.md) | https://www.skillreality.com/roadmap/phase-1/ |
 | Phase 2 — Detection Model | [`phase-2-hazard-model.md`](phase-2-hazard-model.md) | https://www.skillreality.com/roadmap/phase-2/ |
 | Phase 3 — Judgment Layer | [`phase-3-judgment-layer.md`](phase-3-judgment-layer.md) | https://www.skillreality.com/roadmap/phase-3/ |
+| Phase 4 — Field Pilot | [`phase-4-field-pilot.md`](phase-4-field-pilot.md) | https://www.skillreality.com/roadmap/phase-4/ |
+| Phase 5 — Harden & Publish | [`phase-5-harden-publish.md`](phase-5-harden-publish.md) | https://www.skillreality.com/roadmap/phase-5/ |
 
 Hub: https://www.skillreality.com/roadmap/ — **unlisted** (noindex, not linked
 from the main site; the site has no auth, so the URL is the only gate).

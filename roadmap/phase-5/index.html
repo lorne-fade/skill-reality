@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Skill Reality — Phase 5: harden & publish. Fleet, platform, and compliance tracks; the hazard-class factory; the Meta publish path.">
+<link rel="icon" href="/favicon/icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
+<title>Skill Reality — Phase 5 · Harden &amp; Publish</title>
+<style>html,body{margin:0;padding:0;background:#080A0E}</style>
+</head>
+<body>
+<style>
+  :root{
+    --bg:#080A0E; --bg2:#0C1219; --bg3:#111B24; --line:rgba(120,162,204,0.15);
+    --ink:#EAF1F8; --mut:#94A6B8; --dim:rgba(234,241,248,0.46);
+    --blue:#1B74BC; --bright:#4AA3E8; --green:#3DDC97; --amber:#F0B429; --red:#FF5A6E;
+    --sans:'Hanken Grotesk',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+    --wrap:900px;
+  }
+  *{box-sizing:border-box}
+  .page{background:radial-gradient(120% 60% at 50% -10%, rgba(27,116,188,0.16), transparent 55%), var(--bg);
+    color:var(--ink); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased; padding:0 20px 96px;}
+  .wrap{max-width:var(--wrap); margin:0 auto}
+  .eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:2.5px; text-transform:uppercase; color:var(--bright)}
+  h1,h2,h3{text-wrap:balance; margin:0; font-weight:800; letter-spacing:-0.02em}
+  .mono{font-family:var(--mono)} em{color:var(--ink); font-style:italic}
+
+  .top{padding:60px 0 38px; border-bottom:1px solid var(--line)}
+  .brandrow{display:flex; align-items:center; gap:10px; margin-bottom:24px}
+  .glyph{width:26px;height:26px;border-radius:6px;flex:0 0 auto;
+    background:conic-gradient(from 210deg at 50% 50%, var(--blue), var(--bright), var(--blue));
+    -webkit-mask:radial-gradient(circle at 50% 42%, transparent 22%, #000 23%); mask:radial-gradient(circle at 50% 42%, transparent 22%, #000 23%);}
+  .brandrow .bn{font-weight:800; font-size:15px} .brandrow .bd{font-family:var(--mono); font-size:11px; letter-spacing:1px; color:var(--dim); text-transform:uppercase; border-left:1px solid var(--line); padding-left:10px}
+  h1{font-size:clamp(30px,5vw,48px); line-height:1.03; margin:14px 0 0}
+  h1 .accent{color:var(--bright)}
+  .lede{font-size:18px; color:var(--mut); max-width:64ch; margin:16px 0 0}
+  .metastrip{display:flex; flex-wrap:wrap; gap:8px; margin-top:24px}
+  .chip{display:inline-flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11.5px; letter-spacing:0.4px; padding:5px 11px; border-radius:100px; border:1px solid var(--line); color:var(--mut); white-space:nowrap}
+  .chip::before{content:""; width:7px;height:7px;border-radius:50%; background:currentColor; flex:0 0 auto}
+  .chip.now{color:var(--green); border-color:rgba(61,220,151,0.4)}
+  .chip.gate{color:var(--amber); border-color:rgba(240,180,41,0.4)}
+  .chip.new{color:var(--bright); border-color:rgba(74,163,232,0.42)}
+
+  section{padding:50px 0 0}
+  .kick{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:20px}
+  .kick h2{font-size:clamp(21px,3.2vw,27px)}
+  .kick .n{font-family:var(--mono); font-size:13px; color:var(--dim)}
+  .sub{color:var(--mut); max-width:66ch; margin:-6px 0 24px}
+
+  /* three tracks */
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+  .card{background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:20px}
+  .card h3{font-size:16px; display:flex; align-items:center; gap:9px}
+  .card .ico{width:26px;height:26px;border-radius:7px; display:grid; place-items:center; font-size:13px; background:rgba(74,163,232,0.14); color:var(--bright); flex:0 0 auto}
+  .card p{margin:11px 0 0; font-size:13px; color:var(--mut)}
+  .card ul{margin:12px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:7px}
+  .card li{font-size:12.5px; color:var(--mut); display:flex; gap:8px; align-items:flex-start}
+  .card li::before{content:""; width:5px;height:5px;border-radius:50%; background:var(--bright); margin-top:6px; flex:0 0 auto; opacity:.8}
+  .card li b{color:var(--ink); font-weight:600}
+
+  /* class factory */
+  .factory{border:1px solid rgba(74,163,232,0.35); border-radius:16px; background:linear-gradient(180deg, rgba(27,116,188,0.12), var(--bg2)); padding:24px 28px}
+  .factory .lab{font-family:var(--mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--bright); margin-bottom:10px}
+  .factory h3{font-size:20px; margin-bottom:10px}
+  .factory p{margin:0 0 16px; font-size:14.5px; color:var(--mut); max-width:70ch}
+  .factory .flow{display:flex; flex-wrap:wrap; gap:8px; font-family:var(--mono); font-size:11.5px}
+  .factory .flow span{padding:6px 12px; border-radius:8px; background:var(--bg3); border:1px solid var(--line); color:var(--ink)}
+  .factory .flow .ar{border:0; background:transparent; color:var(--bright); padding:6px 2px}
+
+  /* milestones */
+  .miles{display:flex; flex-direction:column}
+  .mile{display:grid; grid-template-columns:96px 1fr; gap:20px; padding:18px 0; border-top:1px solid var(--line)}
+  .mile:first-child{border-top:0}
+  .mile .md{font-family:var(--mono); font-size:12px; font-weight:700; color:var(--bright); letter-spacing:0.5px}
+  .mile h3{font-size:16px}
+  .mile p{margin:6px 0 0; font-size:13.5px; color:var(--mut); max-width:66ch}
+  .mile .gate{display:inline-block; margin-top:8px; font-family:var(--mono); font-size:10.5px; letter-spacing:0.6px; color:var(--green); background:rgba(61,220,151,0.08); border:1px solid rgba(61,220,151,0.25); border-radius:6px; padding:3px 9px}
+
+  /* publish path table */
+  .tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:14px; background:var(--bg2)}
+  table{border-collapse:collapse; width:100%; min-width:620px; font-size:13.5px}
+  th,td{text-align:left; padding:12px 16px; border-top:1px solid var(--line); vertical-align:top}
+  thead th{border-top:0; font-family:var(--mono); font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--dim); font-weight:500; background:var(--bg3)}
+  td.d{font-weight:600; color:var(--ink); width:30%} td.v{color:var(--mut)}
+
+  /* definition of product */
+  .listcard{background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:22px}
+  .listcard h3{font-size:16px; margin-bottom:14px}
+  .listcard ul{margin:0; padding:0; list-style:none; display:grid; grid-template-columns:1fr 1fr; gap:11px 24px}
+  .listcard li{font-size:13.5px; color:var(--mut); display:flex; gap:10px; align-items:flex-start}
+  .listcard li b{color:var(--ink); font-weight:600}
+  .listcard li .mk{flex:0 0 auto; font-family:var(--mono); font-size:12px; color:var(--green); margin-top:1px}
+
+  .foota{margin-top:52px; padding:24px; border:1px solid var(--line); border-radius:16px; background:linear-gradient(180deg, rgba(27,116,188,0.1), var(--bg2)); font-size:13.5px; color:var(--mut)}
+  .foota b{color:var(--ink)}
+  .disclaimer{margin-top:20px; font-size:12px; color:var(--dim); font-family:var(--mono); line-height:1.7}
+
+  @media(max-width:720px){
+    .grid3{grid-template-columns:1fr}
+    .listcard ul{grid-template-columns:1fr}
+    .mile{grid-template-columns:1fr; gap:4px}
+  }
+</style>
+
+<div class="page">
+<div class="wrap">
+
+  <header class="top">
+    <div class="brandrow"><span class="glyph"></span><span class="bn">Skill Reality</span><span class="bd">Frontline Performance AI</span></div>
+    <div class="eyebrow">Build Map · Phase 5</div>
+    <h1>Harden &amp; publish —<br><span class="accent">from pilot to product</span></h1>
+    <p class="lede">The pilot proves one crew, one site, one build. Phase 5 makes that repeatable: a fleet you can operate, a model you can update over the air, a hazard vocabulary you can extend without re-architecting, and the compliance posture that lets procurement say yes — all pointed at Meta's 2026 general availability for public distribution.</p>
+    <div class="metastrip">
+      <span class="chip gate">Ongoing → Meta GA 2026</span>
+      <span class="chip new">Milestone-gated, not week-gated</span>
+      <span class="chip now">Pilot report is the entry ticket</span>
+    </div>
+  </header>
+
+  <!-- THREE TRACKS -->
+  <section>
+    <div class="kick"><h2>Three tracks, run in parallel</h2></div>
+    <div class="grid3">
+      <div class="card">
+        <h3><span class="ico">▣</span> Fleet</h3>
+        <p>The operator's view — what a safety manager buys.</p>
+        <ul>
+          <li><b>Dashboard</b> — alerts, hazard heatmap by zone/shift, trend lines; reads the Phase 3 event schema as-is</li>
+          <li><b>Audit trail</b> — every alert <em>and every suppression</em>, with the policy version that produced it</li>
+          <li><b>OTA updates</b> — signed model + policy bundles, staged rollout, one-tap rollback</li>
+          <li><b>Device management</b> — enrollment, health, battery, per-site policy assignment</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="ico">◆</span> Platform</h3>
+        <p>The engineering debt the slice deliberately deferred.</p>
+        <ul>
+          <li><b>Crash + telemetry</b> — anonymous, opt-in, no frame content ever</li>
+          <li><b>Battery duty-cycling</b> — productize whatever mode Phase 0/4 forced</li>
+          <li><b>Android port</b> — TFLite path, reusing the pipeline seams</li>
+          <li><b>Per-site policy config</b> — the SME table becomes deployable data, versioned per site</li>
+          <li><b>Degraded modes</b> — sensor-only fallback (the original Hazard Watch!) when camera or phone drops</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="ico">◈</span> Compliance</h3>
+        <p>What lets procurement and legal say yes.</p>
+        <ul>
+          <li><b>Data-handling whitepaper</b> — on-device inference, what leaves, retention, deletion</li>
+          <li><b>DPA + consent templates</b> — the pilot pack, productized per jurisdiction</li>
+          <li><b>No-surveillance commitment</b> — published, versioned, contractual</li>
+          <li><b>Regional review</b> — GDPR / works-council playbook from the pilot experience</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLASS FACTORY -->
+  <section>
+    <div class="factory">
+      <div class="lab">The repeatability test</div>
+      <h3>Adding a hazard class must be a process, not a project</h3>
+      <p>The Tier 2 and Tier 3 classes — and every site-specific hazard a customer asks for — go through one standing pipeline. If adding a class requires an architecture conversation, Phase 5 isn't done. The gate: a new class ships end-to-end in under two weeks without touching pipeline code.</p>
+      <div class="flow">
+        <span>Collect (flywheel + synthetic)</span><span class="ar">→</span><span>Label vs. ontology</span><span class="ar">→</span><span>Train + eval vs. recall floor</span><span class="ar">→</span><span>SME writes the policy row</span><span class="ar">→</span><span>OTA staged rollout</span><span class="ar">→</span><span>Field-monitor 2 weeks</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PUBLISH PATH -->
+  <section>
+    <div class="kick"><h2>The Meta publish path</h2><span class="n">distribution is the one clock we don't control</span></div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Stage</th><th>What it means for us</th></tr></thead>
+        <tbody>
+          <tr><td class="d">Now — invite-only channels</td><td class="v">Distribute to our own org and pilot testers via release channels. Every pilot and early customer runs this way — it's a deployment constraint to design around (named testers, per-channel builds), not a blocker.</td></tr>
+          <tr><td class="d">Select partners</td><td class="v">Meta is publishing some partner integrations ahead of GA. The pilot report and a reference customer are exactly the application material — apply as soon as both exist.</td></tr>
+          <tr><td class="d">2026 — general availability</td><td class="v">Public listing opens to a broader audience. Target state: land there with a hardened fleet product, N pilot-proven sites, and the compliance pack — not a prototype scrambling to productize.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sub" style="margin-top:18px">Strategy note: because enterprise safety sells B2B through pilots anyway, the gated period costs us little — invite-only channels cover paid deployments with named crews. GA matters most for scale and for procurement teams that require "published app" status.</p>
+  </section>
+
+  <!-- MILESTONES -->
+  <section>
+    <div class="kick"><h2>Milestones, not weeks</h2><span class="n">each gated on the one before</span></div>
+    <div class="miles">
+      <div class="mile"><div class="md">M1</div><div><h3>Fleet MVP</h3><p>Dashboard + audit trail reading pilot event logs; second pilot site onboarded using the templated consent pack.</p><span class="gate">gate: a safety manager reviews a week of real data without our help</span></div></div>
+      <div class="mile"><div class="md">M2</div><div><h3>OTA + policy-as-data</h3><p>Signed model/policy bundles with staged rollout and rollback; per-site policy tables deployed as data.</p><span class="gate">gate: a model update ships to a live site with zero on-site touch</span></div></div>
+      <div class="mile"><div class="md">M3</div><div><h3>Class factory proven</h3><p>First Tier 2 class (missing machine guard) through the standing pipeline, dataset to field.</p><span class="gate">gate: class shipped in &lt; 2 weeks, no pipeline code changes</span></div></div>
+      <div class="mile"><div class="md">M4</div><div><h3>Android parity</h3><p>TFLite build passing the Phase 1 walk-up protocol and Phase 3 wear-test on reference hardware.</p><span class="gate">gate: same pass bars, second platform</span></div></div>
+      <div class="mile"><div class="md">M5</div><div><h3>Publish application</h3><p>Partner/GA submission with the pilot report, compliance pack, and reference customer attached.</p><span class="gate">gate: submitted — the rest is Meta's clock</span></div></div>
+    </div>
+  </section>
+
+  <!-- DEFINITION OF PRODUCT -->
+  <section>
+    <div class="kick"><h2>Definition of "product"</h2><span class="n">the checklist that ends the roadmap</span></div>
+    <div class="listcard">
+      <ul>
+        <li><span class="mk">✓</span><span><b>A new site deploys in days</b> — templated consent pack, policy config, device enrollment, no engineers on site.</span></li>
+        <li><span class="mk">✓</span><span><b>A new hazard class ships in weeks</b> — through the class factory, gated by recall floor + SME policy row.</span></li>
+        <li><span class="mk">✓</span><span><b>Models update over the air</b> — staged, signed, reversible.</span></li>
+        <li><span class="mk">✓</span><span><b>The safety manager self-serves</b> — dashboard + audit trail answer their questions without us.</span></li>
+        <li><span class="mk">✓</span><span><b>Compliance is a pack, not a negotiation</b> — whitepaper, DPA, no-surveillance commitment, regional playbook.</span></li>
+        <li><span class="mk">✓</span><span><b>Degraded gracefully</b> — camera loss falls back to the sensor monitor; nothing fails silent.</span></li>
+        <li><span class="mk">✓</span><span><b>Two platforms, one pass bar</b> — iOS and Android hitting identical protocol results.</span></li>
+        <li><span class="mk">✓</span><span><b>Publish-ready</b> — the Meta application submitted with proof attached.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SHIPS -->
+  <section>
+    <div class="foota">
+      <b>The through-line, closed.</b> The roadmap opened with a web demo that simulated a camera it couldn't have. It closes with a fleet product where the same brand system, the same hazard vocabulary, the same alert language, and the same event schema run from the first sensor demo to the operator dashboard — and where every deployed pair of glasses feeds the data flywheel that makes the next model better. Phases 0–4 bought certainty; Phase 5 buys repeatability. When M5 is submitted, the roadmap's job is done and the product's job begins.
+    </div>
+    <p class="disclaimer">
+      Milestone scope assumes the Phase 4 pilot passed its bar; a partial pass reorders M1–M3 around the classes that fell short. Meta's partner-selection criteria, GA timing, and publishing requirements are Meta's to define — M5 is written against their current public preview terms (invite-only channels now, select partners ahead of a 2026 GA) and should be re-checked against their docs at execution time. Pricing/packaging is deliberately out of scope here; it feeds from the pilot report and belongs to the commercial plan.
+    </p>
+  </section>
+
+</div>
+</div>
+</body>
+</html>
