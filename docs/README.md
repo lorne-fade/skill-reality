@@ -10,6 +10,7 @@ markdown files are the source of truth; the published team-facing HTML lives at
 | Phase 0 — De-Risk Spike | [`phase-0-spike.md`](phase-0-spike.md) | https://www.skillreality.com/roadmap/phase-0/ |
 | Phase 1 — Vertical Slice | [`phase-1-vertical-slice.md`](phase-1-vertical-slice.md) | https://www.skillreality.com/roadmap/phase-1/ |
 | Phase 2 — Detection Model | [`phase-2-hazard-model.md`](phase-2-hazard-model.md) | https://www.skillreality.com/roadmap/phase-2/ |
+| Phase 3 — Judgment Layer | [`phase-3-judgment-layer.md`](phase-3-judgment-layer.md) | https://www.skillreality.com/roadmap/phase-3/ |
 
 Hub: https://www.skillreality.com/roadmap/ — **unlisted** (noindex, not linked
 from the main site; the site has no auth, so the URL is the only gate).

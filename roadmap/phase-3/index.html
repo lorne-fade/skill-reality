@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Skill Reality — Phase 3: the judgment layer. Severity policy, arbitration, suppression, the on-glasses alert UX, and measured trust metrics.">
+<link rel="icon" href="/favicon/icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
+<title>Skill Reality — Phase 3 · Judgment Layer</title>
+<style>html,body{margin:0;padding:0;background:#080A0E}</style>
+</head>
+<body>
+<style>
+  :root{
+    --bg:#080A0E; --bg2:#0C1219; --bg3:#111B24; --line:rgba(120,162,204,0.15);
+    --ink:#EAF1F8; --mut:#94A6B8; --dim:rgba(234,241,248,0.46);
+    --blue:#1B74BC; --bright:#4AA3E8; --green:#3DDC97; --amber:#F0B429; --red:#FF5A6E;
+    --sans:'Hanken Grotesk',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+    --wrap:900px;
+  }
+  *{box-sizing:border-box}
+  .page{background:radial-gradient(120% 60% at 50% -10%, rgba(27,116,188,0.16), transparent 55%), var(--bg);
+    color:var(--ink); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased; padding:0 20px 96px;}
+  .wrap{max-width:var(--wrap); margin:0 auto}
+  .eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:2.5px; text-transform:uppercase; color:var(--bright)}
+  h1,h2,h3{text-wrap:balance; margin:0; font-weight:800; letter-spacing:-0.02em}
+  .mono{font-family:var(--mono)} em{color:var(--ink); font-style:italic}
+
+  .top{padding:60px 0 38px; border-bottom:1px solid var(--line)}
+  .brandrow{display:flex; align-items:center; gap:10px; margin-bottom:24px}
+  .glyph{width:26px;height:26px;border-radius:6px;flex:0 0 auto;
+    background:conic-gradient(from 210deg at 50% 50%, var(--blue), var(--bright), var(--blue));
+    -webkit-mask:radial-gradient(circle at 50% 42%, transparent 22%, #000 23%); mask:radial-gradient(circle at 50% 42%, transparent 22%, #000 23%);}
+  .brandrow .bn{font-weight:800; font-size:15px} .brandrow .bd{font-family:var(--mono); font-size:11px; letter-spacing:1px; color:var(--dim); text-transform:uppercase; border-left:1px solid var(--line); padding-left:10px}
+  h1{font-size:clamp(30px,5vw,48px); line-height:1.03; margin:14px 0 0}
+  h1 .accent{color:var(--bright)}
+  .lede{font-size:18px; color:var(--mut); max-width:64ch; margin:16px 0 0}
+  .metastrip{display:flex; flex-wrap:wrap; gap:8px; margin-top:24px}
+  .chip{display:inline-flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11.5px; letter-spacing:0.4px; padding:5px 11px; border-radius:100px; border:1px solid var(--line); color:var(--mut); white-space:nowrap}
+  .chip::before{content:""; width:7px;height:7px;border-radius:50%; background:currentColor; flex:0 0 auto}
+  .chip.now{color:var(--green); border-color:rgba(61,220,151,0.4)}
+  .chip.gate{color:var(--amber); border-color:rgba(240,180,41,0.4)}
+  .chip.new{color:var(--bright); border-color:rgba(74,163,232,0.42)}
+
+  section{padding:50px 0 0}
+  .kick{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:20px}
+  .kick h2{font-size:clamp(21px,3.2vw,27px)}
+  .kick .n{font-family:var(--mono); font-size:13px; color:var(--dim)}
+  .sub{color:var(--mut); max-width:66ch; margin:-6px 0 24px}
+
+  /* budget callout */
+  .budget{border:1px solid rgba(74,163,232,0.35); border-radius:16px; background:linear-gradient(180deg, rgba(27,116,188,0.14), var(--bg2)); padding:26px 28px}
+  .budget .lab{font-family:var(--mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--bright); margin-bottom:10px}
+  .budget h3{font-size:21px; margin-bottom:10px}
+  .budget p{margin:0; font-size:15px; color:var(--mut); max-width:70ch}
+
+  /* judgment stages */
+  .pipe{display:flex; flex-direction:column; gap:0}
+  .stage{display:grid; grid-template-columns:64px 1fr; gap:20px; padding:20px 0; border-top:1px solid var(--line)}
+  .stage:first-child{border-top:0}
+  .stage .sn .num{display:grid; place-items:center; width:40px; height:40px; border-radius:11px; background:rgba(74,163,232,0.12); border:1px solid rgba(74,163,232,0.3); font-size:15px; font-weight:700; color:var(--ink)}
+  .stage h3{font-size:17px; display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+  .stage h3 .tech{font-family:var(--mono); font-size:11px; color:var(--dim); font-weight:400; letter-spacing:0.4px}
+  .stage p{margin:8px 0 0; font-size:14px; color:var(--mut); max-width:66ch}
+  .stage .spec{margin-top:11px; display:flex; flex-wrap:wrap; gap:6px}
+  .tag{font-family:var(--mono); font-size:11px; padding:3px 9px; border-radius:6px; background:var(--bg3); color:var(--mut); border:1px solid var(--line)}
+  .tag.hot{color:var(--bright); border-color:rgba(74,163,232,0.35)}
+
+  /* routing matrix */
+  .tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:14px; background:var(--bg2)}
+  table{border-collapse:collapse; width:100%; min-width:640px; font-size:13.5px}
+  th,td{text-align:left; padding:12px 16px; border-top:1px solid var(--line); vertical-align:top}
+  thead th{border-top:0; font-family:var(--mono); font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--dim); font-weight:500; background:var(--bg3)}
+  td.v{color:var(--mut)}
+  .sev{font-family:var(--mono); font-size:10.5px; letter-spacing:0.5px; padding:3px 9px; border-radius:6px; white-space:nowrap}
+  .sev.crit{color:var(--red); background:rgba(255,90,110,0.1); border:1px solid rgba(255,90,110,0.3)}
+  .sev.high{color:var(--amber); background:rgba(240,180,41,0.1); border:1px solid rgba(240,180,41,0.3)}
+  .sev.med{color:var(--bright); background:rgba(74,163,232,0.1); border:1px solid rgba(74,163,232,0.3)}
+  .sev.info{color:var(--mut); background:var(--bg3); border:1px solid var(--line)}
+
+  /* alert card mock */
+  .mockrow{display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:stretch}
+  .glass{border:1px solid var(--line); border-radius:16px; background:#000; padding:26px 22px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; min-height:230px; position:relative; overflow:hidden}
+  .glass::after{content:"600 × 600 · ADDITIVE DISPLAY"; position:absolute; bottom:10px; right:14px; font-family:var(--mono); font-size:9.5px; letter-spacing:1px; color:rgba(234,241,248,0.25)}
+  .acard{width:100%; max-width:340px; border-radius:14px; padding:14px 16px; display:flex; gap:13px; align-items:center}
+  .acard .ic{font-size:26px; line-height:1; flex:0 0 auto}
+  .acard .t{font-family:var(--sans); font-weight:800; font-size:16px; letter-spacing:-0.01em; line-height:1.15}
+  .acard .a{font-size:13px; margin-top:3px; opacity:.85}
+  .acard .kbd{margin-left:auto; flex:0 0 auto; font-family:var(--mono); font-size:10px; border:1px solid currentColor; opacity:.7; border-radius:5px; padding:2px 6px; white-space:nowrap}
+  .acard.crit{border:2px solid var(--red); background:rgba(255,90,110,0.13); color:var(--red); box-shadow:0 0 26px rgba(255,90,110,0.35)}
+  .acard.crit .t{color:#FFD7DC} .acard.crit .a{color:rgba(255,215,220,0.8)}
+  .acard.high{border:2px solid var(--amber); background:rgba(240,180,41,0.11); color:var(--amber)}
+  .acard.high .t{color:#FFEBC2} .acard.high .a{color:rgba(255,235,194,0.8)}
+  .anatomy{background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:22px}
+  .anatomy h3{font-size:15px; font-family:var(--mono); letter-spacing:1px; text-transform:uppercase; color:var(--dim); font-weight:500; margin-bottom:14px}
+  .anatomy ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:11px}
+  .anatomy li{font-size:13.5px; color:var(--mut); display:flex; gap:10px; align-items:flex-start}
+  .anatomy li b{color:var(--ink); font-weight:600}
+  .anatomy li .mk{flex:0 0 auto; font-family:var(--mono); font-size:11px; color:var(--bright); margin-top:2px}
+
+  /* suppression rule card */
+  .rule{border:1px solid rgba(74,163,232,0.35); border-radius:16px; background:linear-gradient(180deg, rgba(27,116,188,0.12), var(--bg2)); padding:22px 26px; margin-top:18px}
+  .rule .lab{font-family:var(--mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--bright); margin-bottom:10px}
+  .rule .logic{font-family:var(--mono); font-size:13px; line-height:1.9; color:var(--ink); overflow-x:auto; white-space:pre}
+  .rule .logic .c{color:var(--dim)} .rule .logic .k{color:var(--bright)} .rule .logic .v{color:var(--amber)}
+  .rule p{margin:12px 0 0; font-size:13px; color:var(--mut)}
+
+  /* trust metrics */
+  .metrics{display:grid; grid-template-columns:repeat(4,1fr); gap:12px}
+  .metric{background:var(--bg2); border:1px solid var(--line); border-radius:14px; padding:17px 16px}
+  .metric .mv{font-family:var(--mono); font-size:22px; font-weight:700; color:var(--ink); letter-spacing:-0.02em}
+  .metric .mv small{font-size:12px; color:var(--dim); font-weight:400}
+  .metric .ml{font-size:12.5px; color:var(--mut); margin-top:6px; line-height:1.4}
+
+  /* lists */
+  .split{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  .listcard{background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:22px}
+  .listcard h3{font-size:16px; margin-bottom:14px}
+  .listcard ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:11px}
+  .listcard li{font-size:13.5px; color:var(--mut); display:flex; gap:10px; align-items:flex-start}
+  .listcard li b{color:var(--ink); font-weight:600}
+  .listcard li .mk{flex:0 0 auto; font-family:var(--mono); font-size:12px; color:var(--bright); margin-top:1px}
+  .listcard.pass li .mk{color:var(--green)}
+
+  /* weeks */
+  .days{display:flex; flex-direction:column}
+  .day{display:grid; grid-template-columns:110px 1fr; gap:20px; padding:16px 0; border-top:1px solid var(--line)}
+  .day:first-child{border-top:0}
+  .day .dd{font-family:var(--mono); font-size:12px; color:var(--bright); letter-spacing:0.5px}
+  .day .dt{font-size:14px; color:var(--mut)} .day .dt b{color:var(--ink); font-weight:600}
+
+  /* non-goals */
+  .nongoals{background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:22px 24px}
+  .nongoals h3{font-size:15px; font-family:var(--mono); letter-spacing:1px; text-transform:uppercase; color:var(--dim); font-weight:500; margin-bottom:14px}
+  .nongoals ul{margin:0; padding:0; list-style:none; display:grid; grid-template-columns:1fr 1fr; gap:10px 24px}
+  .nongoals li{font-size:13.5px; color:var(--mut); display:flex; gap:9px; align-items:flex-start}
+  .nongoals li::before{content:"✕"; color:var(--red); font-family:var(--mono); font-size:12px; flex:0 0 auto; margin-top:2px; opacity:.8}
+  .nongoals li b{color:var(--ink); font-weight:600}
+
+  .exit{margin-top:18px; font-size:13px; color:var(--ink); background:var(--bg2); border:1px solid var(--line); border-left:2px solid var(--green); border-radius:0 10px 10px 0; padding:13px 16px}
+  .exit b{color:var(--green); font-family:var(--mono); font-size:11px; letter-spacing:0.8px; text-transform:uppercase; display:block; margin-bottom:3px; font-weight:500}
+
+  .foota{margin-top:52px; padding:24px; border:1px solid var(--line); border-radius:16px; background:linear-gradient(180deg, rgba(27,116,188,0.1), var(--bg2)); font-size:13.5px; color:var(--mut)}
+  .foota b{color:var(--ink)}
+  .disclaimer{margin-top:20px; font-size:12px; color:var(--dim); font-family:var(--mono); line-height:1.7}
+
+  @media(max-width:720px){
+    .mockrow,.split{grid-template-columns:1fr}
+    .metrics{grid-template-columns:1fr 1fr}
+    .nongoals ul{grid-template-columns:1fr}
+    .stage{grid-template-columns:48px 1fr; gap:14px}
+    .day{grid-template-columns:1fr; gap:4px}
+  }
+</style>
+
+<div class="page">
+<div class="wrap">
+
+  <header class="top">
+    <div class="brandrow"><span class="glyph"></span><span class="bn">Skill Reality</span><span class="bd">Frontline Performance AI</span></div>
+    <div class="eyebrow">Build Map · Phase 3</div>
+    <h1>The judgment layer —<br><span class="accent">detections aren't alerts</span></h1>
+    <p class="lede">Phase 2 hands us a model that sees hazards. Phase 3 decides what deserves the worker's attention — because a warning system that interrupts too often gets muted, and a muted system catches nothing. This phase builds the policy between detection and alert, and the calm on-glasses UX it drives.</p>
+    <div class="metastrip">
+      <span class="chip gate">2–3 weeks</span>
+      <span class="chip new">Module swap at Phase 1's stage 4</span>
+      <span class="chip now">Trust is the deliverable</span>
+    </div>
+  </header>
+
+  <!-- BUDGET -->
+  <section>
+    <div class="budget">
+      <div class="lab">The design constraint everything follows from</div>
+      <h3>Worker attention is a budget — spend it like money</h3>
+      <p>A frontline worker mid-task will tolerate a handful of interruptions per shift before the glasses come off or the audio gets ignored. So the judgment layer is an economist, not a megaphone: every alert must clear a bar of <em>severity × confidence × novelty</em>, and everything that doesn't clear it gets logged silently instead. The log misses nothing; the worker hears only what matters. "More alerts" is never the answer — <em>better-spent</em> alerts is.</p>
+    </div>
+  </section>
+
+  <!-- PIPELINE -->
+  <section>
+    <div class="kick"><h2>Five judgments between detection and alert</h2><span class="n">replaces Phase 1's single rule at stage 4</span></div>
+    <div class="pipe">
+
+      <div class="stage">
+        <div class="sn"><span class="num">1</span></div>
+        <div>
+          <h3>Persist <span class="tech">per-class K-of-N · IoU tracking</span></h3>
+          <p>Phase 1's 3-of-5 rule, generalized: each class gets its own confirmation window tuned to its physics — a spill is static (wide window, high certainty), a person entering frame is fleeting (tight window, faster trigger). Simple IoU tracking gives each detection an identity across frames, so the system knows <em>this</em> spill from a second one.</p>
+          <div class="spec"><span class="tag hot">per-class windows</span><span class="tag">IoU identity tracking</span><span class="tag">confidence floors from Phase 2 eval</span></div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="sn"><span class="num">2</span></div>
+        <div>
+          <h3>Score <span class="tech">severity policy per class</span></h3>
+          <p>The Phase 2 taxonomy's severity (critical / high / medium) is the base score, adjusted by confidence and proximity cues (bigger box ≈ closer ≈ more urgent). The safety SME owns this table — engineering implements it, and every change to it is versioned and logged.</p>
+          <div class="spec"><span class="tag hot">SME-owned policy table</span><span class="tag">versioned</span><span class="tag">proximity weighting</span></div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="sn"><span class="num">3</span></div>
+        <div>
+          <h3>Arbitrate <span class="tech">one alert at a time</span></h3>
+          <p>A 600×600 glass shows one thing well and two things badly. When multiple hazards are live, the highest severity wins the display, full stop. Lower ones wait — and if they resolve or go stale while waiting, they're dropped to the log, not queued for a nag.</p>
+          <div class="spec"><span class="tag hot">single-slot display</span><span class="tag">severity preemption</span><span class="tag">stale alerts drop, never queue</span></div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="sn"><span class="num">4</span></div>
+        <div>
+          <h3>Suppress <span class="tech">acknowledgment · cooldowns · novelty</span></h3>
+          <p>Acknowledged hazards stay suppressed <em>for that specific tracked hazard</em> — acknowledging one spill doesn't silence spills as a category. Re-alert only on real change: severity escalates, the hazard moves closer, or the ack expires. This is the "don't cry wolf" machinery, spelled out below.</p>
+          <div class="spec"><span class="tag hot">per-hazard ack</span><span class="tag">escalation re-arms</span><span class="tag">category never muted by one ack</span></div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="sn"><span class="num">5</span></div>
+        <div>
+          <h3>Route <span class="tech">severity → modality matrix</span></h3>
+          <p>Severity decides how loudly the alert arrives — HUD treatment, audio cue, dwell, repeat policy — per the matrix below. Critical is unmissable; medium never interrupts at all. The routing is data, not code: one table the SME can read and sign.</p>
+          <div class="spec"><span class="tag hot">matrix-driven</span><span class="tag">audio mirrors visual</span><span class="tag">medium = log-only</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="rule">
+      <div class="lab">Suppression policy · v0 — same discipline as Phase 1: every constant is a logged knob</div>
+      <div class="logic"><span class="k">ACK</span> (Enter):    suppress <span class="c">this tracked hazard</span> for <span class="v">10 min</span>
+<span class="k">RE-ARM</span> when:   severity escalates <span class="c">OR</span> proximity jumps ≥ <span class="v">1 zone</span> <span class="c">OR</span> ack expires
+<span class="k">REPEAT</span>:        critical unacked → re-cue audio every <span class="v">20 s</span> <span class="c">(visual stays)</span>
+               high unacked     → one repeat at <span class="v">60 s</span>, then hold visual only
+<span class="k">RATE CAP</span>:      non-critical alerts ≤ <span class="v">6 / hour</span> <span class="c">— past the cap, high degrades to log+chime</span>
+<span class="k">NEVER</span>:         suppress a <span class="c">critical</span> class-wide <span class="c">· stack two alerts · scroll anything</span></div>
+      <p>The rate cap is the alert budget made mechanical. If the system wants to exceed it, that's a signal the model or the persistence windows need tuning — not that the worker needs more noise.</p>
+    </div>
+  </section>
+
+  <!-- ROUTING MATRIX -->
+  <section>
+    <div class="kick"><h2>The routing matrix</h2><span class="n">severity → what the worker experiences</span></div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Severity</th><th>HUD</th><th>Audio</th><th>Dwell / repeat</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="sev crit">Critical</span></td>
+            <td class="v">Red card, pulse animation, preempts anything showing</td>
+            <td class="v">Distinct urgent tone, repeats while unacked</td>
+            <td class="v">Holds until acked or hazard clears</td>
+            <td class="v">Person–vehicle path, man-down, exposed wiring</td>
+          </tr>
+          <tr>
+            <td><span class="sev high">High</span></td>
+            <td class="v">Amber card</td>
+            <td class="v">Single chime, one repeat at 60 s</td>
+            <td class="v">8 s, then compact badge while hazard persists</td>
+            <td class="v">No hard hat, spill, blocked exit</td>
+          </tr>
+          <tr>
+            <td><span class="sev med">Medium</span></td>
+            <td class="v">No interruption — count badge only</td>
+            <td class="v">None</td>
+            <td class="v">Rolled into end-of-task summary</td>
+            <td class="v">Trailing cable, housekeeping</td>
+          </tr>
+          <tr>
+            <td><span class="sev info">Log-only</span></td>
+            <td class="v">Nothing</td>
+            <td class="v">Nothing</td>
+            <td class="v">JSONL event, fleet review later</td>
+            <td class="v">Sub-threshold or rate-capped events</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ALERT UX -->
+  <section>
+    <div class="kick"><h2>The alert card, on glass</h2><span class="n">heads up, never heads down</span></div>
+    <div class="mockrow">
+      <div class="glass">
+        <div class="acard crit"><span class="ic">⚠</span><span><span class="t">FORKLIFT PATH</span><br><span class="a">Step clear — vehicle approaching</span></span><span class="kbd">ENTER OK</span></div>
+        <div class="acard high"><span class="ic">△</span><span><span class="t">NO HARD HAT</span><br><span class="a">Don a hard hat before entering</span></span><span class="kbd">ENTER OK</span></div>
+      </div>
+      <div class="anatomy">
+        <h3>Anatomy — five rules</h3>
+        <ul>
+          <li><span class="mk">01</span><span><b>≤ 3 words of hazard, ≤ 7 of action.</b> Read in one glance at arm's-length focus; no sentence ever wraps twice.</span></li>
+          <li><span class="mk">02</span><span><b>Severity is color + motion,</b> not more words — red pulses, amber sits still. Green/amber/red stay functional, per the brand system.</span></li>
+          <li><span class="mk">03</span><span><b>One action verb, always.</b> "Step clear." "Don a hard hat." Never a paragraph, never two options.</span></li>
+          <li><span class="mk">04</span><span><b>Enter acknowledges, Escape dismisses</b> — the same D-pad grammar as Field Coach and Hazard Watch, zero new learning.</span></li>
+          <li><span class="mk">05</span><span><b>Nothing ever scrolls.</b> If it doesn't fit the card, it doesn't belong on the glass — it belongs in the log.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST METRICS -->
+  <section>
+    <div class="kick"><h2>Trust, measured</h2><span class="n">the numbers the wear-test must hit</span></div>
+    <p class="sub">"Do workers trust it" sounds soft; it isn't. Four proxies, logged automatically, reported per session. These are planning targets to calibrate against the first real crews.</p>
+    <div class="metrics">
+      <div class="metric"><div class="mv">≤ 1<small> / shift</small></div><div class="ml">False alarms a worker would call wrong — the metric that predicts muting.</div></div>
+      <div class="metric"><div class="mv">≤ 5 s<small> median</small></div><div class="ml">Ack latency — long latency means alerts are being ignored, not read.</div></div>
+      <div class="metric"><div class="mv">0<small> mute events</small></div><div class="ml">Glasses removed or audio disabled mid-task — any occurrence is a design failure to investigate.</div></div>
+      <div class="metric"><div class="mv">≥ 90%<small> agree</small></div><div class="ml">Post-task review: alerts the tester agrees were worth an interruption.</div></div>
+    </div>
+  </section>
+
+  <!-- WEAR TEST -->
+  <section>
+    <div class="kick"><h2>The wear-test protocol</h2><span class="n">Phase 1 tested the pipe; this tests the judgment</span></div>
+    <div class="split">
+      <div class="listcard">
+        <h3>Protocol</h3>
+        <ul>
+          <li><span class="mk">01</span><span><b>Real task as the workload:</b> the tester runs a Field Coach procedure (valve / motor / forklift) start to finish while wearing the system — the distraction is the point.</span></li>
+          <li><span class="mk">02</span><span><b>Staged hazards around the task:</b> scripted mix across Tier 1 classes — some persistent, some transient, some recurring after acknowledgment.</span></li>
+          <li><span class="mk">03</span><span><b>Deliberate traps:</b> two hazards at once (arbitration), an acked spill that stays put (suppression), a hazard that escalates (re-arm).</span></li>
+          <li><span class="mk">04</span><span><b>≥ 5 testers × 2 sessions,</b> counterbalanced hazard scripts; everything logged to the event schema.</span></li>
+        </ul>
+      </div>
+      <div class="listcard pass">
+        <h3>Pass bar</h3>
+        <ul>
+          <li><span class="mk">✓</span><span><b>Task completes</b> — the procedure gets done without removing the glasses.</span></li>
+          <li><span class="mk">✓</span><span><b>Trust metrics hit</b> — all four targets above, measured from logs.</span></li>
+          <li><span class="mk">✓</span><span><b>Arbitration correct</b> — in every two-hazard trap, the higher severity showed and the lower logged.</span></li>
+          <li><span class="mk">✓</span><span><b>Suppression correct</b> — no re-alert on acked static hazards; guaranteed re-alert on escalation.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVENT LOG -->
+  <section>
+    <div class="kick"><h2>The event log — Phase 5's seam</h2></div>
+    <p class="sub">Every judgment writes one JSONL event on-device: detection, score, arbitration outcome, alert shown/suppressed, ack, expiry — with the policy version that produced it. No cloud in this phase, but the schema is designed once, here, so the Phase 5 fleet dashboard and the Phase 2 flywheel both read the same stream. Suppressed events matter most: they're the record of what the system chose <em>not</em> to say, which is exactly what a safety review wants to audit.</p>
+  </section>
+
+  <!-- WEEKS -->
+  <section>
+    <div class="kick"><h2>Week by week</h2></div>
+    <div class="days">
+      <div class="day"><div class="dd">Week 1</div><div class="dt"><b>Policy engine.</b> Tracking + per-class persistence, severity table, arbitration, suppression state machine — as a pure module with the event schema, unit-tested against recorded Phase 1/2 frame logs before it ever touches hardware.</div></div>
+      <div class="day"><div class="dd">Week 2</div><div class="dt"><b>UX on glass.</b> Card component per the routing matrix, audio cues, ack/dismiss flow; swap the module into the live pipeline at stage 4; dry-run the traps.</div></div>
+      <div class="day"><div class="dd">Week 3</div><div class="dt"><b>Wear-test + tune.</b> Run the protocol, tune windows / cooldowns / rate cap against the trust metrics, re-run to the pass bar, ship the findings memo with the signed policy table.</div></div>
+    </div>
+  </section>
+
+  <!-- NON-GOALS -->
+  <section>
+    <div class="kick"><h2>Deliberately out of scope</h2></div>
+    <div class="nongoals">
+      <h3>Still thin — these wait</h3>
+      <ul>
+        <li><span><b>No new detection classes.</b> Judgment works on whatever Phase 2 shipped.</span></li>
+        <li><span><b>No fleet dashboard.</b> The schema ships; the dashboard is Phase 5.</span></li>
+        <li><span><b>No per-site configuration UI.</b> Policy is a reviewed table in the build, not a settings screen.</span></li>
+        <li><span><b>No voice or gesture input.</b> D-pad ack only — matching the platform.</span></li>
+        <li><span><b>No supervisor escalation path.</b> Man-down style auto-escalation designs in Phase 4 with real site contacts.</span></li>
+        <li><span><b>No Android.</b> Same slice platform until Phase 5.</span></li>
+      </ul>
+    </div>
+    <div class="exit"><b>Exit criteria</b>A tester completes a real procedure wearing the system, gets timely, uncluttered alerts they agree with, the traps all resolve correctly, and the four trust metrics hit — measured from the event log, not impressions.</div>
+  </section>
+
+  <!-- SHIPS -->
+  <section>
+    <div class="foota">
+      <b>What Phase 3 ships.</b> The judgment module (drop-in at Phase 1's stage 4) with its versioned, SME-signed policy table; the on-glasses alert component set in the Hazard Watch design language; the JSONL event schema that Phase 5's fleet view and Phase 2's flywheel both consume; wear-test results against the four trust metrics; and the tuned constants memo. After this phase the system doesn't just see hazards — it exercises judgment a worker can live with all shift. That's the difference between a demo and a product, and it's what Phase 4 takes to a real site.
+    </div>
+    <p class="disclaimer">
+      All thresholds (ack window, rate cap, dwell times, trust targets) are planning defaults to calibrate in the wear-test and again at pilot — the structure is the commitment, the numbers are knobs. Severity policy is owned by the safety SME and versioned with the build. Depends on: Phase 1's pipeline (module swap at stage 4), Phase 2's model + per-class confidence floors, and M3's display-surface verdict for card vs. overlay rendering.
+    </p>
+  </section>
+
+</div>
+</div>
+</body>
+</html>
