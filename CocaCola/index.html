@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Skill Reality — Bulk Syrup Sanitization</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#05080d; --hud:#5ba8e6; --hud-dim:rgba(91,168,230,.35);
+    --white:#f0f6ff; --halo:#8b7bd8; --warn:#ffb454; --ok:#4ade80;
+    --card:rgba(8,14,22,.8);
+    --mono:'IBM Plex Mono',monospace; --sans:'Space Grotesk',system-ui,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;overflow:hidden;background:var(--void);font-family:var(--sans)}
+
+  /* ---------- scene: fast-food back room ---------- */
+  #scene{position:fixed;inset:0}
+  #cam{width:100%;height:100%;object-fit:cover;display:none}
+  #sim{width:100%;height:100%;position:relative;
+    background:linear-gradient(180deg,#0d141c 0%,#0a1017 55%,#070b10 100%)}
+  .rack{position:absolute;top:8%;left:4%;width:22%;height:38%;border:1px solid rgba(150,175,200,.10);border-radius:3px}
+  .rack:before,.rack:after{content:'';position:absolute;left:0;right:0;height:1px;background:rgba(150,175,200,.10)}
+  .rack:before{top:33%} .rack:after{top:66%}
+  .bin{position:absolute;width:38%;height:18%;background:rgba(70,110,160,.16);border:1px solid rgba(120,160,200,.12);border-radius:2px}
+  .exit{position:absolute;top:5%;right:6%;font-family:var(--mono);font-size:9px;letter-spacing:.2em;
+    color:rgba(120,230,150,.5);border:1px solid rgba(120,230,150,.25);border-radius:3px;padding:3px 7px}
+  .floor{position:absolute;bottom:0;left:0;right:0;height:26%;
+    background:linear-gradient(180deg,rgba(140,170,200,.05),transparent);
+    border-top:1px solid rgba(140,170,200,.10)}
+  .drain{position:absolute;bottom:7%;left:50%;transform:translateX(-50%);width:26px;height:9px;
+    border-radius:50%;background:rgba(0,0,0,.6);border:1px solid rgba(140,170,200,.18)}
+
+  .tank{position:absolute;bottom:20%;width:22%;max-width:120px;height:46%}
+  .tank .shell{position:absolute;inset:0;border-radius:34px 34px 12px 12px;
+    background:linear-gradient(100deg,#243244 0%,#3c5570 30%,#1d2a38 58%,#2b3c50 82%,#131c26 100%);
+    border:1px solid rgba(150,180,210,.16);
+    box-shadow:inset -12px 0 26px rgba(0,0,0,.5),0 18px 40px rgba(0,0,0,.55)}
+  .tank .num{position:absolute;top:34%;left:50%;transform:translateX(-50%);
+    font-family:var(--mono);font-size:26px;font-weight:500;color:rgba(220,235,250,.30)}
+  .tank .scale{position:absolute;top:22%;bottom:22%;left:16%;width:2px;background:rgba(230,240,255,.16)}
+  .tank .placard{position:absolute;bottom:16%;left:50%;transform:translateX(-50%);
+    width:52%;height:11px;border-radius:2px;background:rgba(255,180,84,.22);border:1px solid rgba(255,180,84,.35)}
+  .fitting{position:absolute;width:13px;height:13px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#5b7590,#1a252f 72%);border:1px solid #46606f}
+  .f-fill{top:-5px;left:26%} .f-press{top:-5px;right:26%} .f-supply{bottom:8%;left:-6px}
+  #t1{left:26%} #t2{right:26%}
+
+  .cip{position:absolute;top:16%;right:5%;width:15%;max-width:74px;height:22%;
+    border-radius:5px;background:linear-gradient(160deg,#1b2733,#0d141c);
+    border:1px solid rgba(150,180,210,.16)}
+  .cip .key{position:absolute;top:20%;left:50%;transform:translateX(-50%);width:12px;height:12px;
+    border-radius:50%;border:2px solid rgba(180,205,230,.3)}
+  .cip .lamp{position:absolute;top:50%;left:50%;transform:translateX(-50%);width:9px;height:9px;border-radius:50%;
+    background:rgba(255,90,90,.25);transition:all .2s}
+  .cip .lamp.flash{background:#ff5a5a;box-shadow:0 0 12px #ff5a5a;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:.25}}
+
+  #lens{position:fixed;inset:0;pointer-events:none;z-index:5;
+    background:radial-gradient(ellipse 90% 80% at 50% 45%,rgba(91,168,230,.03) 0%,rgba(0,0,0,0) 55%,rgba(0,0,0,.6) 100%)}
+  #flash{position:fixed;inset:0;z-index:24;pointer-events:none;opacity:0;transition:opacity .25s;
+    background:radial-gradient(ellipse at 50% 60%,rgba(74,222,128,.14),transparent 60%)}
+  #flash.go{opacity:1}
+
+  /* ---------- AR: outline highlight + halo ring + verb badge ---------- */
+  #outline{position:fixed;z-index:8;border:1.5px solid rgba(240,248,255,.85);border-radius:8px;
+    box-shadow:0 0 14px rgba(160,200,255,.5),inset 0 0 10px rgba(160,200,255,.12);
+    opacity:0;transition:all .55s cubic-bezier(.4,0,.2,1);pointer-events:none}
+  #outline.show{opacity:1}
+  #halo{position:fixed;z-index:8;width:30px;height:30px;border-radius:50%;
+    border:2px solid var(--halo);box-shadow:0 0 16px rgba(139,123,216,.7),inset 0 0 8px rgba(139,123,216,.4);
+    opacity:0;transition:all .55s cubic-bezier(.4,0,.2,1);pointer-events:none}
+  #halo.show{opacity:1;animation:halo 1.8s ease-out infinite}
+  @keyframes halo{0%{box-shadow:0 0 0 0 rgba(139,123,216,.55),0 0 16px rgba(139,123,216,.7)}
+                  100%{box-shadow:0 0 0 18px rgba(139,123,216,0),0 0 16px rgba(139,123,216,.7)}}
+  #badge{position:fixed;z-index:9;display:flex;align-items:center;gap:5px;
+    background:rgba(6,11,18,.92);border:1px solid rgba(240,248,255,.22);border-radius:6px;
+    padding:5px 9px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--white);
+    opacity:0;transition:all .55s cubic-bezier(.4,0,.2,1);pointer-events:none;white-space:nowrap}
+  #badge.show{opacity:1}
+  #badge .pinch{font-size:12px}
+
+  /* ---------- top strip ---------- */
+  #top{position:fixed;top:max(10px,env(safe-area-inset-top));left:0;right:0;z-index:20;
+    display:flex;justify-content:space-between;padding:0 14px;
+    font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:rgba(240,246,255,.5)}
+  #top .live{color:var(--hud)}
+  #top .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--ok);
+    margin-right:6px;animation:blink 2s infinite;vertical-align:1px}
+
+  /* ---------- instruction caption bar ---------- */
+  #caption{position:fixed;z-index:20;left:50%;transform:translateX(-50%);
+    bottom:max(150px,calc(env(safe-area-inset-bottom) + 150px));width:min(90vw,430px);
+    background:rgba(6,11,18,.88);border:1px solid rgba(240,248,255,.14);border-radius:999px;
+    padding:9px 18px;font-size:13px;line-height:1.35;color:var(--white);text-align:center;
+    transition:opacity .3s}
+
+  /* ---------- HUD card ---------- */
+  #hud{position:fixed;z-index:20;left:50%;transform:translateX(-50%);
+    bottom:max(92px,calc(env(safe-area-inset-bottom) + 92px));width:min(92vw,430px);
+    background:var(--card);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    border:1px solid var(--hud-dim);border-radius:13px;
+    box-shadow:0 0 30px rgba(91,168,230,.13),0 16px 44px rgba(0,0,0,.55);padding:13px 16px 11px;
+    transition:border-color .4s}
+  #hud.warn{border-color:rgba(255,180,84,.55)}
+  #hud.done{border-color:rgba(74,222,128,.5)}
+  .eyebrow{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;
+    letter-spacing:.16em;margin-bottom:6px}
+  .eyebrow .s{color:var(--hud)} .eyebrow .p{color:rgba(240,246,255,.38)}
+  #phase{color:rgba(240,246,255,.5)}
+  #title{font-size:17px;font-weight:700;line-height:1.25;color:var(--white)}
+  #timerWrap{display:none;margin-top:10px;align-items:center;gap:11px}
+  #timerWrap.show{display:flex}
+  #ring{width:40px;height:40px;flex:none}
+  #ring circle{fill:none;stroke-width:3.5}
+  #ring .tr{stroke:rgba(91,168,230,.18)}
+  #ring .pg{stroke:var(--hud);stroke-linecap:round;transform:rotate(-90deg);transform-origin:center;
+    transition:stroke-dashoffset .5s linear}
+  #tTime{font-family:var(--mono);font-size:19px;color:var(--white)}
+  #tLabel{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:rgba(240,246,255,.42)}
+  #coach{display:none;margin-top:10px;padding-top:9px;border-top:1px solid rgba(91,168,230,.16);
+    font-size:13px;line-height:1.45;color:var(--hud)}
+  #coach.show{display:block}
+  #coach .who{font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;color:rgba(91,168,230,.6);
+    display:block;margin-bottom:3px}
+  .cur{display:inline-block;width:6px;height:13px;background:var(--hud);vertical-align:-2px;animation:blink .9s infinite}
+  #dots{display:flex;gap:3px;margin-top:11px}
+  #dots span{height:3px;flex:1;border-radius:2px;background:rgba(240,246,255,.13);transition:background .4s}
+  #dots span.on{background:var(--hud)} #dots span.wn{background:var(--warn)}
+
+  /* ---------- gesture bar ---------- */
+  #gest{position:fixed;z-index:20;left:50%;transform:translateX(-50%);
+    bottom:max(16px,calc(env(safe-area-inset-bottom) + 12px));display:flex;gap:9px}
+  .g{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;color:rgba(240,246,255,.85);
+    background:rgba(10,16,24,.82);border:1px solid rgba(240,246,255,.18);border-radius:999px;
+    padding:10px 14px;cursor:pointer;user-select:none;transition:all .15s;display:flex;align-items:center;gap:6px}
+  .g:active{transform:scale(.95);border-color:var(--hud);color:var(--hud)}
+  .g.pri{border-color:var(--hud-dim);color:var(--hud);background:rgba(91,168,230,.1)}
+  .g.exp{border-color:rgba(255,180,84,.42);color:var(--warn)}
+
+  #assist{position:fixed;z-index:30;top:max(50px,calc(env(safe-area-inset-top) + 38px));left:50%;
+    transform:translateX(-50%) translateY(-8px);width:min(92vw,430px);background:var(--card);
+    border:1px solid rgba(74,222,128,.4);border-radius:11px;padding:11px 15px;opacity:0;
+    pointer-events:none;transition:all .4s}
+  #assist.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  #assist .who{font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;color:var(--ok);margin-bottom:4px}
+  #assist .msg{font-size:13px;color:var(--white);line-height:1.4}
+
+  #util{position:fixed;z-index:40;top:max(32px,calc(env(safe-area-inset-top) + 24px));right:12px;
+    display:flex;flex-direction:column;gap:7px}
+  .u{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;color:rgba(240,246,255,.5);
+    background:rgba(10,16,24,.72);border:1px solid rgba(240,246,255,.12);border-radius:6px;
+    padding:6px 9px;cursor:pointer}
+  .u.on{color:var(--hud);border-color:var(--hud-dim)}
+</style>
+</head>
+<body>
+
+<div id="scene">
+  <video id="cam" autoplay playsinline muted></video>
+  <div id="sim">
+    <div class="rack"><div class="bin" style="top:6%;left:8%"></div><div class="bin" style="top:40%;left:8%"></div></div>
+    <div class="exit">EXIT</div>
+    <div class="cip"><div class="key"></div><div class="lamp" id="lamp"></div></div>
+    <div class="tank" id="t1">
+      <div class="shell"></div><div class="scale"></div><div class="num">1</div><div class="placard"></div>
+      <div class="fitting f-fill"></div><div class="fitting f-press"></div><div class="fitting f-supply"></div>
+    </div>
+    <div class="tank" id="t2">
+      <div class="shell"></div><div class="scale"></div><div class="num">2</div><div class="placard"></div>
+      <div class="fitting f-fill"></div><div class="fitting f-press"></div><div class="fitting f-supply"></div>
+    </div>
+    <div class="floor"></div><div class="drain"></div>
+  </div>
+</div>
+<div id="lens"></div><div id="flash"></div>
+
+<div id="top">
+  <span class="live"><span class="dot"></span>SKILL REALITY</span>
+  <span id="sess">BULK SYRUP · HYBRID CONTAINER</span>
+</div>
+
+<div id="util">
+  <button class="u" id="camBtn">CAMERA OFF</button>
+  <button class="u" id="voxBtn">VOICE OFF</button>
+</div>
+
+<div id="outline"></div><div id="halo"></div>
+<div id="badge"><span class="pinch">✊</span><span id="badgeText">Attach</span></div>
+
+<div id="assist">
+  <div class="who">REMOTE EXPERT · CONNECTED</div>
+  <div class="msg" id="assistMsg">Connecting…</div>
+</div>
+
+<div id="caption">Guided sanitization · pinch to begin</div>
+
+<div id="hud">
+  <div class="eyebrow"><span class="s" id="stepNo">READY</span><span id="phase"></span><span class="p">EDUCATION MODE</span></div>
+  <div id="title">Bulk syrup container sanitization</div>
+  <div id="timerWrap">
+    <svg id="ring" viewBox="0 0 40 40"><circle class="tr" cx="20" cy="20" r="16"></circle>
+      <circle class="pg" cx="20" cy="20" r="16" stroke-dasharray="100.5" stroke-dashoffset="0"></circle></svg>
+    <div><div id="tTime">0:00</div><div id="tLabel">CYCLE</div></div>
+  </div>
+  <div id="coach"><span class="who">AI COACH</span><span id="coachText"></span><span class="cur" id="cur"></span></div>
+  <div id="dots"></div>
+</div>
+
+<div id="gest">
+  <button class="g" id="back"><span>⟲</span> DOUBLE PINCH</button>
+  <button class="g pri" id="next"><span>◉</span> PINCH · <span id="nextL">START</span></button>
+  <button class="g exp" id="exp"><span>✆</span> HOLD · EXPERT</button>
+</div>
+
+<script>
+/* ---------------------------------------------------------------
+   Skill Reality — bulk syrup sanitization, Ray-Ban Display HUD
+   Steps transcribed from the VR Vision education module (Aug 2024).
+   target: {sel|xy} drives the outline + halo + verb badge.
+---------------------------------------------------------------- */
+const T1='#t1', T2='#t2';
+const steps=[
+ {p:'A · TRANSFER', v:'Inspect', t:'Confirm tank 1 is near empty',
+  c:'Check the sight tube — syrup should sit at the bottom.',
+  coach:"Reading the sight tube… near empty, confirmed. Good to transfer.", sel:T1, off:[0,10], vision:1},
+ {p:'A · TRANSFER', v:'Disconnect', t:'Disconnect the supply hose from tank 1',
+  c:'Disconnect the supply hose from tank 1 and set it aside.',
+  coach:"Set it aside where it won't touch the floor.", sel:T1, off:[-6,62]},
+ {p:'A · TRANSFER', v:'Remove', t:'Remove the dust cap from tank 2 fill fitting',
+  c:'Remove the dust cap from the syrup fill fitting on tank 2.',
+  coach:"Top of tank 2, left fitting. Keep the cap — it goes back on later.", sel:T2, off:[26,-2]},
+ {p:'A · TRANSFER', v:'Attach', t:'Jumper hose ¾″ end → tank 2 fill fitting',
+  c:'Grab the jumper hose from the panel. Remove the dust cap from the ¾″ connector — the larger of the two — and connect it to the syrup fill fitting.',
+  coach:"Larger end. If it doesn't seat easily, you've got the ½″ — check before you force it.", sel:T2, off:[26,-2]},
+ {p:'A · TRANSFER', v:'Attach', t:'Vent line → tank 2 pressure fitting',
+  c:'Connect the vent line to the pressure fitting, also on top of tank 2.',
+  coach:"Right-hand fitting on top. That's the one.", sel:T2, off:[74,-2]},
+ {p:'A · TRANSFER', v:'Attach', t:'Jumper ½″ end → tank 1 supply fitting',
+  c:'Remove the dust cap from the ½″ connector — the smaller of the two — and connect it to the supply fitting on the bottom of tank 1.',
+  coach:"Once this seats, syrup starts moving on its own. Nothing to push.", sel:T1, off:[-6,62]},
+ {p:'A · TRANSFER', v:'Wait', t:'Syrup transfers automatically', timer:150, tl:'TRANSFER',
+  c:'Remaining syrup flows from tank 1 into tank 2. Wait until tank 1 is empty.',
+  coach:"Pressure differential is doing the work. I'll watch the sight tube."},
+ {p:'A · TRANSFER', v:'Disconnect', t:'Break down the transfer rig',
+  c:'Disconnect the pressure line, then the ¾″ connector from tank 2\'s fill fitting. Cap the fill fitting. Disconnect the vent line.',
+  coach:"Caps back on as you go — that's what keeps this sanitary.", sel:T2, off:[50,-2]},
+ {p:'B · SUPPLY', v:'Attach', t:'Supply line → tank 2 bottom fitting',
+  c:'Connect the supply line to the supply fitting on the bottom of tank 2.',
+  coach:"This is the handoff — dispensers are about to run off tank 2.", sel:T2, off:[-6,62]},
+ {p:'B · SUPPLY', v:'Attach', t:'Pressure line → tank 2 top fitting',
+  c:'Connect the pressure line to the pressure fitting on top of tank 2. Tank 2 now supplies the dispensers.',
+  coach:"Tank 2 is live. Front of house never noticed. Now we sanitize tank 1.", sel:T2, off:[74,-2]},
+ {p:'C · SANITIZE', v:'Attach', t:'Vent line → tank 1 pressure fitting', warn:1,
+  c:'Connect the vent line to the pressure fitting on top of tank 1 to vent the remaining CO₂.',
+  coach:"You'll hear the CO₂ leave. Don't crack anything else until it's quiet.", sel:T1, off:[74,-2]},
+ {p:'C · SANITIZE', v:'Wait', t:'Depressurize tank 1', timer:45, tl:'VENTING', warn:1,
+  c:'Wait for depressurization to finish, then disconnect the vent line.',
+  coach:"Listening for it to go silent. Wait for me on this one."},
+ {p:'C · SANITIZE', v:'Attach', t:'Sanitize lines → tank 1',
+  c:'Small stainless connector → pressure fitting. Remove dust caps. Large brass connector → syrup fill fitting on top of tank 1.',
+  coach:"Stainless is the small one, brass is the large one. Easy to swap by feel — look before you seat it.", sel:T1, off:[50,-2]},
+ {p:'C · SANITIZE', v:'Attach', t:'Drain hose → jumper connector → floor drain',
+  c:'Grab the drain hose from the CIP panel. Connect the male fitting to the large jumper connector on tank 1\'s supply fitting. Run the other end to the floor drain.',
+  coach:"Route it clear of the walkway — that hose is a trip hazard for 23 minutes.", sel:T1, off:[-6,62]},
+ {p:'C · SANITIZE', v:'Mix', t:'Mix the sanitizer solution', warn:1,
+  c:'Fill the container with warm water to the fill line. Add sanitizer per the placard on the tank. Close and shake ~1 minute until dissolved.',
+  coach:"Dose is on the tank placard, not from memory. Hold it up and I'll read it with you.", sel:T1, off:[50,84], vision:1},
+ {p:'C · SANITIZE', v:'Turn key', t:'Start the sanitizing cycle',
+  c:'On the CIP panel, turn the key to the ON position. Red light flashes and sanitizer runs the lines.',
+  coach:"Watch for the flashing light. No light or no sound means stop and call support.", xy:[88,25], lamp:1},
+ {p:'C · SANITIZE', v:'Wait', t:'Sanitizing cycle running', timer:1380, tl:'SANITIZE CYCLE', lamp:1,
+  c:'The cycle takes about 23 minutes. If the light stops flashing or the sound stops, contact support.',
+  coach:"23 minutes. I'll hold the clock — go handle the front, I'll ping you at purge."},
+ {p:'C · SANITIZE', v:'Hold', t:'Manual CO₂ purge — 15 seconds', timer:15, tl:'PURGE · HOLD', warn:1,
+  c:'Press and hold the manual CO₂ purge button for 15 seconds, or until there is no discharge down the drain line.',
+  coach:"Hold it. Watch the drain — when the discharge stops, you're clear.", xy:[88,25]},
+ {p:'C · SANITIZE', v:'Disconnect', t:'Remove sanitize lines and cap',
+  c:'Disconnect the large brass connector from the fill fitting and cap it. Disconnect the small stainless connector from the pressure fitting. Cap the fill fitting.',
+  coach:"Caps on both. Sanitary chain stays unbroken.", sel:T1, off:[50,-2]},
+ {p:'C · SANITIZE', v:'Confirm', t:'Confirm tank 1 is empty',
+  c:'Disconnect the jumper hose from the supply fitting. Press the tip of the supply fitting to confirm all liquid is out. Cap it.',
+  coach:"Press and hold — no drip means empty. I'm logging that check.", sel:T1, off:[-6,62], vision:1},
+ {p:'C · SANITIZE', v:'Stow', t:'Coil and stow the hoses',
+  c:'Disconnect the ¾″ jumper hose. Coil and hang it on the panel. Remove the drain line and return it to the CIP panel.',
+  coach:"Coil it the way it hangs — next tech will thank you.", xy:[88,25]},
+ {p:'C · SANITIZE', v:'Log', t:'Initial and date the empty tank',
+  c:'Write your initials and the date on the empty tank. Module complete.',
+  coach:"Initials and date. That's the paper trail — and mine's already written.", sel:T1, off:[50,84]},
+];
+
+let idx=-1,timer=null,vox=false,done=false,typing=null;
+const $=id=>document.getElementById(id);
+const hud=$('hud'),outline=$('outline'),halo=$('halo'),badge=$('badge');
+
+steps.forEach(s=>{const d=document.createElement('span');if(s.warn)d.dataset.w=1;$('dots').appendChild(d)});
+const paintDots=()=>[...$('dots').children].forEach((d,i)=>d.className=i<=idx?(d.dataset.w?'wn':'on'):'');
+
+function speak(t){if(!vox||!('speechSynthesis'in window))return;speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(t);u.rate=1.02;speechSynthesis.speak(u)}
+
+function coachSay(t){clearInterval(typing);$('coach').classList.add('show');$('cur').style.display='inline-block';
+  $('coachText').textContent='';let i=0;
+  typing=setInterval(()=>{$('coachText').textContent=t.slice(0,++i);
+    if(i>=t.length){clearInterval(typing);$('cur').style.display='none'}},18);
+  speak(t)}
+
+function startTimer(sec,label,cb){clearInterval(timer);$('timerWrap').classList.add('show');
+  $('tLabel').textContent=label+(sec>60?' · DEMO 60×':'');
+  const total=sec,C=100.5;let r=sec;const fast=sec>60?60*.25:.25;
+  const paint=()=>{const m=Math.floor(r/60),s=Math.floor(r%60);
+    $('tTime').textContent=m+':'+String(s).padStart(2,'0');
+    document.querySelector('#ring .pg').style.strokeDashoffset=C*(1-r/total)};
+  paint();
+  timer=setInterval(()=>{r-=fast;if(r<=0){r=0;paint();clearInterval(timer);cb&&cb()}else paint()},250)}
+
+function place(s){
+  if(s.sel){
+    const el=document.querySelector(s.sel),b=el.getBoundingClientRect();
+    outline.style.left=(b.left-5)+'px';outline.style.top=(b.top-5)+'px';
+    outline.style.width=(b.width+10)+'px';outline.style.height=(b.height+10)+'px';
+    outline.classList.add('show');
+    const hx=b.left+b.width*(s.off[0]/100),hy=b.top+b.height*(s.off[1]/100);
+    halo.style.left=(hx-15)+'px';halo.style.top=(hy-15)+'px';halo.classList.add('show');
+    badge.style.left=(hx+22)+'px';badge.style.top=(hy-12)+'px';
+  } else if(s.xy){
+    outline.classList.remove('show');
+    const hx=innerWidth*s.xy[0]/100,hy=innerHeight*s.xy[1]/100;
+    halo.style.left=(hx-15)+'px';halo.style.top=(hy-15)+'px';halo.classList.add('show');
+    badge.style.left=(hx+22)+'px';badge.style.top=(hy-12)+'px';
+  } else {outline.classList.remove('show');halo.classList.remove('show');badge.classList.remove('show');return}
+  $('badgeText').textContent=s.v;badge.classList.add('show');
+}
+
+function render(){
+  clearInterval(timer);$('timerWrap').classList.remove('show');
+  hud.classList.remove('warn','done');$('coach').classList.remove('show');
+  $('lamp').classList.remove('flash');
+
+  if(idx===-1){
+    $('stepNo').textContent='READY';$('phase').textContent='';
+    $('title').textContent='Bulk syrup container sanitization';
+    $('caption').textContent='22 steps · 3 phases · hybrid bulk syrup container · pinch to begin';
+    $('nextL').textContent='START';
+    outline.classList.remove('show');halo.classList.remove('show');badge.classList.remove('show');
+    paintDots();return;
+  }
+  if(idx>=steps.length){
+    done=true;hud.classList.add('done');
+    $('stepNo').textContent='COMPLETE';$('phase').textContent='';
+    $('title').textContent='Skill confirmed ✓';
+    $('caption').textContent='22/22 steps · verified on the real container · record synced';
+    $('nextL').textContent='RESTART';
+    outline.classList.remove('show');halo.classList.remove('show');badge.classList.remove('show');
+    [...$('dots').children].forEach(d=>d.className=d.dataset.w?'wn':'on');
+    coachSay("Clean run — confirmed on the actual tank, not in a headset. That record is now training data.");
+    flash();return;
+  }
+
+  const s=steps[idx];
+  $('stepNo').textContent='STEP '+(idx+1)+' OF '+steps.length;
+  $('phase').textContent=s.p;
+  hud.classList.toggle('warn',!!s.warn);
+  $('title').textContent=s.t;
+  $('caption').textContent=s.c;
+  $('nextL').textContent=idx===steps.length-1?'FINISH':'NEXT';
+  place(s);
+  if(s.lamp)$('lamp').classList.add('flash');
+  speak(s.c);
+  setTimeout(()=>{if(steps[idx]===s)coachSay(s.coach)},s.vision?1400:900);
+  if(s.timer)startTimer(s.timer,s.tl,()=>{coachSay('Done — pinch to continue.');flash()});
+}
+
+const flash=()=>{const f=$('flash');f.classList.add('go');setTimeout(()=>f.classList.remove('go'),350)};
+
+$('next').addEventListener('click',()=>{if(done){done=false;idx=-1;render();return}idx++;flash();render()});
+$('back').addEventListener('click',()=>{if(idx>-1&&!done){idx--;render()}});
+
+let aTO=null;
+$('exp').addEventListener('click',()=>{
+  const a=$('assist');a.classList.add('show');
+  $('assistMsg').textContent='Connecting to on-call expert…';
+  setTimeout(()=>{
+    $('assistMsg').textContent='Karan S. joined · "I see your view — brass is the large one, goes on the fill fitting. Quarter turn past snug."';
+    speak('Expert connected. I can see your view.');
+  },1600);
+  clearTimeout(aTO);aTO=setTimeout(()=>a.classList.remove('show'),9000);
+});
+
+let camOn=false,stream=null;
+$('camBtn').addEventListener('click',async function(){
+  if(!camOn){
+    try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+      $('cam').srcObject=stream;$('cam').style.display='block';$('sim').style.display='none';
+      camOn=true;this.textContent='CAMERA ON';this.classList.add('on');
+      outline.classList.remove('show');halo.classList.remove('show');badge.classList.remove('show');
+    }catch(e){this.textContent='BLOCKED';setTimeout(()=>this.textContent='CAMERA OFF',1800)}
+  }else{stream&&stream.getTracks().forEach(t=>t.stop());
+    $('cam').style.display='none';$('sim').style.display='block';
+    camOn=false;this.textContent='CAMERA OFF';this.classList.remove('on');
+    if(idx>=0&&idx<steps.length)place(steps[idx]);}
+});
+
+$('voxBtn').addEventListener('click',function(){
+  vox=!vox;this.textContent=vox?'VOICE ON':'VOICE OFF';this.classList.toggle('on',vox);
+  if(!vox&&'speechSynthesis'in window)speechSynthesis.cancel();else if(vox)speak('Voice guidance on.');
+});
+
+addEventListener('resize',()=>{if(idx>=0&&idx<steps.length&&!camOn)place(steps[idx])});
+render();
+</script>
+</body>
+</html>
