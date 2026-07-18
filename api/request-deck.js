@@ -96,7 +96,7 @@ export default async function handler(req, res) {
               <!-- intro -->
               <tr><td style="padding:26px 8px 0;font-size:16px;line-height:1.6;color:#0d1218">Thanks for your interest — here's the investor deck.</td></tr>
               <!-- proof line -->
-              <tr><td style="padding:12px 8px 0;font-size:14px;line-height:1.6;color:#6b7280">10 years of enterprise VR training. 100+ deployments for Toyota, Siemens, and Coca-Cola.</td></tr>
+              <tr><td style="padding:12px 8px 0;font-size:14px;line-height:1.6;color:#6b7280">A 10-year company on a brand-new platform. 100+ deployments for VR Vision clients including Toyota, Siemens, and Coca-Cola.</td></tr>
               <!-- deck cover, full width, rounded, linked to the deck -->
               <tr><td style="padding:26px 8px 0">
                 <a href="${deckUrl}" style="display:block;text-decoration:none">
@@ -116,7 +116,7 @@ export default async function handler(req, res) {
               </td></tr>
               <!-- footer -->
               <tr><td style="padding:28px 8px 0"><div style="height:1px;line-height:1px;font-size:0;background:#e6e9ee">&nbsp;</div></td></tr>
-              <tr><td style="padding:16px 8px 0;font-size:12.5px;line-height:1.5;color:#8a94a6">Skill Reality · skillreality.com · Raising seed · Launching 2027</td></tr>
+              <tr><td style="padding:16px 8px 0;font-size:12.5px;line-height:1.5;color:#8a94a6">Skill Reality · skillreality.com · Raising our seed round · Pilots 2026 · Commercial launch 2027</td></tr>
             </table>
           </td></tr>
         </table>`,
