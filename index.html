@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -67,6 +67,14 @@
   ]
 }
 </script>
+<!-- React, served from this origin. support.js otherwise pulls it from unpkg.com at
+     runtime, which puts a third party on the render path: if unpkg is slow or down,
+     the page renders nothing. These must stay BEFORE support.js — it skips its own
+     fetch only when React and ReactDOM are already on window. Byte-identical to the
+     versions the runtime pins; if integrity ever fails these are skipped and the
+     unpkg fallback still applies. -->
+<script src="/vendor/react-18.3.1/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z"></script>
+<script src="/vendor/react-18.3.1/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1"></script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -308,17 +316,17 @@
         <div style="border: 1px solid rgba(240,244,248,0.08); border-radius: 16px; padding: 28px; background: #0A0F14;">
           <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 1.5px; color: {{ accentText }}; margin-bottom: 14px;">THE SKILLS GAP</div>
           <div style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8; line-height: 1;"><span data-count="70">70</span>%</div>
-          <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">of workers have not mastered the skills they need for their job today. <span style="color: rgba(240,244,248,0.4);">(Gartner, 2019)</span></div>
+          <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">of workers have not mastered the skills they need for their job today. <span style="color: rgba(240,244,248,0.5);">(Gartner, 2019)</span></div>
         </div>
         <div style="border: 1px solid rgba(240,244,248,0.08); border-radius: 16px; padding: 28px; background: #0A0F14;">
           <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 1.5px; color: {{ accentText }}; margin-bottom: 14px;">WHAT STICKS</div>
           <div style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8; line-height: 1;"><span data-count="34">34</span>%</div>
-          <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">of employees are still applying what they learned one year after training. <span style="color: rgba(240,244,248,0.4);">(Saks &amp; Belcourt, 2006)</span></div>
+          <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">of employees are still applying what they learned one year after training. <span style="color: rgba(240,244,248,0.5);">(Saks &amp; Belcourt, 2006)</span></div>
         </div>
         <div style="border: 1px solid rgba(240,244,248,0.08); border-radius: 16px; padding: 28px; background: #0A0F14;">
           <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 1.5px; color: {{ accentText }}; margin-bottom: 14px;">OBSOLESCENCE</div>
           <div style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8; line-height: 1;"><span data-count="39">39</span>%</div>
-          <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">of workers' core skills will change by 2030 as roles transform. <span style="color: rgba(240,244,248,0.4);">(WEF, Future of Jobs 2025)</span></div>
+          <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">of workers' core skills will change by 2030 as roles transform. <span style="color: rgba(240,244,248,0.5);">(WEF, Future of Jobs 2025)</span></div>
         </div>
       </div>
     </div>
@@ -617,7 +625,7 @@
       <div data-reveal style="max-width: 680px; margin-bottom: 56px;">
         <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: {{ accentText }}; margin-bottom: 20px;">WHY NOW</div>
         <h2 data-sr-h2 style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.08; margin: 0 0 24px;">The platform just opened. The first-mover window is open right now.</h2>
-        <p style="font-size: 17px; line-height: 1.6; color: rgba(240,244,248,0.65); margin: 0;">On May 14, 2026, Meta shipped display support in the Wearables Device Access Toolkit — the first time developers can build guided, camera-aware experiences for Ray-Ban Display glasses. <span style="color: rgba(240,244,248,0.45);">(<a href="https://developers.meta.com/blog/build-for-display-glasses/" target="_blank" rel="noopener" style="color: rgba(240,244,248,0.45);">Meta for Developers</a>, v0.7 release)</span></p>
+        <p style="font-size: 17px; line-height: 1.6; color: rgba(240,244,248,0.65); margin: 0;">On May 14, 2026, Meta shipped display support in the Wearables Device Access Toolkit — the first time developers can build guided, camera-aware experiences for Ray-Ban Display glasses. <span style="color: rgba(240,244,248,0.5);">(<a href="https://developers.meta.com/blog/build-for-display-glasses/" target="_blank" rel="noopener" style="color: rgba(240,244,248,0.5);">Meta for Developers</a>, v0.7 release)</span></p>
       </div>
       <div data-reveal data-sr-grid3 style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 44px;">
         <div style="border: 1px solid rgba(240,244,248,0.08); border-radius: 16px; padding: 28px; background: #0A0F14;">
@@ -628,7 +636,7 @@
         <div style="border: 1px solid rgba(240,244,248,0.08); border-radius: 16px; padding: 28px; background: #0A0F14;">
           <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 1.5px; color: {{ accentText }}; margin-bottom: 14px;">THE MARKET</div>
           <div style="font-size: 40px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8; line-height: 1;">$69.6B</div>
-          <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">Global immersive training market: $16.4B in 2024 → $69.6B by 2030 (28.3% CAGR). <span style="color: rgba(240,244,248,0.4);">(Grand View Research)</span></div>
+          <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">Global immersive training market: $16.4B in 2024 → $69.6B by 2030 (28.3% CAGR). <span style="color: rgba(240,244,248,0.5);">(Grand View Research)</span></div>
         </div>
         <div style="border: 1px solid rgba(240,244,248,0.08); border-radius: 16px; padding: 28px; background: #0A0F14;">
           <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 1.5px; color: {{ accentText }}; margin-bottom: 14px;">THE WINDOW</div>
