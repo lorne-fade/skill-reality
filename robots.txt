@@ -1,0 +1,39 @@
+User-agent: *
+Allow: /
+
+# AI crawlers are welcome — the landing page is meant to be citable.
+# Listed explicitly so the intent is on the record rather than inferred
+# from the absence of a rule.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# NOTE: /roadmap/ and /demo-cc-syrup/ are kept crawlable on purpose. They carry
+# <meta name="robots" content="noindex, nofollow">, and a crawler has to be able
+# to fetch a page to see that directive — disallowing them here would keep the
+# noindex from ever being read.
+
+Sitemap: https://www.skillreality.com/sitemap.xml
