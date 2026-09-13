@@ -9,14 +9,74 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon/icon-192-bright.png">
 <link rel="icon" type="image/png" sizes="96x96" href="/favicon/icon-96-bright.png">
 <link rel="icon" type="image/png" sizes="52x52" href="/favicon/icon-52-bright.png">
+
+<!-- SEO / social: these live in the real head for the same reason as the icons above —
+     the page body is a client-rendered template, so anything left in the helmet block is
+     injected by JS and is invisible to crawlers, LLM scrapers and link unfurlers that
+     don't execute scripts. Keep them here and NOT in the helmet block: the helmet manager
+     appends without checking the existing head, so a copy in both places yields two title
+     elements and duplicate description tags.
+     NB: never write runtime tag names in angle brackets in a comment in this file —
+     support.js rewrites them with a regex that does not skip comments, which turns the
+     text into a real element. -->
+<title>Skill Reality — Training that becomes skill · AI coaching on display glasses</title>
+<meta name="description" content="Immersive coaching delivered hands-free on AI display glasses — an AI that sees the real task, guides the worker through it, and confirms the skill on the job.">
+<link rel="canonical" href="https://www.skillreality.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Skill Reality">
+<meta property="og:title" content="Skill Reality — Training that becomes skill">
+<meta property="og:description" content="AI coaching on display glasses — an AI that sees the real task, guides the worker through it, and confirms the skill on the job.">
+<meta property="og:url" content="https://skillreality.com/">
+<meta property="og:image" content="https://skillreality.com/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Skill Reality — Training that becomes skill">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Skill Reality — Training that becomes skill">
+<meta name="twitter:description" content="AI coaching on display glasses — sees the real task, guides the worker, confirms the skill on the job.">
+<meta name="twitter:image" content="https://skillreality.com/og-card.png">
+
+<!-- Organization data for search engines and AI crawlers. Static so it is readable
+     without running JS. disambiguatingDescription states the corporate relationship
+     in machine-readable form; there is deliberately no parentOrganization. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Skill Reality Inc.",
+  "alternateName": "Skill Reality",
+  "url": "https://www.skillreality.com/",
+  "logo": "https://skillreality.com/favicon/icon-512.png",
+  "image": "https://skillreality.com/og-card.png",
+  "email": "hello@skillreality.com",
+  "description": "Skill Reality builds AI coaching for frontline industrial workers, delivered hands-free on AI display glasses — an AI that sees the real task, guides the worker through it, and confirms the skill on the job.",
+  "disambiguatingDescription": "Skill Reality Inc. is an independent company founded by the team behind VR Vision. It is not a subsidiary of, and does not trade as, VR Vision.",
+  "founder": [
+    {
+      "@type": "Person",
+      "name": "Lorne Fade",
+      "jobTitle": "Co-founder, CTO & Head of AI",
+      "sameAs": "https://www.linkedin.com/in/lornefade/"
+    },
+    {
+      "@type": "Person",
+      "name": "Roni Cerga",
+      "jobTitle": "Co-founder & CEO",
+      "sameAs": "https://www.linkedin.com/in/ronicerga/"
+    }
+  ]
+}
+</script>
 <script src="./support.js"></script>
 </head>
 <body>
 <x-dc>
 <helmet>
-<title>Skill Reality — Training that becomes skill · AI coaching on display glasses</title>
+<!-- NOTE: the title, description, canonical, Open Graph and Twitter tags deliberately do
+     NOT live here — they are in the real document head so crawlers that don't run JS can
+     read them. Do not re-add them here; the helmet manager appends without deduping
+     against the existing head, so they would render twice. -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Immersive coaching delivered hands-free on AI display glasses — an AI that sees the real task, guides the worker through it, and confirms the skill on the job. A VR Vision company.">
 <meta name="theme-color" content="#050607">
 
 <!-- favicon / app icons -->
@@ -25,21 +85,6 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-
-<!-- social share -->
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Skill Reality">
-<meta property="og:title" content="Skill Reality — Training that becomes skill">
-<meta property="og:description" content="AI coaching on display glasses — an AI that sees the real task, guides the worker through it, and confirms the skill on the job. A VR Vision company.">
-<meta property="og:url" content="https://skillreality.com/">
-<meta property="og:image" content="https://skillreality.com/og-card.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Skill Reality — Training that becomes skill">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Skill Reality — Training that becomes skill">
-<meta name="twitter:description" content="AI coaching on display glasses — sees the real task, guides the worker, confirms the skill on the job. A VR Vision company.">
-<meta name="twitter:image" content="https://skillreality.com/og-card.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -171,12 +216,12 @@
         </div>
         <h1 data-sr-hero-h style="font-size: 74px; line-height: 1.0; font-weight: 800; letter-spacing: -2.8px; margin: 0 0 24px; animation: srFadeUp 0.45s ease-out 0.07s both;">Training that <span style="background: linear-gradient(100deg, {{ accent }}, #6fc0ff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;">becomes&nbsp;skill.</span></h1>
         <p style="font-size: 19px; line-height: 1.55; color: rgba(240,244,248,0.65); max-width: 480px; margin: 0 0 18px; animation: srFadeUp 0.45s ease-out 0.14s both;">Immersive coaching delivered hands-free on AI display glasses — an AI that sees the real task, guides the worker through it, and confirms the skill on the job.</p>
-        <p style="font-size: 17px; line-height: 1.5; font-weight: 600; color: rgba(240,244,248,0.85); max-width: 480px; margin: 0 0 40px; animation: srFadeUp 0.45s ease-out 0.18s both;">A 10-year company on a brand-new platform.</p>
+        <p style="font-size: 17px; line-height: 1.5; font-weight: 600; color: rgba(240,244,248,0.85); max-width: 480px; margin: 0 0 40px; animation: srFadeUp 0.45s ease-out 0.18s both;">A team with 10 years in enterprise XR, on a brand-new platform.</p>
         <div data-sr-row style="display: flex; gap: 14px; animation: srFadeUp 0.45s ease-out 0.21s both;">
           <a href="#contact" onClick="{{ scrollToInvestor }}" data-magnetic style="display: inline-flex; align-items: center; justify-content: center; background: {{ accent }}; color: #fff; font-weight: 700; font-size: 15px; padding: 15px 28px; border-radius: 10px; text-decoration: none; letter-spacing: -0.2px; transition: box-shadow 0.3s ease-out, background 0.25s;" style-hover="background: #2585d1; box-shadow: 0 0 32px rgba(27,116,188,0.45);">Request the investor deck</a>
           <a href="#contact" onClick="{{ scrollToPartner }}" data-magnetic style="display: inline-flex; align-items: center; justify-content: center; color: #F0F4F8; font-weight: 600; font-size: 15px; padding: 15px 28px; border-radius: 10px; text-decoration: none; border: 1px solid rgba(240,244,248,0.22); letter-spacing: -0.2px; transition: border-color 0.25s, color 0.25s, box-shadow 0.3s ease-out;" style-hover="border-color: {{ accent }}; color: {{ accent }}; box-shadow: 0 0 24px rgba(27,116,188,0.2);">Become a design partner</a>
         </div>
-        <div data-proof style="margin-top: 26px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.8px; line-height: 1.75; color: rgba(240,244,248,0.55); max-width: 540px; animation: srFadeUp 0.45s ease-out 0.28s both;">A VR VISION COMPANY · 10 YEARS · 100+ DEPLOYMENTS<br>VR VISION CLIENTS: TOYOTA · SIEMENS · COCA-COLA · TORONTO HYDRO · HYDRO ONE · ENEL</div>
+        <div data-proof style="margin-top: 26px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.8px; line-height: 1.75; color: rgba(240,244,248,0.55); max-width: 540px; animation: srFadeUp 0.45s ease-out 0.28s both;">BUILT BY THE TEAM BEHIND VR VISION · 10 YEARS · 100+ ENTERPRISE XR DEPLOYMENTS<br>DELIVERED FOR: TOYOTA · SIEMENS · COCA-COLA · TORONTO HYDRO · HYDRO ONE · ENEL</div>
       </div>
 
       <!-- live looping HUD demo -->
@@ -197,13 +242,13 @@
         <!-- step chip (top right) -->
         <div style="position: absolute; right: 4%; top: 5.5%; display: inline-flex; align-items: center; gap: 8px; background: rgba(8,12,16,0.72); border: 1px solid rgba(27,116,188,0.55); border-radius: 100px; padding: 7px 15px; backdrop-filter: blur(6px); box-shadow: 0 0 22px rgba(27,116,188,0.18); animation: srFadeUp 0.3s ease-out 0.9s both;">
           <span style="width: 6px; height: 6px; border-radius: 50%; background: {{ accent }}; animation: srPulse 2.2s ease-in-out infinite;"></span>
-          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1.5px; color: rgba(240,244,248,0.9);">{{ hudStepLabel }}</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1.5px; color: rgba(240,244,248,0.9);" data-dyn-text data-text="{{ hudStepLabel }}">STEP 4 OF 7</span>
         </div>
 
         <!-- instruction card at the baked leader-line endpoint (upper right) -->
         <div data-hud-card style="position: absolute; right: 3%; bottom: 56%; max-width: 44%; background: rgba(8,12,16,0.72); border: 1px solid rgba(27,116,188,0.55); border-radius: 10px; padding: 11px 14px; backdrop-filter: blur(6px); box-shadow: 0 0 26px rgba(27,116,188,0.2); animation: srFadeUp 0.3s ease-out 1.2s both;">
           <div style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 1.5px; color: {{ accent }}; margin-bottom: 5px;">GUIDANCE</div>
-          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.5px; line-height: 1.5; color: #F0F4F8; min-height: 18px;">{{ hudTyped }}<span style="display: inline-block; width: 6px; height: 11px; background: rgba(27,116,188,0.7); margin-left: 3px; vertical-align: -1px; animation: srPulse 1s steps(2) infinite;"></span></div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.5px; line-height: 1.5; color: #F0F4F8; min-height: 18px;"><span data-dyn-text data-text="{{ hudTyped }}">ALIGN AND TIGHTEN VALVE TO 2.5 NM</span><span style="display: inline-block; width: 6px; height: 11px; background: rgba(27,116,188,0.7); margin-left: 3px; vertical-align: -1px; animation: srPulse 1s steps(2) infinite;"></span></div>
         </div>
 
         <!-- completed chip (lower right) -->
@@ -212,7 +257,7 @@
             <span style="display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: #35c07d; animation: srTick 0.4s cubic-bezier(0.22,1,0.36,1) both;">
               <span style="display: block; width: 7px; height: 4px; border-left: 2px solid #06080A; border-bottom: 2px solid #06080A; transform: rotate(-45deg) translate(0.5px, -1px);"></span>
             </span>
-            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1.5px; color: rgba(240,244,248,0.9);">{{ doneLabel }}</span>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1.5px; color: rgba(240,244,248,0.9);" data-dyn-text data-text="{{ doneLabel }}">STEP 3 COMPLETED</span>
           </div>
         </sc-if>
 
@@ -246,7 +291,7 @@
         <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: {{ accent }}; margin-bottom: 20px;">THE PROBLEM</div>
         <h2 data-sr-h2 style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.08; margin: 0 0 24px;">People watch. They don't do. So it never becomes skill.</h2>
         <p style="font-size: 17px; line-height: 1.6; color: rgba(240,244,248,0.65); margin: 0 0 16px; max-width: 440px;">Slides, videos, modules — most training is still watched, not performed. It drains money through lost productivity, errors, rework, and turnover.</p>
-        <p style="font-size: 17px; line-height: 1.6; color: rgba(240,244,248,0.85); font-weight: 600; margin: 0; max-width: 440px;">In safety-critical work — energy, utilities, manufacturing, rail — an untrained worker isn't just a cost. It's a hazard.</p>
+        <p style="font-size: 17px; line-height: 1.6; color: rgba(240,244,248,0.85); font-weight: 600; margin: 0; max-width: 440px;">In safety-critical work — energy, utilities, manufacturing, automotive — an untrained worker isn't just a cost. It's a hazard.</p>
       </div>
       <div data-reveal style="background: #0A0F14; border: 1px solid rgba(240,244,248,0.08); border-radius: 20px; padding: 36px 32px 28px;">
         <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; gap: 12px; flex-wrap: wrap;">
@@ -262,7 +307,7 @@
       <div data-reveal data-sr-grid3 style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
         <div style="border: 1px solid rgba(240,244,248,0.08); border-radius: 16px; padding: 28px; background: #0A0F14;">
           <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 1.5px; color: {{ accent }}; margin-bottom: 14px;">THE SKILLS GAP</div>
-          <div style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8; line-height: 1;"><span data-count="70">0</span>%</div>
+          <div style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8; line-height: 1;"><span data-count="70">70</span>%</div>
           <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">of workers say they lack the skills they actually need to do their job.</div>
         </div>
         <div style="border: 1px solid rgba(240,244,248,0.08); border-radius: 16px; padding: 28px; background: #0A0F14;">
@@ -272,7 +317,7 @@
         </div>
         <div style="border: 1px solid rgba(240,244,248,0.08); border-radius: 16px; padding: 28px; background: #0A0F14;">
           <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 1.5px; color: {{ accent }}; margin-bottom: 14px;">OBSOLESCENCE</div>
-          <div style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8; line-height: 1;"><span data-count="39">0</span>%</div>
+          <div style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8; line-height: 1;"><span data-count="39">39</span>%</div>
           <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">of workers' core skills will be outdated by 2030 as roles transform.</div>
         </div>
       </div>
@@ -613,17 +658,17 @@
       <div data-reveal style="max-width: 680px; margin-bottom: 56px;">
         <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: {{ accent }}; margin-bottom: 20px;">PROOF</div>
         <h2 data-sr-h2 style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.08; margin: 0 0 24px;">The model already works.</h2>
-        <p style="font-size: 17px; line-height: 1.6; color: rgba(240,244,248,0.65); margin: 0;">Documented across 100+ VR Vision deployments in energy, utilities, manufacturing, and rail. The glasses don't change whether immersive training works — they change how far it can reach.</p>
+        <p style="font-size: 17px; line-height: 1.6; color: rgba(240,244,248,0.65); margin: 0;">Documented across 100+ VR Vision deployments in energy, utilities, manufacturing, and automotive. The glasses don't change whether immersive training works — they change how far it can reach.</p>
       </div>
       <div data-reveal data-sr-grid3 style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px;">
         <div style="border: 1px solid rgba(240,244,248,0.08); border-radius: 16px; padding: 28px; background: #0A0F14;">
           <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 1.5px; color: {{ accent }}; margin-bottom: 14px;">ONBOARDING</div>
-          <div style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8; line-height: 1;"><span data-count="65">0</span>%</div>
+          <div style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8; line-height: 1;"><span data-count="65">65</span>%</div>
           <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">faster onboarding for new frontline workers.</div>
         </div>
         <div style="border: 1px solid rgba(240,244,248,0.08); border-radius: 16px; padding: 28px; background: #0A0F14;">
           <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 1.5px; color: {{ accent }}; margin-bottom: 14px;">ERRORS</div>
-          <div style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8; line-height: 1;"><span data-count="30">0</span>%</div>
+          <div style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8; line-height: 1;"><span data-count="30">30</span>%</div>
           <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">reduction in on-the-job errors.</div>
         </div>
         <div style="border: 1px solid rgba(240,244,248,0.08); border-radius: 16px; padding: 28px; background: #0A0F14;">
@@ -632,35 +677,36 @@
           <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">knowledge retention vs. traditional training.</div>
         </div>
       </div>
+      <div data-reveal style="font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.5px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-bottom: 24px;">Source: VR Vision enterprise deployment data — internal program measurement across 100+ deployments.</div>
       <div data-reveal style="border: 1px solid rgba(27,116,188,0.28); background: rgba(27,116,188,0.05); border-radius: 16px; padding: 26px 28px; margin-bottom: 72px;">
         <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 1.5px; color: {{ accent }}; margin-bottom: 10px;">INDEPENDENT VALIDATION</div>
         <p style="font-size: 16.5px; line-height: 1.55; color: rgba(240,244,248,0.82); margin: 0;">PwC found VR-trained employees learn 4× faster than classroom and are 275% more confident applying skills. <span style="color: rgba(240,244,248,0.55);">(PwC, 2020)</span></p>
       </div>
       <div data-reveal style="max-width: 680px; margin-bottom: 44px;">
         <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: {{ accent }}; margin-bottom: 20px;">HERITAGE</div>
-        <h2 data-sr-h2 style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.08; margin: 0 0 24px;">This isn't a startup. It's a 10-year company on a brand-new platform.</h2>
-        <p style="font-size: 17px; line-height: 1.6; color: rgba(240,244,248,0.65); margin: 0;">Skill Reality is a spin-out of VR Vision — same team, new name, wider scope.</p>
+        <h2 data-sr-h2 style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.08; margin: 0 0 24px;">Not our first deployment. A 10-year team on a brand-new platform.</h2>
+        <p style="font-size: 17px; line-height: 1.6; color: rgba(240,244,248,0.65); margin: 0;">Skill Reality Inc. is a separate company, founded by the team behind VR Vision — same operators, new platform, wider scope.</p>
       </div>
       <div data-reveal data-sr-grid3 style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 44px;">
         <div style="border: 1px solid rgba(240,244,248,0.08); border-radius: 16px; padding: 28px; background: #0A0F14;">
           <div style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8; line-height: 1;">10+</div>
-          <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">years operating history in enterprise immersive training.</div>
+          <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">years the founding team has spent in enterprise immersive training.</div>
         </div>
         <div style="border: 1px solid rgba(240,244,248,0.08); border-radius: 16px; padding: 28px; background: #0A0F14;">
           <div style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8; line-height: 1;">100+</div>
-          <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">enterprise VR training deployments shipped and in service.</div>
+          <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">enterprise VR training deployments the team has shipped.</div>
         </div>
         <div style="border: 1px solid rgba(240,244,248,0.08); border-radius: 16px; padding: 28px; background: #0A0F14;">
           <div style="font-size: 44px; font-weight: 800; letter-spacing: -1.5px; color: #F0F4F8; line-height: 1;">F500</div>
-          <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">Fortune 500 client base across safety-critical industries.</div>
+          <div style="font-size: 14px; line-height: 1.5; color: rgba(240,244,248,0.55); margin-top: 10px;">Fortune 500 clients the team has delivered for, across safety-critical industries.</div>
         </div>
       </div>
       <div data-reveal style="border-top: 1px solid rgba(240,244,248,0.08); padding-top: 32px;">
-        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 1.5px; color: rgba(240,244,248,0.5); margin-bottom: 18px;">VR VISION CLIENTS</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 1.5px; color: rgba(240,244,248,0.5); margin-bottom: 18px;">CLIENTS THE TEAM DELIVERED AT VR VISION</div>
         <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 14px 34px; font-size: 19px; font-weight: 700; letter-spacing: -0.3px; color: rgba(240,244,248,0.6);">
           <span>Toyota</span><span>Siemens</span><span>Coca-Cola</span><span>Toronto Hydro</span><span>Hydro One</span><span>Enel</span>
         </div>
-        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 1px; color: rgba(240,244,248,0.45); margin-top: 16px;">ENERGY · UTILITIES · MANUFACTURING · RAIL</div>
+        <div style="font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: 1px; color: rgba(240,244,248,0.45); margin-top: 16px;">ENERGY · UTILITIES · MANUFACTURING · AUTOMOTIVE</div>
       </div>
     </div>
   </section>
@@ -680,8 +726,8 @@
         <div data-road-node style="position: relative; padding: 0 28px 0 0; opacity: 0; transform: translateY(12px); transition: opacity 0.45s ease-out, transform 0.45s ease-out;">
           <div style="width: 15px; height: 15px; border-radius: 50%; background: {{ accent }}; margin-bottom: 24px; animation: srNodePulse 2.6s ease-in-out infinite;"></div>
           <div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 1.5px; color: {{ accent }}; margin-bottom: 10px;">PHASE 0 · TODAY</div>
-          <div style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">VR Vision headset programs</div>
-          <p style="font-size: 14.5px; line-height: 1.55; color: rgba(240,244,248,0.55); margin: 0; max-width: 260px;">Live revenue. 100+ enterprise deployments across Fortune 500 clients — the proof the model works.</p>
+          <div style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">The team's VR Vision headset programs</div>
+          <p style="font-size: 14.5px; line-height: 1.55; color: rgba(240,244,248,0.55); margin: 0; max-width: 260px;">100+ enterprise deployments across Fortune 500 clients, delivered by this team at VR Vision — the proof the model works.</p>
         </div>
         <div data-road-node style="position: relative; padding: 0 28px 0 0; opacity: 0; transform: translateY(12px); transition: opacity 0.45s ease-out, transform 0.45s ease-out;">
           <div style="width: 15px; height: 15px; border-radius: 50%; border: 2px solid rgba(240,244,248,0.3); background: #090D12; margin-bottom: 24px;"></div>
@@ -795,10 +841,10 @@
               <input id="investor-email" type="email" required size="1" placeholder="you@fund.com" value="{{ investorEmail }}" onChange="{{ onInvestorEmail }}" style="flex: 1; min-width: 0; background: rgba(6,8,10,0.7); border: 1px solid rgba(240,244,248,0.15); border-radius: 10px; padding: 14px 16px; color: #F0F4F8; font-size: 15px; font-family: 'Hanken Grotesk', sans-serif; transition: border-color 0.2s;">
               <!-- honeypot: hidden from humans, bots fill it -->
               <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" value="{{ investorHoney }}" onChange="{{ onInvestorHoney }}" style="position: absolute; left: -9999px; top: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none;">
-              <button type="submit" data-magnetic style="background: {{ accent }}; color: #fff; border: none; border-radius: 10px; padding: 14px 22px; font-size: 15px; font-weight: 700; font-family: 'Hanken Grotesk', sans-serif; cursor: pointer; white-space: nowrap; opacity: {{ investorBtnOpacity }}; transition: box-shadow 0.3s ease-out, background 0.25s, opacity 0.2s;" style-hover="background: #2585d1; box-shadow: 0 0 28px rgba(27,116,188,0.45);">{{ investorButtonLabel }}</button>
+              <button type="submit" data-magnetic style="background: {{ accent }}; color: #fff; border: none; border-radius: 10px; padding: 14px 22px; font-size: 15px; font-weight: 700; font-family: 'Hanken Grotesk', sans-serif; cursor: pointer; white-space: nowrap; opacity: {{ investorBtnOpacity }}; transition: box-shadow 0.3s ease-out, background 0.25s, opacity 0.2s;" style-hover="background: #2585d1; box-shadow: 0 0 28px rgba(27,116,188,0.45);" data-dyn-text data-text="{{ investorButtonLabel }}">Request the deck</button>
             </form>
             <sc-if value="{{ investorError }}" hint-placeholder-val="{{ false }}">
-              <p style="font-size: 13px; line-height: 1.4; color: #e67a7a; margin: 12px 0 0;">{{ investorErrorMsg }}</p>
+              <p style="font-size: 13px; line-height: 1.4; color: #e67a7a; margin: 12px 0 0;" data-dyn-text data-text="{{ investorErrorMsg }}"></p>
             </sc-if>
             <p style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(240,244,248,0.55); margin: 14px 0 0; letter-spacing: 0.5px;">Sent as a link, straight to your inbox. No noise.</p>
           </sc-if>
@@ -823,10 +869,10 @@
               <input id="partner-email" type="email" required size="1" placeholder="you@company.com" value="{{ partnerEmail }}" onChange="{{ onPartnerEmail }}" style="flex: 1; min-width: 0; background: rgba(6,8,10,0.7); border: 1px solid rgba(240,244,248,0.15); border-radius: 10px; padding: 14px 16px; color: #F0F4F8; font-size: 15px; font-family: 'Hanken Grotesk', sans-serif; transition: border-color 0.2s;">
               <!-- honeypot: hidden from humans, bots fill it -->
               <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" value="{{ partnerHoney }}" onChange="{{ onPartnerHoney }}" style="position: absolute; left: -9999px; top: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none;">
-              <button type="submit" data-magnetic style="background: transparent; color: #F0F4F8; border: 1px solid rgba(240,244,248,0.3); border-radius: 10px; padding: 14px 22px; font-size: 15px; font-weight: 700; font-family: 'Hanken Grotesk', sans-serif; cursor: pointer; white-space: nowrap; opacity: {{ partnerBtnOpacity }}; transition: border-color 0.25s, color 0.25s, box-shadow 0.3s ease-out, opacity 0.2s;" style-hover="border-color: {{ accent }}; color: {{ accent }}; box-shadow: 0 0 20px rgba(27,116,188,0.2);">{{ partnerButtonLabel }}</button>
+              <button type="submit" data-magnetic style="background: transparent; color: #F0F4F8; border: 1px solid rgba(240,244,248,0.3); border-radius: 10px; padding: 14px 22px; font-size: 15px; font-weight: 700; font-family: 'Hanken Grotesk', sans-serif; cursor: pointer; white-space: nowrap; opacity: {{ partnerBtnOpacity }}; transition: border-color 0.25s, color 0.25s, box-shadow 0.3s ease-out, opacity 0.2s;" style-hover="border-color: {{ accent }}; color: {{ accent }}; box-shadow: 0 0 20px rgba(27,116,188,0.2);" data-dyn-text data-text="{{ partnerButtonLabel }}">Join the waitlist</button>
             </form>
             <sc-if value="{{ partnerError }}" hint-placeholder-val="{{ false }}">
-              <p style="font-size: 13px; line-height: 1.4; color: #e67a7a; margin: 12px 0 0;">{{ partnerErrorMsg }}</p>
+              <p style="font-size: 13px; line-height: 1.4; color: #e67a7a; margin: 12px 0 0;" data-dyn-text data-text="{{ partnerErrorMsg }}"></p>
             </sc-if>
             <p style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(240,244,248,0.55); margin: 14px 0 0; letter-spacing: 0.5px;">One email. No noise.</p>
           </sc-if>
@@ -846,7 +892,7 @@
           <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(240,244,248,0.6); letter-spacing: 0.5px;">AI COACHING ON DISPLAY GLASSES</span>
         </div>
       </div>
-      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(240,244,248,0.55); letter-spacing: 0.5px;">A VR VISION COMPANY · © 2026 SKILL REALITY INC.</div>
+      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(240,244,248,0.55); letter-spacing: 0.5px;">© 2026 SKILL REALITY INC.</div>
     </div>
   </footer>
 
@@ -924,6 +970,10 @@ class Component extends DCLogic {
 
     // ---- count-ups ----
     const counts = root.querySelectorAll('[data-count]');
+    // The markup carries the real final value so crawlers, LLM scrapers and
+    // no-JS visitors read "70%" rather than "0%". Zero it here, on the client
+    // only, so the on-screen count-up still starts from nothing.
+    if (!this._reduced) counts.forEach((el) => { el.textContent = '0'; });
     this._ioCount = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
         if (!e.isIntersecting) return;
@@ -976,6 +1026,24 @@ class Component extends DCLogic {
         el.addEventListener('mouseleave', () => { el.style.transform = 'translate(0, 0)'; });
       });
     }
+
+    this._syncDynText();
+  }
+
+  // Live-changing text is bound through a `data-text` attribute instead of a
+  // `{{ }}` text node, so the served HTML carries real copy rather than raw
+  // template syntax. React only ever renders the static fallback child, so
+  // re-syncing after every render keeps the live value on screen.
+  _syncDynText() {
+    const root = this._root || document;
+    root.querySelectorAll('[data-dyn-text]').forEach((el) => {
+      const v = el.getAttribute('data-text');
+      if (v != null && el.textContent !== v) el.textContent = v;
+    });
+  }
+
+  componentDidUpdate() {
+    this._syncDynText();
   }
 
   _startHudLoop() {
