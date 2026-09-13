@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Only the landing page is listed. /roadmap/ and /demo-cc-syrup/ are noindex, and
+  the demo apps (/coach/, /hazard/, /hud/) are deliberately left out: they are
+  reachable and indexable, but listing them here would actively push unfinished
+  demo builds into search results while the seed round is open. Add them when
+  they are something you want ranking.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.skillreality.com/</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>
