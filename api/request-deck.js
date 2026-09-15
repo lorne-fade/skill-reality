@@ -96,7 +96,7 @@ export default async function handler(req, res) {
               <!-- intro -->
               <tr><td style="padding:26px 8px 0;font-size:16px;line-height:1.6;color:#0d1218">Thanks for your interest — here's the investor deck.</td></tr>
               <!-- proof line -->
-              <tr><td style="padding:12px 8px 0;font-size:14px;line-height:1.6;color:#6b7280">Built by the team behind VR Vision — 100+ enterprise deployments delivered for clients including Toyota, Siemens, and Coca-Cola.</td></tr>
+              <tr><td style="padding:12px 8px 0;font-size:14px;line-height:1.6;color:#6b7280">Built by a co-founder of VR Vision — 100+ enterprise deployments delivered for clients including Toyota, Siemens, and Coca-Cola.</td></tr>
               <!-- deck cover, full width, rounded, linked to the deck -->
               <tr><td style="padding:26px 8px 0">
                 <a href="${deckUrl}" style="display:block;text-decoration:none">
@@ -111,7 +111,7 @@ export default async function handler(req, res) {
               <tr><td style="padding:32px 8px 0;font-size:15px;line-height:1.6;color:#333">If you'd like a walkthrough, just reply — this goes straight to my inbox.</td></tr>
               <tr><td style="padding:18px 8px 0;font-size:14px;line-height:1.7;color:#0d1218">
                 <strong>Lorne Fade</strong><br />
-                Co-founder, Skill Reality<br />
+                Founder &amp; CEO, Skill Reality<br />
                 <a href="https://www.linkedin.com/in/lornefade" style="color:#1B74BC;text-decoration:none">linkedin.com/in/lornefade</a>
               </td></tr>
               <!-- footer -->
