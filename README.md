@@ -32,3 +32,34 @@ When it fires, the fix is always the same: describe the tag in prose instead of
 angle brackets — "the helmet block", "the template element", "the title tag".
 
 Do not edit `support.js`. It is generated, and carries a "do not edit" banner.
+
+## Social cards
+
+`og-card.png` (link unfurls) and `deck-cover.jpg` (the investor deck email)
+carry copy **as pixels**, so no text search will find a stale claim in them.
+Both previously kept an "A VR VISION COMPANY" badge live long after that claim
+was removed from the page.
+
+To change their copy, edit `BOLD` / `BADGE` in the script and re-run:
+
+```bash
+python scripts/social-cards/make-cards.py
+```
+
+```bash
+python scripts/social-cards/make-cards.py --check
+```
+
+`--check` regenerates in memory and reports whether the committed images still
+match, without writing anything.
+
+The script erases only the two text regions and re-renders those in the real
+site fonts, so the photo panel, wordmark and headline stay identical at the
+pixel level. It always works from the pre-correction artwork in git
+(`PRISTINE_REV`) rather than from the live files, so corrections never stack.
+Needs Pillow, Chrome (`CHROME=` to override discovery) and network access for
+the webfonts. The script's docstring explains the rest, including why the text
+is rendered at 2x and downsampled.
+
+Changing these images does not change their URLs, so Slack and LinkedIn will
+serve a cached unfurl for a while afterwards.
