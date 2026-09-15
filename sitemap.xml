@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Only the landing page is listed. /roadmap/ and /demo-cc-syrup/ are noindex, and
+  Only the landing page is listed. /roadmap/ and /demo/ are noindex, and
   the demo apps (/coach/, /hazard/, /hud/) are deliberately left out: they are
   reachable and indexable, but listing them here would actively push unfinished
   demo builds into search results while the seed round is open. Add them when

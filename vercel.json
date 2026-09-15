@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/demo-cc-syrup",
+      "destination": "/demo",
+      "permanent": true
+    },
+    {
+      "source": "/demo-cc-syrup/:path*",
+      "destination": "/demo/:path*",
+      "permanent": true
+    }
+  ]
+}
