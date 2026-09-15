@@ -31,7 +31,7 @@ Allow: /
 User-agent: Applebot-Extended
 Allow: /
 
-# NOTE: /roadmap/ and /demo-cc-syrup/ are kept crawlable on purpose. They carry
+# NOTE: /roadmap/ and /demo/ are kept crawlable on purpose. They carry
 # <meta name="robots" content="noindex, nofollow">, and a crawler has to be able
 # to fetch a page to see that directive — disallowing them here would keep the
 # noindex from ever being read.
