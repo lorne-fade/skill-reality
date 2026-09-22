@@ -63,3 +63,23 @@ is rendered at 2x and downsampled.
 
 Changing these images does not change their URLs, so Slack and LinkedIn will
 serve a cached unfurl for a while afterwards.
+
+## Logo and icons
+
+`favicon/skill-reality-mark.svg` is the vector master for the mark. Every
+raster icon on the site — the nav/footer glyph, the favicon set, the PWA and
+apple-touch icons, the `-bright` set the Meta glasses menu scrapes, and the
+`/coach`, `/hazard` and `/hud` app icons — is generated from it:
+
+```bash
+python scripts/make-icons.py
+```
+
+```bash
+python scripts/make-icons.py --check
+```
+
+`--check` regenerates in memory and reports whether every committed icon still
+matches, without writing anything. The geometry lives in the script; the SVG
+is emitted from it, so edit the script rather than the SVG. Needs Pillow and
+Chrome (`CHROME=` to override discovery).
